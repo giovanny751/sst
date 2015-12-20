@@ -378,12 +378,18 @@ class Planes extends My_Controller {
 
     function consultaplanes() {
         $this->load->model("Planes_model");
+        $emp_id = $this->session->userdata()['emp_id'];
         if (!empty($this->input->post('tareapropia')))
-            $usu_id = $this->session->userdata('emp_id');
+            $tareaspropias = $this->session->userdata()['emp_id'];
         else
-            $usu_id = "";
+            $tareaspropias = "";
+        
         $planes = $this->Planes_model->filtrobusqueda(
-                $this->input->post("nombre"), $this->input->post("responsable"), $this->input->post("estado"), $usu_id
+                $this->input->post("nombre"), 
+                $this->input->post("responsable"), 
+                $this->input->post("estado"), 
+                $tareaspropias,
+                $emp_id
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($planes));
     }

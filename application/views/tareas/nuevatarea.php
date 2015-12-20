@@ -377,7 +377,7 @@
                                         <div class="row">
                                             <label for="costo" class="col-lg-3 col-md-3 col-sx-3 col-sm-3">Costo</label>
                                             <div class="col-lg-9 col-md-9 col-sx-9 col-sm-9">
-                                                <input value="<?php echo (!empty($avance[0]->avaTar_costo)) ? $avance[0]->avaTar_costo : ""; ?>" type="text" style="text-align:center" name="costo" id="costo" class="form-control avance miles">
+                                                <input value="<?php echo (!empty($avance[0]->avaTar_costo)) ? $avance[0]->avaTar_costo : ""; ?>" type="text" style="text-align:right" name="costo" id="costo" class="form-control avance miles">
                                             </div>
                                         </div>
                                     </div>
@@ -760,7 +760,9 @@
                     var costo = 0;
                     $.each(msg, function (key, val) {
                         totalhoras += parseInt(val.avaTar_horasTrabajadas);
-                        costo += parseInt(val.avaTar_costo.replace(".", "").replace(",", ""));
+//                        console.log(val.avaTar_costo.replace(',','').replace(',','').replace(',','').replace('.',''));
+                        costo = parseInt(val.avaTar_costo.replace(',','').replace(',','').replace(',','').replace('.','')) + parseInt(costo);
+//                        console.log(costo);
                         html += "<tr>"
                                 + "<td>"
                                 + "<a href='javascript:' class='avances_ fa fa-pencil-square-o fa-2x btn btn-info' avaTar_id='" + val.avaTar_id + "' ></a>"
@@ -769,14 +771,14 @@
                                 + "<td>" + val.tar_nombre + "</td>"
                                 + "<td>" + val.nombre + "</td>"
                                 + "<td>" + val.avaTar_horasTrabajadas + "</td>"
-                                + "<td>" + val.avaTar_costo + "</td>"
+                                + "<td style='text-align:right'>" + val.avaTar_costo + "</td>"
                                 + "<td>" + val.avaTar_comentarios + "</td>"
                                 + "</tr>";
                     });
                     html += "<tr>\n\
                                         <td colspan='4' style='text-align:right;'><b>Total</b></td>\n\
                                         <td>" + totalhoras + "</td>\n\
-                                        <td>" + num_miles(costo) + "</td>\n\
+                                        <td style='text-align:right'>" + num_miles(costo) + "</td>\n\
                                         <td></td>\n\
                                         </tr>"
                     $('.datatable_ajax12').html(html);

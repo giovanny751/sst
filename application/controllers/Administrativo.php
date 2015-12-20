@@ -20,8 +20,6 @@ class Administrativo extends My_Controller {
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data["usu_id"]);
         $this->load->library('PHPExcel/Classes/PHPExcel.php');
-        
-           
     }
 
     function creacionempleados() {
@@ -343,30 +341,26 @@ class Administrativo extends My_Controller {
     }
 
     function listadoempleados() {
-        if ($this->consultaacceso($this->data["usu_id"])) :
-            $this->load->model('Empresa_model');
-            $this->data['empresa'] = $this->Empresa_model->detail();
-            if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
-                $this->load->model('Tipo_documento_model');
-                $this->load->model('Tipocontrato_model');
-                $this->load->model("Estados_model");
-                $this->load->model('Cargo_model');
-                $this->load->model('Dimension2_model');
-                $this->load->model('Dimension_model');
-                $this->data['dimension'] = $this->Dimension_model->detail();
-                $this->data['dimension2'] = $this->Dimension2_model->detail();
-                $this->data['cargo'] = $this->Cargo_model->detail();
-                $this->data['estado'] = $this->Estados_model->detail();
-                $this->data['tipocontrato'] = $this->Tipocontrato_model->detail();
+        $this->load->model('Empresa_model');
+        $this->data['empresa'] = $this->Empresa_model->detail();
+        if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
+            $this->load->model('Tipo_documento_model');
+            $this->load->model('Tipocontrato_model');
+            $this->load->model("Estados_model");
+            $this->load->model('Cargo_model');
+            $this->load->model('Dimension2_model');
+            $this->load->model('Dimension_model');
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->data['dimension2'] = $this->Dimension2_model->detail();
+            $this->data['cargo'] = $this->Cargo_model->detail();
+            $this->data['estado'] = $this->Estados_model->detail();
+            $this->data['tipocontrato'] = $this->Tipocontrato_model->detail();
 //        var_dump($this->data['tipocontrato']);die;
-                $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
-                $this->layout->view("administrativo/listadoempleados", $this->data);
-            } else {
-                redirect('index.php/administrativo/empresa', 'location');
-            }
-        else:
-            $this->layout->view("permisos");
-        endif;
+            $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
+            $this->layout->view("administrativo/listadoempleados", $this->data);
+        } else {
+            redirect('index.php/administrativo/empresa', 'location');
+        }
     }
 
     function consultaempleados() {
@@ -398,46 +392,38 @@ class Administrativo extends My_Controller {
     }
 
     function creacionusuarios() {
-        if ($this->consultaacceso($this->data["usu_id"])) :
-            $this->load->model('Sexo_model');
-            $this->load->model('Cargo_model');
-            $this->load->model('Empleado_model');
-            $this->load->model('Estados_model');
-            $this->load->model('User_model');
-            $this->load->model('Roles_model');
-            $this->data['roles'] = $this->Roles_model->roles();
+        $this->load->model('Sexo_model');
+        $this->load->model('Cargo_model');
+        $this->load->model('Empleado_model');
+        $this->load->model('Estados_model');
+        $this->load->model('User_model');
+        $this->load->model('Roles_model');
+        $this->data['roles'] = $this->Roles_model->roles();
 //            var_dump($this->data['roles']);die;
-            $this->data['empleado'] = $this->Empleado_model->detail();
-            $this->data['estado'] = $this->Estados_model->detail();
-            $this->data['sexo'] = $this->Sexo_model->detail();
-            $this->data['cargo'] = $this->Cargo_model->detail();
-            $this->data['usuario'] = "";
-            $user = $this->input->post('usu_id');
-            if (!empty($user)) {
-                $this->data['usuario'] = $this->User_model->consultausuarioxid($this->input->post('usu_id'));
-                $this->data['empleado'] = $this->Empleado_model->empleadoxcargo($this->data['usuario'][0]->car_id);
+        $this->data['empleado'] = $this->Empleado_model->detail();
+        $this->data['estado'] = $this->Estados_model->detail();
+        $this->data['sexo'] = $this->Sexo_model->detail();
+        $this->data['cargo'] = $this->Cargo_model->detail();
+        $this->data['usuario'] = "";
+        $user = $this->input->post('usu_id');
+        if (!empty($user)) {
+            $this->data['usuario'] = $this->User_model->consultausuarioxid($this->input->post('usu_id'));
+            $this->data['empleado'] = $this->Empleado_model->empleadoxcargo($this->data['usuario'][0]->car_id);
 //            var_dump($this->data['usuario']);die;
-            }
-            $this->layout->view("administrativo/creacionusuarios", $this->data);
-        else:
-            $this->layout->view("permisos");
-        endif;
+        }
+        $this->layout->view("administrativo/creacionusuarios", $this->data);
     }
 
     function listadousuarios() {
-        if ($this->consultaacceso($this->data["usu_id"])) :
-            $this->load->model('Tipo_documento_model');
-            $this->load->model('Estados_model');
-            $this->load->model('User_model');
-            $this->load->model('Roles_model');
-            $this->data['roles'] = $this->Roles_model->roles();
-            $this->data['estado'] = $this->Estados_model->detail();
-            $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
-            $this->data["usuarios"] = $this->User_model->consultageneral();
-            $this->layout->view("administrativo/listadousuarios", $this->data);
-        else:
-            $this->layout->view("permisos");
-        endif;
+        $this->load->model('Tipo_documento_model');
+        $this->load->model('Estados_model');
+        $this->load->model('User_model');
+        $this->load->model('Roles_model');
+        $this->data['roles'] = $this->Roles_model->roles();
+        $this->data['estado'] = $this->Estados_model->detail();
+        $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
+        $this->data["usuarios"] = $this->User_model->consultageneral();
+        $this->layout->view("administrativo/listadousuarios", $this->data);
     }
 
     function consultarusuario() {
@@ -535,15 +521,11 @@ class Administrativo extends My_Controller {
     }
 
     function cargos() {
-        if ($this->consultaacceso($this->data["usu_id"])) :
-            $this->load->model("Empresa_model");
-            $this->load->model('Cargo_model');
-            $this->data["cargo"] = $this->Cargo_model->detail();
-            $this->data['informacion'] = $this->Empresa_model->detail();
-            $this->layout->view("administrativo/cargos", $this->data);
-        else:
-            $this->layout->view("permisos");
-        endif;
+        $this->load->model("Empresa_model");
+        $this->load->model('Cargo_model');
+        $this->data["cargo"] = $this->Cargo_model->detail();
+        $this->data['informacion'] = $this->Empresa_model->detail();
+        $this->layout->view("administrativo/cargos", $this->data);
     }
 
     function cargoriesgo() {
@@ -686,16 +668,14 @@ class Administrativo extends My_Controller {
     }
 
     function dimension2() {
-        if ($this->consultaacceso($this->data["usu_id"])) {
-            $this->load->model('Dimension2_model');
-            $this->load->model('Empresa_model');
-            $this->data['empresa'] = $this->Empresa_model->detail();
-            if (!empty($this->data['empresa'][0]->Dimdos_id)) {
-                $this->data['dimension'] = $this->Dimension2_model->detail();
-                $this->layout->view("administrativo/dimension2", $this->data);
-            } else {
-                redirect('index.php/administrativo/empresa', 'location');
-            }
+        $this->load->model('Dimension2_model');
+        $this->load->model('Empresa_model');
+        $this->data['empresa'] = $this->Empresa_model->detail();
+        if (!empty($this->data['empresa'][0]->Dimdos_id)) {
+            $this->data['dimension'] = $this->Dimension2_model->detail();
+            $this->layout->view("administrativo/dimension2", $this->data);
+        } else {
+            redirect('index.php/administrativo/empresa', 'location');
         }
     }
 
@@ -782,8 +762,8 @@ class Administrativo extends My_Controller {
     }
 
     function eliminardimension() {
-//        $this->load->model('Dimension_model');
-//        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
+        $this->load->model('Dimension_model');
+        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
     }
 
     function actualizardimension() {

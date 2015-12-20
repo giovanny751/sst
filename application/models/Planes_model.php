@@ -25,7 +25,8 @@ class Planes_model extends CI_Model {
         }
     }
 
-    function filtrobusqueda($nombre, $responsable, $estado, $tareaspropias) {
+    function filtrobusqueda($nombre, $responsable, $estado, $tareaspropias,$emp_id) {
+//        echo $emp_id;die;
         try {
             if (!empty($nombre))
                 $this->db->where('pla_nombre', $nombre);
@@ -41,7 +42,7 @@ class Planes_model extends CI_Model {
             $this->db->select("empleado.Emp_Apellidos,sum(replace(tar_costopresupuestado,LTRIM(RTRIM(',')),'')) AS tar_costopresupuestado",false);
             $this->db->select("(select COUNT(emp_id) i
                             from tarea
-                            where pla_id = planes.pla_id and emp_id=" . $this->session->userdata('usu_id') . "
+                            where pla_id = planes.pla_id and emp_id=" . $emp_id . "
                             ) as num_tareas ");
             $this->db->select("count(avance_tarea.avaTar_progreso) as count_progreso ,"
                     . "sum(avance_tarea.avaTar_progreso) as sum_progreso", false);

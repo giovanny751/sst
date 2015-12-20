@@ -1,8 +1,5 @@
 <div class="row">
     <div class="col-md-6">
-        <!-- <div class="circuloIcon" id="guardartarea"><i class="fa fa-floppy-o fa-3x"></i></div>
-        <div class="circuloIcon" id="guardartarea" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-        <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div> -->
         <a href="<?php echo base_url() . "/index.php/riesgo/nuevoriesgo" ?>"><div class="circuloIcon" title="Nuevo Riesgo" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
@@ -152,17 +149,18 @@
                         tbody += "<table class='tablesst'>\n\
                                         <thead style='text-align:center;'>\n\
                                         <tr><th colspan='11'>" + tipo + "</th></tr>\n\
-                                        <tr><th width='7%'>Tipo</th>\n\
-                                        <th width='15%'>Descripción</th>\n\
-                                        <th width='10%'><?php echo $empresa[0]->Dim_id ?></th>\n\
+                                        <tr>\n\
+                                        <th width='15%'>Tipo</th>\n\
+                                        <th width='14%'>Descripción</th>\n\
+                                        <th width='9%'><?php echo $empresa[0]->Dim_id ?></th>\n\
                                         <th width='10%'><?php echo $empresa[0]->Dimdos_id ?></th>\n\
-                                        <th width='7%'>Lugar/Zona</th>\n\
-                                        <th width='15%'>Actividades</th>\n\
+                                        <th width='6%'>Lugar/Zona</th>\n\
+                                        <th width='12%'>Actividades</th>\n\
                                         <th width='5%'>Cargo</th>\n\
                                         <th width='7%'>Fecha Creación</th>\n\
                                         <th width='8%'>Estado de aceptación</th>\n\
                                         <th width='8%'>Tareas(activas)</th>\n\
-                                        <th width='8%'>Accion</th></tr>\n\
+                                        <th width='7%'>Accion</th></tr>\n\
                                     </thead>";
                         $.each(data, function (key, val) {
                             tbody += "<tr>";
