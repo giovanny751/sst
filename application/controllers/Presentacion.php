@@ -430,7 +430,7 @@ class Presentacion extends My_Controller {
             $metodoConsultar = $this->input->post("TxtMetodoConsultar");
             $claseConsultar = $this->input->post("TxtClaseConsultar");
             if(!empty($metodoConsultar[0]) && !empty($claseConsultar[0]))
-            for($i = 0;$i < count($metodoEliminar); $i++ ){
+            for($i = 0;$i < count($metodoConsultar); $i++ ){
                 $crud = 3;
                 $data[] = array(
                     "mod_id"=>$modulo,
@@ -443,7 +443,7 @@ class Presentacion extends My_Controller {
             $metodoActualizar = $this->input->post("TxtMetodoActualizar");
             $claseActualizar = $this->input->post("TxtClaseActualizar");
             if(!empty($metodoActualizar[0]) && !empty($claseActualizar[0]))
-            for($i = 0;$i < count($metodoEliminar); $i++ ){
+            for($i = 0;$i < count($metodoActualizar); $i++ ){
                 $crud = 2;
                 $data[] = array(
                     "mod_id"=>$modulo,
@@ -456,7 +456,7 @@ class Presentacion extends My_Controller {
             $metodoInsertar = $this->input->post("TxtMetodoInsertar");
             $claseInsertar = $this->input->post("TxtClaseInsertar");
             if(!empty($metodoInsertar[0]) && !empty($claseInsertar[0]))
-            for($i = 0;$i < count($metodoEliminar); $i++ ){
+            for($i = 0;$i < count($metodoInsertar); $i++ ){
             $crud = 4;
                 $data[] = array(
                     "mod_id"=>$modulo,
@@ -465,10 +465,21 @@ class Presentacion extends My_Controller {
                     "tipCru_id"=>$crud
                     );
             }
+            $this->Ingreso_model->eliminarPermisoMetodo($modulo);
             $this->Ingreso_model->guardarPermisosMetodo($data);
+        }catch(exception $e){
             
-            
-            
+        }
+    }
+    function cargarMetodos(){
+        try{
+            $this->load->model("Ingreso_model");
+            $datos = $this->Ingreso_model->cargarPermisoMetodo($this->input->post("modulo"));
+            $array = array();
+            foreach($datos as $value):
+                $array[$value->crud][] = array($value->clase, $value->metodo); 
+            endforeach;
+            $this->output->set_content_type('application/json')->set_output(json_encode($array));
         }catch(exception $e){
             
         }

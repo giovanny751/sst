@@ -150,6 +150,7 @@
         </div>
     </div>
 </div>   
+<!-- Modal -->
 <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -160,102 +161,7 @@
             <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
                 <form method="post" id="FrmMetodos">
                     <input type="hidden" name="modulo" id="Hdnmodulo" >
-                    <div class=" marginV20">
-                        <div class="widgetTitle">
-                            <h5><i class="glyphicon glyphicon-pencil"></i> Consultar</h5>
-                        </div>
-                        <div class="well">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
-                                    <button type="button" class="agregarmetodo btn btn-success" tipo="1">+</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Clase</label>
-                                    <input type="text" placeholder="Modulo" id="modulo" name="TxtClaseConsultar[]" class="form-control">
-                                </div>
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Metodo</label><input type="text" placeholder="Modulo" id="modulo" name="TxtMetodoConsultar[]" class="form-control">
-                                </div>
-                                <div class="col-md-2 col-lg-2 col-sm-2 col-sx-2">
-                                    <button type="button" class="eliminarmetodo btn btn-danger">-</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" marginV20">
-                        <div class="widgetTitle">
-                            <h5><i class="glyphicon glyphicon-pencil"></i> Eliminar</h5>
-                        </div>
-                        <div class="well">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
-                                    <button type="button" class="agregarmetodo btn btn-success" tipo="2">+</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Clase</label>
-                                    <input type="text" placeholder="Modulo" id="modulo" name="TxtClaseEliminar[]" class="form-control">
-                                </div>
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Metodo</label><input type="text" placeholder="Modulo" name="TxtMetodoEliminar[]" id="modulo" class="form-control">
-                                </div>
-                                <div class="col-md-2 col-lg-2 col-sm-2 col-sx-2">
-                                    <button type="button" class="eliminarmetodo btn btn-danger">-</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" marginV20">
-                        <div class="widgetTitle">
-                            <h5><i class="glyphicon glyphicon-pencil"></i> Actualizar</h5>
-                        </div>
-                        <div class="well">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
-                                    <button type="button" class="agregarmetodo btn btn-success" tipo="3">+</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Clase</label>
-                                    <input type="text" placeholder="Modulo" id="modulo" name="TxtClaseActualizar[]" class="form-control">
-                                </div>
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Metodo</label><input type="text" placeholder="Modulo" name="TxtMetodoActualizar[]" id="modulo" class="form-control">
-                                </div>
-                                <div class="col-md-2 col-lg-2 col-sm-2 col-sx-2">
-                                    <button type="button" class="eliminarmetodo btn btn-danger">-</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" marginV20">
-                        <div class="widgetTitle">
-                            <h5><i class="glyphicon glyphicon-pencil"></i> Insertar</h5>  
-                        </div>
-                        <div class="well">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
-                                    <button type="button" class="agregarmetodo btn btn-success" tipo="4">+</button>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Clase</label>
-                                    <input type="text" placeholder="Modulo" id="modulo" name="TxtClaseInsertar[]" class="form-control">
-                                </div>
-                                <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">
-                                    <label>Metodo</label><input type="text" placeholder="Modulo" name="TxtMetodoInsertar[]" id="modulo" class="form-control">
-                                </div>
-                                <div class="col-md-2 col-lg-2 col-sm-2 col-sx-2">
-                                    <button type="button" class="eliminarmetodo btn btn-danger">-</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="modalHtml"></div>
                 </form>
             </div>		
             <div class="modal-footer">
@@ -277,52 +183,140 @@
     $('body').delegate("#guardarmetodos","click",  function () {    
         $.post("<?php echo base_url("index.php/presentacion/guardarMetodos") ?>",$('#FrmMetodos').serialize())
                 .done(function (msg) {
-                    
+                    $('#myModal5').modal("toggle");
+                    alerta("verde","Guardado");
                 })
                 .fail(function (msg) {
-
+                    alerta("rojo","Error");
                 });
     });
-
     $('body').delegate(".metodos", "click", function () {
-        $('#Hdnmodulo').val($(this).attr('idgeneral'));
-        $('#myModal5').modal("show");
+        var modulo = $(this).attr('idgeneral');
+        var url = "<?php echo base_url("index.php/presentacion/cargarMetodos") ?>";
+        var datos = {modulo:modulo};
+        $('#Hdnmodulo').val(modulo);
+        $.post(url,datos)
+                .done(function(msg){
+                    htmlModal(msg);
+                    $('#myModal5').modal("toggle");
+                })
+                .fail(function(msg){
+                    alerta("rojo","Error Modal");
+                })
+        
     });
+    
+    function filas(tipo){
+        switch(tipo){
+            case "1": 
+                var clase  = "TxtClaseEliminar[]";
+                var metodo = "TxtMetodoEliminar[]";
+                var agregar = "filaEliminar";
+                break;
+            case "2": 
+                var clase  = "TxtMetodoActualizar[]";
+                var metodo = "TxtClaseActualizar[]";
+                var agregar = "filaActualizar";
+                break;
+            case "3": 
+                var clase  = "TxtClaseConsultar[]";
+                var metodo = "TxtMetodoConsultar[]";
+                var agregar = "filaConsultar";
+                break;
+            case "4": 
+                var clase = "TxtClaseInsertar[]";
+                var metodo  = "TxtMetodoInsertar[]";
+                var agregar = "filaInsertar";
+                break;
+            default:
+                alerta("naranja","Error Tipo Filas");
+        }
+        var html = "";
+        html += "<div class=\"row\">";
+        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+        html += "<label>Clase</label>";
+        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + clase + "\" id=\"modulo\" class=\"form-control\" >";
+        html += "</div>";
+        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+        html += "<label>Metodo</label>";
+        html += "<input type=\"text\" placeholder=\"Modulo\" name=\""+metodo+"\" id=\"modulo\" class=\"form-control\" >";
+        html += "</div>";
+        html += "<div class=\"col-md-2 col-lg-2 col-sm-2 col-sx-2\">";
+        html += "<button type=\"button\" class=\"eliminarmetodo btn btn-danger\">-</button>";
+        html += "</div>";
+        html += "</div>";
+        
+        $("#"+agregar).append(html);
+    };
+    
+    function htmlModal(datos){
+        var clases = ["TxtClaseEliminar[]","TxtMetodoActualizar[]","TxtClaseConsultar[]","TxtClaseInsertar[]"];
+        var metodos = ["TxtMetodoEliminar[]","TxtClaseActualizar[]","TxtMetodoConsultar[]","TxtMetodoInsertar[]"];
+        var idEtiqueta = ["filaEliminar","filaActualizar","filaConsultar","filaInsertar"];
+        var titulo = ["Eliminar","Actualizar","Consultar","Insertar"];
+        var html = "";
+        for(var i=0 ; i<4; i++){
+            var fila = false;
+            html += "<div class=\"marginV20\">";
+            html += "<div class=\"widgetTitle\">";
+            html += "<h5><i class=\"glyphicon glyphicon-pencil\"></i> "+titulo[i]+"</h5>";
+            html += "</div>";
+            html += "<div class=\"well\" id=\""+idEtiqueta[i]+"\">";
+            html += "<div class=\"row\">";
+            html += "<div class=\"col-md-12 col-lg-12 col-sm-12 col-sx-12\">";
+            html += "<button type=\"button\" class=\"agregarmetodo btn btn-success\" tipo=\""+parseInt(i+1)+"\">+</button>";
+            html += "</div>";
+            html += "</div>";
+            $.each(datos,function(metodo,cantidad){
+                if(metodo == (i+1)){
+                    $.each(cantidad,function(index,valor){
+                        html += "<div class=\"row\">";
+                        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+                        html += "<label>Clase</label>";
+                        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + clases[i] + "\" value=\""+valor[0]+"\" id=\"modulo\" class=\"form-control\" >";
+                        html += "</div>";
+                        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+                        html += "<label>Metodo</label>";
+                        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + metodos[i] + "\" value=\""+valor[1]+"\" id=\"modulo\" class=\"form-control\" >";
+                        html += "</div>";
+                        html += "<div class=\"col-md-2 col-lg-2 col-sm-2 col-sx-2\">";
+                        html += "<button type=\"button\" class=\"eliminarmetodo btn btn-danger\">-</button>";
+                        html += "</div>";
+                        html += "</div>";
+                    });
+                    fila = true
+                    return false;
+                }
+            });
+            
+            if(fila == false){
+                html += "<div class=\"row\">";
+                html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+                html += "<label>Clase</label>";
+                html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + clases[i] + "\" id=\"modulo\" class=\"form-control\" >";
+                html += "</div>";
+                html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+                html += "<label>Metodo</label>";
+                html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + metodos[i] + "\" id=\"modulo\" class=\"form-control\" >";
+                html += "</div>";
+                html += "<div class=\"col-md-2 col-lg-2 col-sm-2 col-sx-2\">";
+                html += "<button type=\"button\" class=\"eliminarmetodo btn btn-danger\">-</button>";
+                html += "</div>";
+                html += "</div>";
+            }
+            
+            html += "</div>";
+        }
+        $("#modalHtml").html(html);
+    }
 
     $('body').delegate(".eliminarmetodo", "click", function () {
         $(this).parent().parent().remove();
     });
 
     $('body').delegate(".agregarmetodo", "click", function () {
-        
         var tipo = $(this).attr('tipo'); 
-        if(tipo == 1){
-            var clase= 'TxtClaseConsultar[]';
-            var metodo = 'TxtMetodoConsultar[]';
-        }else
-        if(tipo == 2){
-            var clase = 'TxtClaseEliminar[]';
-            var metodo = 'TxtMetodoEliminar[]';
-        }else
-        if(tipo == 3){
-            var metodo= 'TxtMetodoActualizar[]';
-            var clase = 'TxtClaseActualizar[]';
-        }
-        else if(tipo == 4){ 
-            var metodo= 'TxtMetodoInsertar[]';
-            var clase = 'TxtClaseInsertar[]';
-        }
-        var html = '<div class="row"><div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">\n\
-                                        <label>Clase</label>\n\
-                                        <input type="text" placeholder="Modulo" name="'+clase+'" id="modulo" class="form-control">\n\
-                                    </div>\n\
-                                    <div class="col-md-5 col-lg-5 col-sm-5 col-sx-5">\n\
-                                        <label>Metodo</label><input type="text" placeholder="Modulo" name="'+metodo+'" id="modulo" class="form-control">\n\
-                                    </div>\n\
-                                    <div class="col-md-2 col-lg-2 col-sm-2 col-sx-2">\n\
-                                        <button type="button" class="eliminarmetodo btn btn-danger">-</button>\n\
-                                    </div></div>';
-        $(this).parents('.well').append(html);
+        filas(tipo);
     });
 
     $('#desicion').hide();

@@ -28,7 +28,24 @@ class Ingreso_model extends CI_Model {
     }
 
     function guardarPermisosMetodo($data){
+        
         $this->db->insert_batch("permisos_metodo",$data);
+    }
+    function eliminarPermisoMetodo($modulo){
+        $this->db->where("mod_id",$modulo);
+        $this->db->delete("permisos_metodo");
+    }
+    function cargarPermisoMetodo($mod){
+        try{
+            $this->db->select("perMet_clase as clase");
+            $this->db->select("perMet_metodo as metodo");
+            $this->db->select("tipCru_id as crud");
+            $this->db->where("mod_id",$mod);
+            $resultado = $this->db->get("permisos_metodo");
+            return $resultado->result();
+        }  catch (Exception $e){
+            
+        }
     }
     
     function permisoroles($padre = null) {
