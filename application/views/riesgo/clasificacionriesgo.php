@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <th style="text-align:center"><b><?= $categoria ?></b></th>  
-                            <th><i class="fa fa-pencil-square-o fa-2x modificar" rieCla_id="<?php echo $id ?>" title="Modificar" data-target="#myModal" data-toggle="modal"></i></th>
+                            <th><i class="fa fa-pencil-square-o fa-2x modificar2" rieCla_id="<?php echo $id ?>" title="Modificar" data-target="#myModal2" data-toggle="modal"></i></th>
                             <th><i class="fa fa-trash-o fa-2x eliminarcategoria"  title="Eliminar" rieCla_id="<?php echo $id ?>"></i></th>
                         </tr>
                         <tr>
@@ -92,6 +92,36 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div id="myModal2" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    <div id="guardartipo2" class="circuloIcon">
+                        <i class="fa fa-floppy-o fa-3x"></i>
+                    </div>
+                    CLASIFICACIÓN DE RIESGO
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="categoria_m">Categoria</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="hidden" class="form-control" id="categoria_id" name="categoria_id">
+                        <input type="text" class="form-control" id="categoria_m" name="categoria_m">
+                        <p><br></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
     $('.modal_nuevo').click(function () {
@@ -100,10 +130,17 @@
         $("#accion").val('1')
     });
     $('body').delegate('.modificar', 'click', function () {
-        $("#accion").val('2')
+        $("#accion").val('2');
         $('#tip_id').val($(this).attr('rieclatip_id'))
         $('#rieCla_id').val($(this).attr("riecla_id"));
         $('#ct').val($(this).attr('rieCla_categoria'));
+        $('#tipo').val($(this).attr('rieClaTip_tipo'));
+    })
+    $('body').delegate('.modificar2', 'click', function () {
+        $("#accion").val('2')
+        $('#tip_id').val($(this).attr('rieclatip_id'))
+        $('#rieCla_id').val($(this).attr("riecla_id"));
+        $('#categoria_id').val($(this).attr('rieCla_id'));
         $('#tipo').val($(this).attr('rieClaTip_tipo'));
     })
     $('body').delegate('.eliminar', 'click', function () {
@@ -143,12 +180,12 @@
         $('#ct *').remove();
         $.each(msg, function (key, val) {
             $.each(val, function (indice, campo) {
-                option += "<option value='"+key+"'>"+indice+"</option>";
+                option += "<option value='" + key + "'>" + indice + "</option>";
                 cuerpo += "<table class='tablesst'>";
                 cuerpo += "<thead>";
                 cuerpo += "<tr>";
                 cuerpo += "<th   style='text-align:center'><b>" + indice + "</b></th>";
-                cuerpo += "<th  style='text-align:center'> <i class='fa fa-pencil-square-o fa-2x modificarcategoria' riecla_id='" + key + "'  title='Modificar'></i></th>";
+                cuerpo += "<th  style='text-align:center'> <i class='fa fa-pencil-square-o fa-2x modificarcategoria' data-toggle='modal' data-target='#myModal2' riecla_id='" + key + "'  title='Modificar'></i></th>";
                 cuerpo += "<th><i class='fa fa-trash-o fa-2x eliminarcategoria' rieCla_id='" + key + "'  title='Eliminar'></i></th>";
                 cuerpo += "</tr>";
                 cuerpo += "<tr>";
@@ -162,7 +199,7 @@
                     if (campo[0] != null) {
                         cuerpo += "<tr>";
                         cuerpo += "<td><b>" + campo[1] + "</b   ></td>";
-                        cuerpo += "<td class='transparent'><i class='fa fa-pencil-square-o fa-2x modificar' data-toggle='modal' data-target='#myModal' title='Modificar' rieclatip_id='"+campo[0]+"' rieclatip_tipo='"+campo[1]+"' riecla_id='"+key+"' rieCla_categoria='"+key+"' title='Modificar'></i></td>";
+                        cuerpo += "<td class='transparent'><i class='fa fa-pencil-square-o fa-2x modificar' data-toggle='modal' data-target='#myModal' title='Modificar' rieclatip_id='" + campo[0] + "' rieclatip_tipo='" + campo[1] + "' riecla_id='" + key + "' rieCla_categoria='" + key + "' title='Modificar'></i></td>";
                         cuerpo += "<td class='transparent'><i class='fa fa-trash-o fa-2x eliminar' rieCla_id='" + key + "' rieClaTip_id='" + campo[0] + "' title='Eliminar'></i></td>";
                         cuerpo += "</tr>";
                     }
@@ -196,6 +233,28 @@
                 });
 
     });
+    $('#guardartipo2').click(function () {
+        if ($('#categoria_m').val() == "") {
+            alerta('rojo', 'Campo Categoria Obligatorio')
+            return false;
+        }
+        $.post(
+                "<?php echo base_url("index.php/Riesgo/update") ?>",
+        {categoria:$('#categoria_m').val(),id_categoria:$('#categoria_id').val()}
+                )
+                .done(function (msg) {
+                    if (msg != 1){
+                        agregarTabla(msg);
+                        alerta("verde", "Categoria guardada con exito");
+                    }else
+                        alerta("amarillo", "Datos ya existentes en el sistema");
+                    $('#myModal2').modal("hide");
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error al guardar el tipo por favor comunicarse con el administrador");
+                });
+
+    });
 
     $('.categoria').click(function () {
         var categoria = $('#cat').val();
@@ -215,7 +274,7 @@
                 })
                 ;
     });
-    
-       
+
+
 
 </script>    

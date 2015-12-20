@@ -2,6 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
 /**
  *
  * @package     NYGSOFT
@@ -39,18 +40,18 @@ class Riesgo extends My_Controller {
         if (!empty($this->data['empresa'][0]->Dim_id) && !empty($this->data['empresa'][0]->Dimdos_id)) {
             if (!empty($this->input->post("rie_id"))) {
                 $this->data['carpetas'] = $this->Registrocarpeta_model->detailxriesgocarpetas($this->input->post('rie_id'));
-                 $carpeta = $this->Registrocarpeta_model->detailxriesgo($this->input->post('rie_id'));
+                $carpeta = $this->Registrocarpeta_model->detailxriesgo($this->input->post('rie_id'));
                 $d = array();
                 foreach ($carpeta as $c) {
-                    $d[$c->regCar_id][$c->regCar_nombre." - ".$c->regCar_descripcion][] = array(
-                        $c->reg_archivo, 
-                        $c->reg_descripcion, 
-                        $c->reg_version, 
-                        $c->usu_nombre." ".$c->usu_apellido, 
-                        $c->reg_tamano, 
+                    $d[$c->regCar_id][$c->regCar_nombre . " - " . $c->regCar_descripcion][] = array(
+                        $c->reg_archivo,
+                        $c->reg_descripcion,
+                        $c->reg_version,
+                        $c->usu_nombre . " " . $c->usu_apellido,
+                        $c->reg_tamano,
                         $c->reg_fechaCreacion,
                         $c->reg_id
-                            );
+                    );
                 }
                 $this->data['carpeta'] = $d;
                 $this->load->model("Planes_model");
@@ -217,13 +218,12 @@ class Riesgo extends My_Controller {
             redirect('index.php/administrativo/empresa', 'location');
         }
     }
-    
-    function listadoriesgocargos(){
+
+    function listadoriesgocargos() {
         $this->load->model('Riesgocargo_model');
         $data["cargoId"] = $this->Riesgocargo_model->detailxcargoxid($this->input->post('rie_id'));
         $this->output->set_content_type('application/json')->set_output(json_encode($data["cargoId"]));
     }
-    
 
     function estadosaceptacion() {
         $this->load->model("Estadoaceptacion_model");
@@ -323,6 +323,25 @@ class Riesgo extends My_Controller {
         }
     }
 
+    function update() {
+        try {
+            $this->load->model("Riesgoclasificacion_model");
+            $this->Riesgoclasificacion_model->create($this->input->post('categoria'), $this->input->post('id_categoria'));
+            $categoria = $this->Riesgoclasificacion_model->detailandtipo();
+            $i = array();
+            foreach ($categoria as $c) {
+                $i[$c->rieCla_id][$c->rieCla_categoria][] = array(
+                    $c->rieClaTip_id,
+                    $c->rieClaTip_tipo
+                );
+            }
+
+            $this->output->set_content_type('application/json')->set_output(json_encode($i));
+        } catch (exception $e) {
+            
+        }
+    }
+
     function guardarclasificacionriesgo() {
         try {
             $this->load->model("Riesgoclasificacion_model");
@@ -406,7 +425,7 @@ class Riesgo extends My_Controller {
                 );
             }
             $this->output->set_content_type('application/json')->set_output(json_encode($i));
-        }else{
+        } else {
             echo 1;
         }
     }
@@ -415,6 +434,7 @@ class Riesgo extends My_Controller {
         $this->load->model("Riesgo_model");
         $this->Riesgo_model->eliminar_riesgos($this->input->post());
     }
+
     function eliminar() {
         $this->load->model("Riesgoclasificacion_model");
         $this->Riesgoclasificacion_model->eliminar(

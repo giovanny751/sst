@@ -40,14 +40,21 @@ class Riesgoclasificacion_model extends CI_Model {
         }
     }
 
-    function create($categoria) {
+    function create($categoria, $rieCla_id = null) {
         try {
-            $this->db->set("rieCla_categoria", $categoria);
-            $this->db->insert("riesgo_clasificacion");
+            if ($rieCla_id == null) {
+                $this->db->set("rieCla_categoria", $categoria);
+                $this->db->insert("riesgo_clasificacion");
+            } else {
+                $this->db->set("rieCla_categoria", $categoria);
+                $this->db->where("rieCla_id", $rieCla_id);
+                $this->db->update("riesgo_clasificacion");
+            }
         } catch (exception $e) {
             
         }
     }
+
     function eliminar($id) {
         try {
             $this->db->where("rieClaTip_id", $id);
@@ -56,7 +63,8 @@ class Riesgoclasificacion_model extends CI_Model {
             
         }
     }
-    function eliminarCategoria($rieCat_id){
+
+    function eliminarCategoria($rieCat_id) {
         try {
             $this->db->where("rieCla_id", $rieCat_id);
             $this->db->delete("riesgo_clasificacion");
@@ -65,6 +73,7 @@ class Riesgoclasificacion_model extends CI_Model {
             
         }
     }
+
 }
 
 ?>
