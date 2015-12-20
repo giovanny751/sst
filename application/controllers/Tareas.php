@@ -2,6 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
 /**
  *
  * @package     NYGSOFT
@@ -21,86 +22,105 @@ class Tareas extends My_Controller {
     }
 
     function nuevatarea() {
-            $this->load->model('Estados_model');
-            $this->load->model('Tarea_model');
-            $this->load->model('Cargo_model');
-            $this->load->model('Planes_model');
-            $this->load->model('Avancetarea_model');
-            $this->load->model('Actividad_model');
-            $this->load->model('Dimension2_model');
-            $this->load->model('Dimension_model');
-            $this->load->model('Tipo_model');
-            $this->load->model('Notificacion_model');
-            $this->load->model("Riesgoclasificacion_model");
-            $this->data['tareas'] = $this->Tarea_model->detail();
-            $this->load->model("Registrocarpeta_model");
-            $this->load->model('Empresa_model');
-            $this->load->model('Norma_model');
-            $this->load->model('Normaarticulo_model');
-            $this->data['empresa'] = $this->Empresa_model->detail();
-            $this->data['norma'] = $this->Norma_model->detail();
-            if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
-                if (!empty($this->input->post("tar_id"))):
-                    if (!empty($this->input->post("nuevoavance")))
-                        $this->data["nuevoavance"] = $this->input->post("nuevoavance");
-                    $this->data['riesgos_guardada'] = $this->Tarea_model->lista_riesgos_guardados($this->input->post('tar_id'));
-                    $this->load->model('Empleado_model');
-                    $carpeta = $this->Registrocarpeta_model->detailxtareas($this->input->post('tar_id'));
-                    $this->data['carpetas'] = $this->Registrocarpeta_model->detailxtareascarpetas($this->input->post('tar_id'));
-                    $d = array();
-                    foreach ($carpeta as $c) {
-                        $d[$c->regCar_id][$c->regCar_nombre . " - " . $c->regCar_descripcion][] = array(
-                            $c->reg_archivo,
-                            $c->reg_descripcion,
-                            $c->reg_version,
-                            $c->usu_nombre . " " . $c->usu_apellido,
-                            $c->reg_tamano,
-                            $c->reg_fechaCreacion,
-                            $c->regCar_id
-                        );
-                    }
-                    $this->data["avance"] = "";
-                    if (!empty($this->input->post('avaTar_id'))):
-                        $this->load->model("Avancetarea_model");
-                        $this->data["avance"] = $this->Avancetarea_model->avancexTarea($this->input->post("avaTar_id"));
-                    endif;
-                    $this->data['carpeta'] = $d;
-                    $this->data['tarea'] = $this->Tarea_model->detailxid($this->input->post("tar_id"))[0];
+        $this->load->model('Estados_model');
+        $this->load->model('Tarea_model');
+        $this->load->model('Cargo_model');
+        $this->load->model('Planes_model');
+        $this->load->model('Avancetarea_model');
+        $this->load->model('Actividad_model');
+        $this->load->model('Dimension2_model');
+        $this->load->model('Dimension_model');
+        $this->load->model('Tipo_model');
+        $this->load->model('Notificacion_model');
+        $this->load->model("Riesgoclasificacion_model");
+        $this->data['tareas'] = $this->Tarea_model->detail();
+        $this->load->model("Registrocarpeta_model");
+        $this->load->model('Empresa_model');
+        $this->load->model('Norma_model');
+        $this->load->model('Planes_model');
+        $this->load->model('Normaarticulo_model');
+        $this->data['empresa'] = $this->Empresa_model->detail();
+        $this->data['norma'] = $this->Norma_model->detail();
+        if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
+            if (!empty($this->input->post("tar_id"))):
 
-                    $this->data['tarea_norma'] = $this->Tarea_model->tarea_norma($this->input->post("tar_id"));
-                    $this->data['normaarticulo'] = $this->Normaarticulo_model->detailxId($this->data['tarea']->nor_id);
-
-                    $this->data["hijo"] = $this->Actividad_model->actividadxPlan($this->data['tarea']->pla_id);
-                    $this->data['empleado'] = $this->Empleado_model->empleadoxcargo($this->data['tarea']->car_id);
-                endif;
-                $this->data['pla_id'] = "";
-                if (!empty($this->input->post("pla_id")) || (!empty($this->data['tarea']->pla_id))) {
-                    if (!empty($this->input->post("pla_id")))
-                        $this->data['pla_id'] = $this->input->post("pla_id");
-                    if (!empty($this->data['tarea']->pla_id))
-                        $this->data['pla_id'] = $this->data['tarea']->pla_id;
-
-                    $this->load->model('Actividadpadre_model');
-                    $this->data["actividades"] = $this->Actividadpadre_model->detailxplaid($this->data['pla_id']);
-                    if (!empty($this->data['tarea']->actPad_id)) {
-                        $this->load->model('Actividad_model');
-                        $this->data["actividadhijo"] = $this->Actividad_model->consultaxActividad($this->data['tarea']->actPad_id);
-                    }
+                $this->data['todo_izq'] = $this->Planes_model->min_id_tarea();
+                $this->db->where('tar_id <', $this->input->post('tar_id'));
+                $this->data['izq'] = $this->Planes_model->max_id_tarea();
+                if (empty($this->data['izq'])) {
+                    $this->data['izq'] = $this->data['todo_izq'];
                 }
-                $this->data['categoria'] = $this->Riesgoclasificacion_model->detail();
-                $this->data['notificacion'] = $this->Notificacion_model->detail();
-                $this->data['estados'] = $this->Estados_model->detail();
-                $this->data['tipo'] = $this->Tipo_model->detail();
-                $this->data['planes'] = $this->Planes_model->detail();
-                $this->data['cargo'] = $this->Cargo_model->allcargos();
-                $this->data['dimension'] = $this->Dimension_model->detail();
-                $this->data['dimension2'] = $this->Dimension2_model->detail();
-                $this->data['post'] = $this->input->post();
-                $this->data['riesgos'] = $this->Tarea_model->lista_riesgos();
-                $this->layout->view("tareas/nuevatarea", $this->data);
-            } else {
-                redirect('index.php/administrativo/empresa', 'location');
+                $this->db->where('tar_id >', $this->input->post('tar_id'));
+                $this->data['derecha'] = $this->Planes_model->select_id_tarea();
+                $this->data['max_der'] = $this->Planes_model->max_id_tarea();
+
+                if (empty($this->data['derecha'])) {
+                    $this->data['derecha'] = $this->data['max_der'];
+                }
+
+
+
+                if (!empty($this->input->post("nuevoavance")))
+                    $this->data["nuevoavance"] = $this->input->post("nuevoavance");
+                $this->data['riesgos_guardada'] = $this->Tarea_model->lista_riesgos_guardados($this->input->post('tar_id'));
+                $this->load->model('Empleado_model');
+                $carpeta = $this->Registrocarpeta_model->detailxtareas($this->input->post('tar_id'));
+                $this->data['carpetas'] = $this->Registrocarpeta_model->detailxtareascarpetas($this->input->post('tar_id'));
+                $d = array();
+                foreach ($carpeta as $c) {
+                    $d[$c->regCar_id][$c->regCar_nombre . " - " . $c->regCar_descripcion][] = array(
+                        '<a href="' . base_url('') . $c->reg_ruta . '/' . $c->reg_id . '/' . $c->reg_archivo . '">' . $c->reg_archivo . "</a>",
+                        $c->reg_descripcion,
+                        $c->reg_version,
+                        $c->usu_nombre . " " . $c->usu_apellido,
+                        $c->reg_tamano,
+                        $c->reg_fechaCreacion,
+                        $c->reg_id
+                    );
+                }
+                $this->data["avance"] = "";
+                if (!empty($this->input->post('avaTar_id'))):
+                    $this->load->model("Avancetarea_model");
+                    $this->data["avance"] = $this->Avancetarea_model->avancexTarea($this->input->post("avaTar_id"));
+                endif;
+                $this->data['carpeta'] = $d;
+                $this->data['tarea'] = $this->Tarea_model->detailxid($this->input->post("tar_id"))[0];
+
+                $this->data['tarea_norma'] = $this->Tarea_model->tarea_norma($this->input->post("tar_id"));
+                $this->data['normaarticulo'] = $this->Normaarticulo_model->detailxId($this->data['tarea']->nor_id);
+
+                $this->data["hijo"] = $this->Actividad_model->actividadxPlan($this->data['tarea']->pla_id);
+                $this->data['empleado'] = $this->Empleado_model->empleadoxcargo($this->data['tarea']->car_id);
+            endif;
+            $this->data['pla_id'] = "";
+            if (!empty($this->input->post("pla_id")) || (!empty($this->data['tarea']->pla_id))) {
+                if (!empty($this->input->post("pla_id")))
+                    $this->data['pla_id'] = $this->input->post("pla_id");
+                if (!empty($this->data['tarea']->pla_id))
+                    $this->data['pla_id'] = $this->data['tarea']->pla_id;
+
+                $this->load->model('Actividadpadre_model');
+                $this->data["actividades"] = $this->Actividadpadre_model->detailxplaid($this->data['pla_id']);
+                if (!empty($this->data['tarea']->actPad_id)) {
+                    $this->load->model('Actividad_model');
+                    $this->data["actividadhijo"] = $this->Actividad_model->consultaxActividad($this->data['tarea']->actPad_id);
+                }
             }
+            $this->data['categoria'] = $this->Riesgoclasificacion_model->detail();
+            $this->data['notificacion'] = $this->Notificacion_model->detail();
+            $this->data['estados'] = $this->Estados_model->detail();
+            $this->data['tipo'] = $this->Tipo_model->detail();
+            $this->data['planes'] = $this->Planes_model->detail();
+            $this->data['cargo'] = $this->Cargo_model->allcargos();
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->data['dimension2'] = $this->Dimension2_model->detail();
+            $this->data['post'] = $this->input->post();
+            $this->data['riesgos'] = $this->Tarea_model->lista_riesgos();
+
+            $this->layout->view("tareas/nuevatarea", $this->data);
+        } else {
+            redirect('index.php/administrativo/empresa', 'location');
+        }
     }
 
     function consultacarpeta() {
@@ -110,14 +130,14 @@ class Tareas extends My_Controller {
         $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
     }
 
-    function consultaTipoActividad(){
+    function consultaTipoActividad() {
         $this->load->model("Actividad_model");
-        if(!empty($this->input->post('actividad'))):
-        $data = $this->Actividad_model->consultaXid($this->input->post('actividad'));
-        echo $data[0]->tip_id;
+        if (!empty($this->input->post('actividad'))):
+            $data = $this->Actividad_model->consultaXid($this->input->post('actividad'));
+            echo $data[0]->tip_id;
         endif;
     }
-    
+
     function consultaarticulo() {
         $this->load->model("Norma_model");
         $norma = $this->Norma_model->normaarticulo($this->input->post("norma"));
@@ -139,6 +159,12 @@ class Tareas extends My_Controller {
 
         $this->load->model("Registrocarpeta_model");
         $this->Registrocarpeta_model->eliminarcarpeta($this->input->post("carpeta"));
+    }
+
+    function modificarregistro() {
+        $this->load->model('Registro_model');
+        $datos = $this->Registro_model->modificarregistro($this->input->post("registro"));
+        $this->output->set_content_type('application/json')->set_output(json_encode($datos));
     }
 
     function eliminartarea() {
@@ -201,18 +227,21 @@ class Tareas extends My_Controller {
                     $post['reg_archivo'] = basename($_FILES['archivo']['name']);
 
             $ind_id = $post['ind_id'];
-            $targetPath = "./uploads/indicador/".$ind_id."/";
+            $targetPath = "./uploads/indicador/" . $ind_id . "/";
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
             //De la carpeta idRegistro, creamos carpeta con el id del empleado
             $post['reg_ruta'] = $targetPath;
             $idregistro = $this->Registro_model->guardar_registro($post);
-            $targetPath = $targetPath .$idregistro;
+            $targetPath = $targetPath . $idregistro;
             mkdir($targetPath, 0777, true);
-            $targetPath = $targetPath.'/' . basename($_FILES['archivo']['name']);
-            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $targetPath)) {    
-            } else { }
+            $targetPath = $targetPath . '/' . basename($_FILES['archivo']['name']);
+            if (move_uploaded_file($_FILES['archivo']['tmp_name'], $targetPath)) {
+                
+            } else {
+                
+            }
             $data = $this->Registro_model->registroxcarpeta($post['regCar_id']);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
@@ -229,6 +258,7 @@ class Tareas extends My_Controller {
             $post["reg_fechaCreacion"] = $fecha->format('Y-m-d H:i:s');
             $post["userCreator"] = $this->data["usu_id"];
             $post["tar_id"] = $this->input->post("tar_id");
+            $post["reg_id"] = $this->input->post("reg_id");
             $targetPath = "./uploads/tareas_registro/";
             //De la carpeta idRegistro, creamos carpeta con el id del empleado
             if (!file_exists($targetPath))
@@ -236,12 +266,18 @@ class Tareas extends My_Controller {
             $targetPath = "./uploads/tareas_registro/" . $post["tar_id"];
             if (!file_exists($targetPath))
                 mkdir($targetPath, 0777, true);
-            $post['reg_ruta'] = $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
+            $post['reg_ruta'] = $target_path = $targetPath;
             $post["reg_archivo"] = basename($_FILES['archivo']['name']);
+
+            $id = $this->Registro_model->guardar_registro($post);
+            $target_path = $targetPath . '/' . $id;
+            if (!file_exists($target_path))
+                mkdir($target_path, 0777, true);
+
+            $target_path = $targetPath . '/' . $id . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
             }
-            $this->Registro_model->guardar_registro($post);
             $data = $this->Registro_model->registroxcarpeta($this->input->post('regCar_id'));
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
@@ -445,12 +481,12 @@ class Tareas extends My_Controller {
     }
 
     function listadotareas() {
-            $this->load->model('Planes_model');
-            $this->load->model('Tarea_model');
-            $this->data["planes"] = $this->Planes_model->detail();
-            $this->data["tareas"] = $this->Tarea_model->detail();
-            $this->data["responsables"] = $this->Tarea_model->responsables();
-            $this->layout->view("tareas/listadotareas", $this->data);
+        $this->load->model('Planes_model');
+        $this->load->model('Tarea_model');
+        $this->data["planes"] = $this->Planes_model->detail();
+        $this->data["tareas"] = $this->Tarea_model->detail();
+        $this->data["responsables"] = $this->Tarea_model->responsables();
+        $this->layout->view("tareas/listadotareas", $this->data);
     }
 
     function consultatareas() {
@@ -470,7 +506,8 @@ class Tareas extends My_Controller {
                         "nombretarea" => $t->tar_nombre,
                         "nombre" => $t->Emp_Nombre,
                         "tipo" => $t->tip_tipo,
-                        "cantidadriesgo" => $t->cantidadriesgo
+                        "cantidadriesgo" => $t->cantidadriesgo,
+                        "progreso" => (!empty($t->progreso)?$t->progreso.'%':'0%')
                     )
                 );
             endforeach;
@@ -482,8 +519,8 @@ class Tareas extends My_Controller {
     }
 
     function listadoactividades() {
-            $this->load->model('Estados_model');
-            $this->layout->view("tareas/listadoactividades");
+        $this->load->model('Estados_model');
+        $this->layout->view("tareas/listadoactividades");
     }
 
     function registro() {
@@ -514,7 +551,7 @@ class Tareas extends My_Controller {
     }
 
     function agregarregistro() {
-            $this->layout->view("tareas/agregarregistro");
+        $this->layout->view("tareas/agregarregistro");
     }
 
     function eliminar_actividad_hijo() {
@@ -576,7 +613,7 @@ class Tareas extends My_Controller {
     }
 
     function listadoregistros() {
-            $this->layout->view("tareas/listadoregistros");
+        $this->layout->view("tareas/listadoregistros");
     }
 
     function guardarcarpeta() {
@@ -648,7 +685,7 @@ class Tareas extends My_Controller {
     }
 
     function configuracionsistema() {
-            $this->layout->view("tareas/configuracionsistema");
+        $this->layout->view("tareas/configuracionsistema");
     }
 
     function autocompletar() {
@@ -719,9 +756,10 @@ class Tareas extends My_Controller {
         else
             echo 1;
     }
-    function traer_riesgos(){
+
+    function traer_riesgos() {
         $this->load->model("Tarea_model");
-        $this->data['riesgos'] = $this->Tarea_model->lista_riesgos($this->input->post('clasificacionriesgo'),$this->input->post('tiposriesgos'));
+        $this->data['riesgos'] = $this->Tarea_model->lista_riesgos($this->input->post('clasificacionriesgo'), $this->input->post('tiposriesgos'));
         $this->output->set_content_type('application/json')->set_output(json_encode($this->data['riesgos']));
     }
 

@@ -111,14 +111,14 @@
                 $.each(nombreplan, function (nombre, tareaid) {
                     table += "<thead><tr><th colspan='12'>"+nombre+"</th></tr>";
                         table += "<tr>";
-                        table += "<th>AGREGAR AVANCE</th>"
-                        table += "<th>AVANCE</th>"
-                        table += "<th>TIPO</th>"
-                        table += "<th>NOMBRE DE LA TAREA</th>"
-                        table += "<th>FECHA INICIO</th>"
-                        table += "<th>FECHA FIN</th>"
-                        table += "<th>DURACIÓN PRESUPUESTADA</th>"
-                        table += "<th>RESPONSABLES</th>"
+                        table += "<th width='5%'>AGREGAR AVANCE</th>"
+                        table += "<th width='5%'>AVANCE</th>"
+                        table += "<th width='5%'>TIPO</th>"
+                        table += "<th width='20%'>NOMBRE DE LA TAREA</th>"
+                        table += "<th width='8%'>FECHA INICIO</th>"
+                        table += "<th width='8%'>FECHA FIN</th>"
+                        table += "<th width='14%'>DURACIÓN PRESUPUESTADA</th>"
+                        table += "<th width='10%'>RESPONSABLES</th>"
                         table += "<th># RIESGOS</th>"
                         table += "<th>RIESGOS</th>"
                         table += "<th>EDITAR</th>"
@@ -132,7 +132,7 @@
                             if (typeof numeracion != "string"){
                                     table += "<tr>";
                                     table += '<td style="text-align:center"><i class="fa fa-bookmark-o btn btn-default nuevoavance" title="Nuevo avance" tar_id="'+ idtar+'" ></i></td>';
-                                    table += "<td></td>";
+                                    table += "<td>"+numeracion.progreso+"</td>";
                                     table += "<td>"+numeracion.tipo+"</td>";
                                     table += "<td>"+numeracion.nombretarea+"</td>";
                                     table += "<td>"+numeracion.fechainicio+"</td>";

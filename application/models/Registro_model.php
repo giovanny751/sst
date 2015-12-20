@@ -69,14 +69,15 @@ class Registro_model extends CI_Model {
 
     function guardar_registro($post) {
         try {
+//            print_r($post);
             if(!empty($post['reg_id'])){
                 $this->db->where("reg_id", $post['reg_id']);
                 $this->db->update("registro", $post);
+                return $post['reg_id'];
             }else{
                 $this->db->insert("registro", $post);
+                return $this->db->insert_id();
             }
-            
-            return $this->db->insert_id();
         } catch (exception $e) {
             
         }
@@ -105,6 +106,15 @@ class Registro_model extends CI_Model {
         try {
             $this->db->where("reg_id", $id);
             $this->db->delete("registro");
+        } catch (exception $e) {
+            
+        }
+    }
+    function modificarregistro($id) {
+        try {
+            $this->db->where("reg_id", $id);
+            $datos=$this->db->get("registro");
+            return $datos->result();
         } catch (exception $e) {
             
         }

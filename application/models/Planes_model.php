@@ -369,6 +369,21 @@ class Planes_model extends CI_Model {
         }
     }
 
+    
+
+    function max_id_next($id) {
+        try {
+            $this->db->select('pla_id');
+            $datos = $this->db->get('planes', 1, 1);
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->pla_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
     function select_id() {
         try {
             $this->db->select('pla_id');
@@ -382,14 +397,58 @@ class Planes_model extends CI_Model {
             
         }
     }
-
-    function max_id_next($id) {
+    function max_id_tarea() {
         try {
-            $this->db->select('pla_id');
-            $datos = $this->db->get('planes', 1, 1);
+            $this->db->select_max('tar_id');
+            $datos = $this->db->get('tarea');
             $datos = $datos->result();
             if (count($datos) > 0)
-                return $datos[0]->pla_id;
+                return $datos[0]->tar_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+
+    function min_id_tarea() {
+        try {
+            $this->db->select_min('tar_id');
+            $datos = $this->db->get('tarea');
+            $datos = $datos->result();
+//        echo $this->db->last_query();
+            if (count($datos) > 0)
+                return $datos[0]->tar_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+
+    
+
+    function max_id_next_tarea($id) {
+        try {
+            $this->db->select('tar_id');
+            $datos = $this->db->get('tarea', 1, 1);
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->tar_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+    
+    function select_id_tarea() {
+        try {
+            $this->db->select('tar_id');
+            $datos = $this->db->get('tarea', 1, 1);
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->tar_id;
             else
                 return '';
         } catch (exception $e) {

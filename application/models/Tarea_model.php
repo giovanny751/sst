@@ -126,6 +126,8 @@ class Tarea_model extends CI_Model {
             $this->db->select("tarea.tar_id");
             $this->db->select("tipo.tip_tipo");
             $this->db->select("planes.pla_nombre");
+            $this->db->select("max(avance_tarea.avaTar_fecha) as ultimoAvance");
+            $this->db->select("(select avaTar_progreso  from avance_tarea where tar_id=tarea.tar_id ORDER BY avaTar_fecha desc limit 1  )  progreso",false);
             $this->db->select("planes.pla_id");
             $this->db->select("(select count(rie_id) as cantidadriesgo from tarea_riesgos where tarea_riesgos.tar_id = tarea.tar_id) cantidadriesgo",false);
             $this->db->order_by("planes.pla_id");
@@ -137,6 +139,8 @@ class Tarea_model extends CI_Model {
             $this->db->join("empleado", "empleado.Emp_id = tarea.emp_id", "left");
             $this->db->group_by('tarea.tar_id');
             $tarea = $this->db->get("planes");
+            
+            
             return $tarea->result();
         } catch (exception $e) {
             

@@ -186,10 +186,7 @@
 
         <style>
             //2015-10-29
-            .blockOverlay{
-                z-index:10000 !important;
-            }
-
+            
             .tab-pane{
                 color: black;
             }
@@ -307,8 +304,8 @@
                     heading: texto
                 });
             }
-            
-            
+
+
             $('body').delegate('.number', 'keypress', function (tecla) {
                 if (tecla.charCode > 0 && tecla.charCode < 48 || tecla.charCode > 57)
                     return false;
@@ -316,7 +313,7 @@
             //numero que permite comas        
             $('body').delegate('.number2', 'keypress', function (tecla) {
                 console.log(tecla.charCode);
-                if (tecla.charCode > 0 && (tecla.charCode < 48 || tecla.charCode > 57) && (tecla.charCode < 45 || tecla.charCode > 47) )
+                if (tecla.charCode > 0 && (tecla.charCode < 48 || tecla.charCode > 57) && (tecla.charCode < 45 || tecla.charCode > 47))
                     return false;
             });
             $('body').delegate('.miles', 'keyup', function (tecla) {
@@ -360,15 +357,16 @@
                 }
             }
 
-            ;(function($){
+            ;
+            (function ($) {
                 $.fn.datepicker.dates['es'] = {
-                        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
-                        daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
-                        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"],
-                        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+                    days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+                    daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+                    daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"],
+                    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
                 };
-        }(jQuery));
+            }(jQuery));
 
             $(".email").change(function () {
                 email("email");
@@ -378,20 +376,20 @@
                 format: "yyyy-mm-dd",
                 autoclose: true
             });
-            
 
-            function difFecha(idFecha1,idFecha2){
+
+            function difFecha(idFecha1, idFecha2) {
                 var valFecha1 = $(idFecha1).val();
                 var valFecha2 = $(idFecha2).val();
                 var arrayFecha1 = valFecha1.split("-");
                 var arrayFecha2 = valFecha2.split("-");
-                var fecha1=new Date(arrayFecha1[0],arrayFecha1[1]-1,arrayFecha1[2]);
-                var fecha2=new Date(arrayFecha2[0],arrayFecha2[1]-1,arrayFecha2[2]);
-                var resta=(fecha2-fecha1)/1000/3600/24; 
-                if(resta >= 0){
+                var fecha1 = new Date(arrayFecha1[0], arrayFecha1[1] - 1, arrayFecha1[2]);
+                var fecha2 = new Date(arrayFecha2[0], arrayFecha2[1] - 1, arrayFecha2[2]);
+                var resta = (fecha2 - fecha1) / 1000 / 3600 / 24;
+                if (resta >= 0) {
                     return resta;
-                }else{
-                    alerta("amarillo","Fecha no es valida");
+                } else {
+                    alerta("amarillo", "Fecha no es valida");
                     return false;
                 }
             }
@@ -434,3 +432,8 @@
                 $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
             });
         </script>
+<style>
+    .blockOverlay{
+        z-index:10000 !important;
+    }
+</style>

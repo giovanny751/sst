@@ -152,31 +152,31 @@
                         tbody += "<table class='tablesst'>\n\
                                         <thead style='text-align:center;'>\n\
                                         <tr><th colspan='11'>" + tipo + "</th></tr>\n\
-                                        <th>Tipo</th>\n\
-                                        <th>Descripción</th>\n\
-                                        <th><?php echo $empresa[0]->Dim_id ?></th>\n\
-                                        <th><?php echo $empresa[0]->Dimdos_id ?></th>\n\
-                                        <th>Lugar/Zona</th>\n\
-                                        <th>Actividades</th>\n\
-                                        <th>Cargo</th>\n\
-                                        <th>Fecha Creación</th>\n\
-                                        <th>Estado de aceptación</th>\n\
-                                        <th>Tareas(activas)</th>\n\
-                                        <th>Accion</th>\n\
+                                        <tr><th width='7%'>Tipo</th>\n\
+                                        <th width='15%'>Descripción</th>\n\
+                                        <th width='10%'><?php echo $empresa[0]->Dim_id ?></th>\n\
+                                        <th width='10%'><?php echo $empresa[0]->Dimdos_id ?></th>\n\
+                                        <th width='7%'>Lugar/Zona</th>\n\
+                                        <th width='15%'>Actividades</th>\n\
+                                        <th width='5%'>Cargo</th>\n\
+                                        <th width='7%'>Fecha Creación</th>\n\
+                                        <th width='8%'>Estado de aceptación</th>\n\
+                                        <th width='8%'>Tareas(activas)</th>\n\
+                                        <th width='8%'>Accion</th></tr>\n\
                                     </thead>";
                         $.each(data, function (key, val) {
                             tbody += "<tr>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.rieClaTip_tipo + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.rie_descripcion + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.des1 + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.des2 + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.rie_zona + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.rie_actividad + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.rieClaTip_tipo !=null?val.rieClaTip_tipo :'')  + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.rie_descripcion!=null?val.rie_descripcion:'') + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.des1!=null?val.des1:'') + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.des2!=null?val.des2:'') + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.rie_zona!=null?val.rie_zona:'') + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.rie_actividad!=null?val.rie_actividad:'') + "</td>";
                             tbody += "<td class='transparent' style='background-color:" + val.rieCol_colorhtml + "'>\n\
                                             <i class='fa fa-street-view fa-2x cargoMultiple' title='Cargos' rie_id='" + val.rie_id + "' ></i>\n\
                                     </td>"; //Cargos
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.rie_fecha + "</td>";
-                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + val.estado + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.rie_fecha!=null?val.rie_fecha:'')  + "</td>";
+                            tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'>" + (val.estado!=null?val.estado:'') + "</td>";
                             tbody += "<td style='background-color:" + val.rieCol_colorhtml + "'></td>";
                             tbody += '<td class="transparent" style="background-color:' + val.rieCol_colorhtml + '">\n\
                                             <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" rie_id="' + val.rie_id + '" ></i>\n\

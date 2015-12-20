@@ -6,12 +6,12 @@
         <!--<div class="circuloIcon" ><i class="fa fa-folder-open fa-3x"></i></div>-->
     </div>
     <div class="col-md-6">
-        <div id="posicionFlecha">
-            <div class="flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble"><i class="fa fa-step-backward fa-2x"></i></div>
-            <div class="flechaHeader Izquierda" metodo="flechaIzquierda"><i class="fa fa-arrow-left fa-2x"></i></div>
-            <div class="flechaHeader Derecha" metodo="flechaDerecha"><i class="fa fa-arrow-right fa-2x"></i></div>
-            <div class="flechaHeader DerechaDoble" metodo="flechaDerechaDoble"><i class="fa fa-step-forward fa-2x"></i></div>
-            <div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div>
+            <div id="posicionFlecha">
+            <div class="envio flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble" nuevo="<?php echo (isset($todo_izq) ? $todo_izq : '') ?>"><i class="fa fa-step-backward fa-2x"></i></div>
+            <div class="envio flechaHeader Izquierda" metodo="flechaIzquierda" nuevo="<?php echo (isset($izq) ? $izq : '') ?>"><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div class="envio flechaHeader Derecha" metodo="flechaDerecha" nuevo="<?php echo (isset($derecha) ? $derecha : '') ?>"><i class="fa fa-arrow-right fa-2x"></i></div>
+            <div class="envio flechaHeader DerechaDoble" metodo="flechaDerechaDoble" nuevo="<?php echo (isset($max_der) ? $max_der : '') ?>"><i class="fa fa-step-forward fa-2x"></i></div>
+            <a href="<?php echo base_url('index.php/Tareas/listadotareas') ?>"><div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div></a>
         </div>
     </div>
 </div>
@@ -461,8 +461,8 @@
                                                                                     <td><?php echo $campocar[4] ?></td>
                                                                                     <td><?php echo $campocar[5] ?></td>
                                                                                     <td>
-                                                                                        <i class="fa fa-times fa-2x eliminarregistro btn btn-danger" title="Eliminar" reg_id="<?php echo $campocar[6] ?>"></i>
-                                                                                        <i class="fa fa-pencil-square-o fa-2x modificarregistro btn btn-info" title="Modificar" reg_id="<?php echo $campocar[6] ?>" data-target="#myModal15" data-toggle="modal"></i>
+                                                                                        <i class="fa fa-times fa-2x eliminarregistro2 btn btn-danger" title="Eliminar" reg_id="<?php echo $campocar[6] ?>"></i>
+                                                                                        <i class="fa fa-pencil-square-o fa-2x modificarregistro btn btn-info" title="Modificar" reg_id="<?php echo $campocar[6] ?>" data-target="#myModal" data-toggle="modal"></i>
                                                                                     </td>
                                                                                 </tr>   
                                                         <?php endforeach; ?>
@@ -534,6 +534,7 @@
                     <div class="modal-body">
                         <form method="post" id="formactividadpadre">
                             <input type="hidden" value="<?php echo $tarea->tar_id; ?>" name="tar_id" id="tar_id_registro"/>
+                            <input type="hidden" value="" name="reg_id" id="reg_id"/>
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                     <label for="carpeta">Carpeta:</label>
@@ -644,6 +645,39 @@
                 .done(function (msg) {
                     $("#" + puntero).remove();
                     alerta("verde", "Registro eliminado correctamente");
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
+                })
+
+    });
+    $('body').delegate(".eliminarregistro2", "click", function () {
+        var puntero = $(this).attr("reg_id");
+        var puntero2 = $(this);
+        $.post(
+                "<?php echo base_url("index.php/tareas/eliminarregistro") ?>",
+                {registro: puntero}
+        )
+                .done(function (msg) {
+                    puntero2.parent().parent().remove();
+                    alerta("verde", "Registro eliminado correctamente");
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
+                })
+
+    });
+    $('body').delegate(".modificarregistro", "click", function () {
+        var puntero = $(this).attr("reg_id");
+        $.post(
+                "<?php echo base_url("index.php/tareas/modificarregistro") ?>",
+                {registro: puntero}
+        )
+                .done(function (msg) {
+                    $('#reg_id').val(msg[0].reg_id)
+                    $('#carpeta').val(msg[0].regCar_id)
+                    $('#version').val(msg[0].reg_version)
+                    $('#descripcion_tarea').val(msg[0].reg_descripcion)
                 })
                 .fail(function (msg) {
                     alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
@@ -876,24 +910,24 @@
         });
     });
 
-    $(".flechaHeader").click(function () {
-        var url = "<?php echo base_url("index.php/tareas/consultaTareasFlechas") ?>";
-        var idTarea = $("#tareid").val();
-        var metodo = $(this).attr("metodo");
-        if (metodo != "documento") {
-            $.post(url, {idTarea: idTarea, metodo: metodo})
-                    .done(function (msg) {
-                        $("#riesgos input[type='text'],#riesgos select").val("");
-                        $("#tareid").val(msg.tar_id);
-                    })
-                    .fail(function (msg) {
-                        alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
-                        $("input[type='text'], select").val();
-                    })
-        } else {
-            window.location = "<?php echo base_url("index.php/tareas/listadotareas"); ?>";
-        }
-    });
+//    $(".flechaHeader").click(function () {
+//        var url = "<?php echo base_url("index.php/tareas/consultaTareasFlechas") ?>";
+//        var idTarea = $("#tareid").val();
+//        var metodo = $(this).attr("metodo");
+//        if (metodo != "documento") {
+//            $.post(url, {idTarea: idTarea, metodo: metodo})
+//                    .done(function (msg) {
+//                        $("#riesgos input[type='text'],#riesgos select").val("");
+//                        $("#tareid").val(msg.tar_id);
+//                    })
+//                    .fail(function (msg) {
+//                        alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+//                        $("input[type='text'], select").val();
+//                    })
+//        } else {
+//            window.location = "<?php echo base_url("index.php/tareas/listadotareas"); ?>";
+//        }
+//    });
     $('#cancelar').click(function () {
         var form = "<form method='post' id='enviotarea' action='<?php echo base_url("index.php/planes/nuevoplan") ?>'>";
         form += "<input type='hidden' value='" + $(this).attr('plan') + "' name='pla_id'>";
@@ -983,6 +1017,7 @@
             form_data.append('reg_version', $('#version').val());
             form_data.append('tar_id', $('#tar_id_registro').val());
             form_data.append('reg_descripcion', $('#descripcion_tarea').val());
+            form_data.append('reg_id', $('#reg_id').val());
             $.ajax({
                 url: '<?php echo base_url("index.php/tareas/guardar_registro_tarea") ?>',
                 dataType: 'text', // what to expect back from the PHP script, if anything
@@ -999,15 +1034,15 @@
                     var filas = "";
                     $.each(result, function (key, val) {
                         filas += "<tr>";
-                        filas += "<td>" + val.reg_archivo + "</td>";
+                        filas += "<td><a href='<?php echo base_url('')?>"+val.reg_ruta+'/'+val.reg_id+'/'+val.reg_archivo+"'>" + val.reg_archivo + "</a></td>";
                         filas += "<td>" + val.reg_descripcion + "</td>";
                         filas += "<td>" + val.reg_version + "</td>";
                         filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
                         filas += "<td>" + val.reg_tamano + "</td>";
                         filas += "<td>" + val.reg_fechaCreacion + "</td>";
                         filas += "<td>";
-                        filas += "<i class='fa fa-times fa-2x eliminarregistro btn btn-danger' title='Eliminar' reg_id='" + val.tarReg_id + "'></i>";
-                        filas += "<i class='fa fa-pencil-square-o fa-2x modificarregistro btn btn-info' title='Modificar' reg_id='" + val.tarReg_id + "'  data-target='#myModal15' data-toggle='modal'></i>";
+                        filas += "<i class='fa fa-times fa-2x eliminarregistro2 btn btn-danger' title='Eliminar' reg_id='" + val.reg_id + "'></i>";
+                        filas += "<i class='fa fa-pencil-square-o fa-2x modificarregistro btn btn-info' title='Modificar' reg_id='" + val.reg_id + "'  data-target='#myModal' data-toggle='modal'></i>";
                         filas += "</td>";
                         filas += "</tr>";
                     });
@@ -1054,6 +1089,7 @@
     $('body').delegate(".nuevoregistro", "click", function () {
 
         $('#carpeta').val($(this).attr("car_id"));
+        $('#reg_id').val('');
 
     });
 
@@ -1105,5 +1141,17 @@
 
 
 
-
+$('.envio').click(function() {
+        $('#tar_id3').val($(this).attr('nuevo'));
+        $('#formulario_siguiente').submit();
+    })
 </script>    
+<form id="formulario_siguiente" action="<?php echo base_url('index.php/Tareas/nuevatarea') ?>" method="POST">
+    <input type="hidden" id="tar_id3" name="tar_id">
+</form>
+
+<style>
+    #guardaravance{
+        color:#000;
+    }
+</style>

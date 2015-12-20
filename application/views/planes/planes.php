@@ -6,10 +6,10 @@
     </div>
     <div class="col-md-6">
         <div id="posicionFlecha">
-            <div class="flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble"><i class="fa fa-step-backward fa-2x"></i></div>
-            <div class="flechaHeader Izquierda" metodo="flechaIzquierda"><i class="fa fa-arrow-left fa-2x"></i></div>
-            <div class="flechaHeader Derecha" metodo="flechaDerecha"><i class="fa fa-arrow-right fa-2x"></i></div>
-            <div class="flechaHeader DerechaDoble" metodo="flechaDerechaDoble"><i class="fa fa-step-forward fa-2x"></i></div>
+            <div class="envio flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble" nuevo="<?php echo (isset($todo_izq) ? $todo_izq : '') ?>"><i class="fa fa-step-backward fa-2x"></i></div>
+            <div class="envio flechaHeader Izquierda" metodo="flechaIzquierda" nuevo="<?php echo (isset($izq) ? $izq : '') ?>"><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div class="envio flechaHeader Derecha" metodo="flechaDerecha" nuevo="<?php echo (isset($derecha) ? $derecha : '') ?>"><i class="fa fa-arrow-right fa-2x"></i></div>
+            <div class="envio flechaHeader DerechaDoble" metodo="flechaDerechaDoble" nuevo="<?php echo (isset($max_der) ? $max_der : '') ?>"><i class="fa fa-step-forward fa-2x"></i></div>
             <a href="<?php echo base_url('index.php/Planes/listadoplanes') ?>"><div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div></a>
         </div>
     </div>
@@ -1190,6 +1190,6 @@ echo (empty($plan[0]->pla_id)) ? base_url('index.php/planes/guardarplan') : base
         $('#formulario_siguiente').submit();
     })
 </script>
-<form id="formulario_siguiente" action="<?php echo base_url('index.php/planes/nuevoplan') ?>" method="POST">
+<form id="formulario_siguiente" action="<?php echo base_url('index.php/planes/nuevatarea') ?>" method="POST">
     <input type="hidden" id="pla_id_3" name="pla_id">
 </form>

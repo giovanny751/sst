@@ -6,7 +6,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tituloCuerpo">
-            <span class="txtTitulo">LISTADO EMPLEADOS</span>
+            <span class="txtTitulo"><a href="<?php echo base_url('index.php/presentacion/principal')?>">HOME</a>/
+                <!--<a href="<?php echo base_url('index.php/administrativo/empresa')?>">DATOS EMPRESA</a>/-->
+                LISTADO EMPLEADOS</span>
         </div>
     </div>
 </div>
