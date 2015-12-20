@@ -28,6 +28,7 @@ class Indicador extends My_Controller {
         $this->load->model('Empresa_model');
         $this->load->model('Indicador_model');
         $this->load->model("Indicadortipo_model");
+        $this->load->model("Planes_model");
         $this->data['indicadortipo'] = $this->Indicadortipo_model->detail();
         $this->data['empresa'] = $this->Empresa_model->detail();
         if (!empty($this->data['empresa'][0]->Dim_id) && !empty($this->data['empresa'][0]->Dimdos_id)) {
@@ -37,6 +38,26 @@ class Indicador extends My_Controller {
             $this->data['dimension'] = $this->Dimension_model->detail();
             $this->data['dimension2'] = $this->Dimension2_model->detail();
             if (!empty($this->input->post("ind_id"))) {
+                
+                
+                
+                $this->data['todo_izq'] = $this->Indicador_model->min_id();
+                $this->db->where('ind_id <', $this->input->post('ind_id'));
+                $this->data['izq'] = $this->Indicador_model->max_id();
+                if (empty($this->data['izq'])) {
+                    $this->data['izq'] = $this->data['todo_izq'];
+                }
+                $this->db->where('ind_id >', $this->input->post('ind_id'));
+                $this->data['derecha'] = $this->Indicador_model->select_id();
+                $this->data['max_der'] = $this->Indicador_model->max_id();
+
+                if (empty($this->data['derecha'])) {
+                    $this->data['derecha'] = $this->data['max_der'];
+                }
+                
+                
+                
+                
                 $this->load->model("Indicadorvalores_model");
                 $this->load->model("Indicadorcarpeta_model");
                 $this->load->model("Registrocarpeta_model");

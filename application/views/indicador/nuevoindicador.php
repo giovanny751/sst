@@ -6,11 +6,11 @@
     </div>
     <div class="col-md-6">
         <div id="posicionFlecha">
-            <div class="flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble"><i class="fa fa-step-backward fa-2x"></i></div>
-            <div class="flechaHeader Izquierda" metodo="flechaIzquierda"><i class="fa fa-arrow-left fa-2x"></i></div>
-            <div class="flechaHeader Derecha" metodo="flechaDerecha"><i class="fa fa-arrow-right fa-2x"></i></div>
-            <div class="flechaHeader DerechaDoble" metodo="flechaDerechaDoble"><i class="fa fa-step-forward fa-2x"></i></div>
-            <div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div>
+            <div class="envio flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble" nuevo="<?php echo (isset($todo_izq) ? $todo_izq : '') ?>"><i class="fa fa-step-backward fa-2x"></i></div>
+            <div class="envio flechaHeader Izquierda" metodo="flechaIzquierda" nuevo="<?php echo (isset($izq) ? $izq : '') ?>"><i class="fa fa-arrow-left fa-2x"></i></div>
+            <div class="envio flechaHeader Derecha" metodo="flechaDerecha" nuevo="<?php echo (isset($derecha) ? $derecha : '') ?>"><i class="fa fa-arrow-right fa-2x"></i></div>
+            <div class="envio flechaHeader DerechaDoble" metodo="flechaDerechaDoble" nuevo="<?php echo (isset($max_der) ? $max_der : '') ?>"><i class="fa fa-step-forward fa-2x"></i></div>
+            <a href="<?php echo base_url('index.php/indicador/nuevoindicador') ?>"><div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div></a>
         </div>
     </div>
 </div>
@@ -558,38 +558,38 @@
         }
     })
 
-    $(".flechaHeader").click(function () {
-        var url = "<?php echo base_url("index.php/administrativo/consultausuariosflechas") ?>";
-        var idUsuarioCreado = $("#usuid").val();
-        var metodo = $(this).attr("metodo");
-        if (metodo != "documento") {
-            $.post(url, {idUsuarioCreado: idUsuarioCreado, metodo: metodo})
-                    .done(function (msg) {
-                        $("input[type='text'],select").val("");
-                        $("#usuid").val(msg.usu_id);
-                        $("#cedula").val(msg.usu_cedula);
-                        $("#nombres").val(msg.usu_nombre);
-                        $("#apellidos").val(msg.usu_apellido);
-                        $("#usuario").val(msg.usu_usuario);
-                        $("#contrasena").val(msg.usu_contrasena);
-                        $("#email").val(msg.usu_email);
-                        $("#genero").val(msg.sex_id);
-                        $("#estado").val(msg.est_id);//estado
-                        $("#cargo").val(msg.car_id);//cargo
-                        $("#empleado").val(msg.emp_id);//empleado
-                        if (msg.cambiocontrasena == "1") {
-                            $("#cambiocontrasena").is(":checked");
-                        }
-                    })
-                    .fail(function (msg) {
-                        alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
-                        $("input[type='text'], select").val();
-                    })
-        } else {
-            window.location = "<?php echo base_url("index.php/indicador/verindicadores"); ?>";
-        }
-
-    });
+//    $(".flechaHeader").click(function () {
+//        var url = "<?php echo base_url("index.php/administrativo/consultausuariosflechas") ?>";
+//        var idUsuarioCreado = $("#usuid").val();
+//        var metodo = $(this).attr("metodo");
+//        if (metodo != "documento") {
+//            $.post(url, {idUsuarioCreado: idUsuarioCreado, metodo: metodo})
+//                    .done(function (msg) {
+//                        $("input[type='text'],select").val("");
+//                        $("#usuid").val(msg.usu_id);
+//                        $("#cedula").val(msg.usu_cedula);
+//                        $("#nombres").val(msg.usu_nombre);
+//                        $("#apellidos").val(msg.usu_apellido);
+//                        $("#usuario").val(msg.usu_usuario);
+//                        $("#contrasena").val(msg.usu_contrasena);
+//                        $("#email").val(msg.usu_email);
+//                        $("#genero").val(msg.sex_id);
+//                        $("#estado").val(msg.est_id);//estado
+//                        $("#cargo").val(msg.car_id);//cargo
+//                        $("#empleado").val(msg.emp_id);//empleado
+//                        if (msg.cambiocontrasena == "1") {
+//                            $("#cambiocontrasena").is(":checked");
+//                        }
+//                    })
+//                    .fail(function (msg) {
+//                        alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
+//                        $("input[type='text'], select").val();
+//                    })
+//        } else {
+//            window.location = "<?php echo base_url("index.php/indicador/verindicadores"); ?>";
+//        }
+//
+//    });
     $("body").on("click", "#actualizar", function () {
         if (obligatorio("obligatorio")) {
             $.post("<?php echo base_url("index.php/indicador/actualizarindicador") ?>", $("#indicador").serialize())
@@ -799,4 +799,11 @@
         grafi([<?php echo $fechas; ?>], [<?php echo $valores2; ?>],[<?php echo $valores3; ?>]);
 <?php } ?>
 
-</script> 
+$('.envio').click(function() {
+        $('#pla_id_3').val($(this).attr('nuevo'));
+        $('#formulario_siguiente').submit();
+    })
+</script>
+<form id="formulario_siguiente" action="<?php echo base_url('index.php/indicador/nuevoindicador') ?>" method="POST">
+    <input type="hidden" id="pla_id_3" name="ind_id">
+</form>

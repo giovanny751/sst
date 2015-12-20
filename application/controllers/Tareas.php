@@ -234,7 +234,8 @@ class Tareas extends My_Controller {
             //De la carpeta idRegistro, creamos carpeta con el id del empleado
             $post['reg_ruta'] = $targetPath;
             $idregistro = $this->Registro_model->guardar_registro($post);
-            $targetPath = $targetPath . $idregistro;
+            $targetPath = $targetPath .'/'. $idregistro;
+            if (!file_exists($targetPath))
             mkdir($targetPath, 0777, true);
             $targetPath = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $targetPath)) {

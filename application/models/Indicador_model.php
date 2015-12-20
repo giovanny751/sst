@@ -100,6 +100,64 @@ class Indicador_model extends CI_Model {
             
         }
     }
+    function max_id() {
+        try {
+            $this->db->select_max('ind_id');
+            $datos = $this->db->get('indicador');
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->ind_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+
+    function min_id() {
+        try {
+            $this->db->select_min('ind_id');
+            $datos = $this->db->get('indicador');
+            $datos = $datos->result();
+//        echo $this->db->last_query();
+            if (count($datos) > 0)
+                return $datos[0]->ind_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+
+    
+
+    function max_id_next($id) {
+        try {
+            $this->db->select('ind_id');
+            $datos = $this->db->get('indicador', 1, 1);
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->ind_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
+    
+    function select_id() {
+        try {
+            $this->db->select('ind_id');
+            $datos = $this->db->get('indicador', 1, 1);
+            $datos = $datos->result();
+            if (count($datos) > 0)
+                return $datos[0]->ind_id;
+            else
+                return '';
+        } catch (exception $e) {
+            
+        }
+    }
 
 }
 
