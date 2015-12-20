@@ -2,6 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
 /**
  *
  * @package     NYGSOFT
@@ -10,7 +11,6 @@ if (!defined('BASEPATH'))
  * @celular     301 385 9952
  * @email       javierbr12@hotmail.com    
  */
-
 class Administrativo extends My_Controller {
 
     function __construct() {
@@ -19,68 +19,80 @@ class Administrativo extends My_Controller {
         $this->load->model('Roles_model');
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data["usu_id"]);
+        switch ($this->consultaacceso()) {
+            case 1:
+                echo "No tiene permisos para ingresar a visualizar la vista";
+                die;
+            break;
+            case 2:
+                $data =  array("message"=>"No tiene permisos para ejecutar a la acción");
+                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+                die;
+            break;
+            case 3:
+                $data = array('message'=>"No tiene permisos por favor verificar con el administrador");
+                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+                die;
+            break;
+        }
         $this->load->library('PHPExcel/Classes/PHPExcel.php');
     }
 
     function creacionempleados() {
 
-        if ($this->consultaacceso($this->data["usu_id"])) :
-            $this->data['empleado'] = "";
+        $this->data['empleado'] = "";
 
-            $this->load->model('Tipocontrato_model');
-            $this->load->model('Sexo_model');
-            $this->load->model('Estadocivil_model');
-            $this->load->model('Tipoaseguradora_model');
-            $this->load->model('Dimension2_model');
-            $this->load->model('Dimension_model');
-            $this->load->model('Cargo_model');
-            $this->load->model('Tipo_aseguradora__model');
-            $this->load->model('Empleadotipoaseguradora_model');
-            $this->load->model('Empresa_model');
-            $this->load->model('Empleadoregistro_model');
-            $this->load->model('Empleadoresponsable_model');
+        $this->load->model('Tipocontrato_model');
+        $this->load->model('Sexo_model');
+        $this->load->model('Estadocivil_model');
+        $this->load->model('Tipoaseguradora_model');
+        $this->load->model('Dimension2_model');
+        $this->load->model('Dimension_model');
+        $this->load->model('Cargo_model');
+        $this->load->model('Tipo_aseguradora__model');
+        $this->load->model('Empleadotipoaseguradora_model');
+        $this->load->model('Empresa_model');
+        $this->load->model('Empleadoregistro_model');
+        $this->load->model('Empleadoresponsable_model');
 
-            $empleadoId = null;
-            if (!empty($this->input->post('emp_id')))
-                $empleadoId = $this->input->post('emp_id');
-            else if (!empty($this->session->guardadoExitoIdEmpleado))
-                $empleadoId = $this->session->guardadoExitoIdEmpleado;
+        $empleadoId = null;
+        if (!empty($this->input->post('emp_id')))
+            $empleadoId = $this->input->post('emp_id');
+        else if (!empty($this->session->guardadoExitoIdEmpleado))
+            $empleadoId = $this->session->guardadoExitoIdEmpleado;
 
-            if (isset($empleadoId)) {
-                $this->load->model('Empleadocarpeta_model');
-                $this->load->model('Empleado_model');
-                $this->data['empleado'] = $this->Empleado_model->consultaempleadoxid($empleadoId);
-                $this->data["aserguradorasxempleado"] = $this->Empleadotipoaseguradora_model->consult_empleado($empleadoId);
+        if (isset($empleadoId)) {
+            $this->load->model('Empleadocarpeta_model');
+            $this->load->model('Empleado_model');
+            $this->data['empleado'] = $this->Empleado_model->consultaempleadoxid($empleadoId);
+            $this->data["aserguradorasxempleado"] = $this->Empleadotipoaseguradora_model->consult_empleado($empleadoId);
 //                var_dump($this->data["aserguradorasxempleado"]);die;
-                $this->data["carpeta"] = $this->Empleadocarpeta_model->detail($empleadoId);
-                $registro = $this->Empleadoregistro_model->detailxIdEmpleado($empleadoId);
+            $this->data["carpeta"] = $this->Empleadocarpeta_model->detail($empleadoId);
+            $registro = $this->Empleadoregistro_model->detailxIdEmpleado($empleadoId);
 
-                $i = array();
-                foreach ($registro as $campo) {
-                    $i[$campo->empCar_id][$campo->empCar_nombre . " - " . $campo->empCar_descripcion][] = array($campo->nombreempleado, $campo->empReg_archivo, $campo->empReg_descripcion, $campo->empReg_version, $campo->empReg_id, $campo->empReg_tamano, $campo->empgReg_fecha);
-                }
-                $this->data['registro'] = $i;
-                $this->session->guardadoExitoIdEmpleado = null;
-                
-                $this->data['empleadoresponsable'] = $this->Empleadoresponsable_model->detail();
+            $i = array();
+            foreach ($registro as $campo) {
+                $i[$campo->empCar_id][$campo->empCar_nombre . " - " . $campo->empCar_descripcion][] = array($campo->nombreempleado, $campo->empReg_archivo, $campo->empReg_descripcion, $campo->empReg_version, $campo->empReg_id, $campo->empReg_tamano, $campo->empgReg_fecha);
             }
-            $this->data['empresa'] = $this->Empresa_model->detail();
-            if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
-                $this->data['cargo'] = $this->Cargo_model->detail();
-                $this->data['tipocontrato'] = $this->Tipocontrato_model->detail();
-                $this->data['sexo'] = $this->Sexo_model->detail();
-                $this->data['estadocivil'] = $this->Estadocivil_model->detail();
-                $this->data['aseguradoras'] = $this->Tipo_aseguradora__model->aseguradoras();
-                $this->data['tipoaseguradora'] = $this->Tipoaseguradora_model->detail();
-                $this->data['dimension'] = $this->Dimension_model->detail();
-                $this->data['dimension2'] = $this->Dimension2_model->detail();
-                $this->layout->view("administrativo/creacionempleados", $this->data);
-            } else {
-                redirect('index.php/administrativo/empresa', 'location');
-            }
-        else:
-            $this->layout->view("permisos");
-        endif;
+            $this->data['registro'] = $i;
+            $this->session->guardadoExitoIdEmpleado = null;
+
+            $this->data['empleadoresponsable'] = $this->Empleadoresponsable_model->detail();
+        }
+        $this->data['empresa'] = $this->Empresa_model->detail();
+        if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
+            $this->data['cargo'] = $this->Cargo_model->detail();
+            $this->data['tipocontrato'] = $this->Tipocontrato_model->detail();
+            $this->data['sexo'] = $this->Sexo_model->detail();
+            $this->data['estadocivil'] = $this->Estadocivil_model->detail();
+            $this->data['aseguradoras'] = $this->Tipo_aseguradora__model->aseguradoras();
+            $this->data['tipoaseguradora'] = $this->Tipoaseguradora_model->detail();
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->data['dimension2'] = $this->Dimension2_model->detail();
+            $this->layout->view("administrativo/creacionempleados", $this->data);
+        } else {
+            redirect('index.php/administrativo/empresa', 'location');
+        }
     }
 
     function cargarempleadocarpeta() {
@@ -115,6 +127,7 @@ class Administrativo extends My_Controller {
                 $this->input->post("empCar_id")
         );
     }
+
     function cargartablaincapacidad() {
         try {
             $this->load->model('Empleadoincapacidad_model');
@@ -124,6 +137,7 @@ class Administrativo extends My_Controller {
             
         }
     }
+
     function guardarincapacidad() {
         try {
             $this->load->model('Empleadoincapacidad_model');
@@ -139,7 +153,6 @@ class Administrativo extends My_Controller {
                 'empInc_fechaIngreso' => date("Y-m-d H:i:s")
             );
             $this->Empleadoincapacidad_model->create($data);
-
         } catch (exception $e) {
             
         }
@@ -727,8 +740,10 @@ class Administrativo extends My_Controller {
             $this->Dimension2_model->create($data);
             $dimension = $this->Dimension2_model->detail();
             $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else
-            echo 1;
+        } else{
+            $respuesta["message"] = "Datos existente en el sistema"; 
+            $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
+        }
     }
 
     function eliminardimension2() {
@@ -741,16 +756,12 @@ class Administrativo extends My_Controller {
     }
 
     function dimension() {
-        if ($this->consultaacceso($this->data["usu_id"])) {
-            $this->load->model('Dimension_model');
-            $this->load->model('Empresa_model');
-            $this->data['empresa'] = $this->Empresa_model->detail();
-            if (!empty($this->data['empresa'][0]->Dim_id)) {
-                $this->data['dimension'] = $this->Dimension_model->detail();
-                $this->layout->view("administrativo/dimension", $this->data);
-            } else {
-                redirect('index.php/administrativo/empresa', 'location');
-            }
+        $this->load->model('Dimension_model');
+        $this->load->model('Empresa_model');
+        $this->data['empresa'] = $this->Empresa_model->detail();
+        if (!empty($this->data['empresa'][0]->Dim_id)) {
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->layout->view("administrativo/dimension", $this->data);
         }
     }
 
@@ -778,13 +789,15 @@ class Administrativo extends My_Controller {
             $this->Dimension_model->create($data);
             $dimension = $this->Dimension_model->detail();
             $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else
-            echo 1;
+        } else{
+            $respuesta["message"] = "Datos existente en el sistema"; 
+            $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
+        }
     }
 
     function eliminardimension() {
         $this->load->model('Dimension_model');
-        $this->Dimension_model->delete($this->input->post('id'));
+        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
     }
 
     function actualizardimension() {
@@ -792,7 +805,6 @@ class Administrativo extends My_Controller {
     }
 
     function empresa() {
-        if ($this->consultaacceso($this->data["usu_id"])) {
             $this->load->model("Empresa_model");
             $this->load->model('Tamano_empresa_model');
             $this->load->model('Numero_empleados_model');
@@ -812,7 +824,6 @@ class Administrativo extends My_Controller {
             $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
 //        var_dump($this->data['informacion']);die;
             $this->layout->view("administrativo/empresa", $this->data);
-        }
     }
 
     function guardarempresa() {
@@ -933,7 +944,7 @@ class Administrativo extends My_Controller {
         $lastRow = $excel->getHighestRow();
         $creados = 0;
         $actulizados = 0;
-        $registros=0;
+        $registros = 0;
         for ($row = 10; $row <= $lastRow; $row++) {
             $registros++;
             $info = array();
@@ -942,7 +953,7 @@ class Administrativo extends My_Controller {
             $info['Emp_Apellidos'] = $excel->getCell('C' . $row)->getValue();
             $info['sex_Id'] = $excel->getCell('D' . $row)->getValue();
             $info['Emp_FechaNacimiento'] = $excel->getCell('E' . $row)->getValue();
-            if(!empty($info['Emp_FechaNacimiento'])){
+            if (!empty($info['Emp_FechaNacimiento'])) {
                 $info['Emp_FechaNacimiento'] = date('Y-m-d H:i:s', ($excel->getCell('E' . $row)->getValue() - 25569 - 0.08333) * 86400);
             }
             $info['Emp_Estatura'] = $excel->getCell('F' . $row)->getValue();
@@ -955,16 +966,16 @@ class Administrativo extends My_Controller {
             if (($excel->getCell('M' . $row)->getValue()) != '')
                 $info['TipCon_Id'] = $this->Empleado_model->buscar_tipo_contrato($excel->getCell('M' . $row)->getValue());
             $info['Emp_FechaInicioContrato'] = $excel->getCell('N' . $row)->getValue();
-            if(!empty($info['Emp_FechaInicioContrato'])){
+            if (!empty($info['Emp_FechaInicioContrato'])) {
                 $info['Emp_FechaInicioContrato'] = date('Y-m-d H:i:s', ($excel->getCell('N' . $row)->getValue() - 25569 - 0.08333) * 86400);
             }
             $info['Emp_FechaFinContrato'] = $excel->getCell('O' . $row)->getValue();
-            if(!empty($info['Emp_FechaFinContrato'])){
+            if (!empty($info['Emp_FechaFinContrato'])) {
                 $info['Emp_FechaFinContrato'] = date('Y-m-d H:i:s', ($excel->getCell('O' . $row)->getValue() - 25569 - 0.08333) * 86400);
             }
             $info['Emp_PlanObligatorioSalud'] = $excel->getCell('P' . $row)->getValue();
             $info['Emp_FechaAfiliacionArl'] = $excel->getCell('Q' . $row)->getValue();
-            if(!empty($info['Emp_FechaAfiliacionArl'])){
+            if (!empty($info['Emp_FechaAfiliacionArl'])) {
                 $info['Emp_FechaAfiliacionArl'] = date('Y-m-d H:i:s', ($excel->getCell('Q' . $row)->getValue() - 25569 - 0.08333) * 86400);
             }
             if (($excel->getCell('R' . $row)->getValue()) != '')
@@ -991,20 +1002,21 @@ class Administrativo extends My_Controller {
                 $this->db->where('Emp_Cedula', $info['Emp_Cedula']);
                 $this->db->update('empleado', $info);
                 $actulizados++;
-            } else{
+            } else {
                 $this->db->insert('empleado', $info);
                 $creados++;
             }
         }
-        echo "<p><br>Numero de registros: ".$registros;
-        echo "<br>Registros actualizados : ".$actulizados;
-        echo "<br>Registros Creados : ".$creados;
+        echo "<p><br>Numero de registros: " . $registros;
+        echo "<br>Registros actualizados : " . $actulizados;
+        echo "<br>Registros Creados : " . $creados;
     }
-    function accidente(){
-        
-        $this->layout->view("administrativo/accidente",$this->data);
-        
+
+    function accidente() {
+
+        $this->layout->view("administrativo/accidente", $this->data);
     }
+
 }
 
 /* End of file welcome.php */

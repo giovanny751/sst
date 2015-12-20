@@ -14,6 +14,7 @@ class Presentacion extends My_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->model("Roles_model");
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data["usu_id"]);
     }
@@ -230,6 +231,7 @@ class Presentacion extends My_Controller {
     }
 
     function roles() {
+        $this->load->model("Roles_model");
             $this->data['content'] = "<table border='0' width='100%'>" . $this->permisoroles('prueba', null) . "</table>";
             $this->data['roles'] = $this->Roles_model->roles();
             $this->layout->view('presentacion/roles', $this->data);

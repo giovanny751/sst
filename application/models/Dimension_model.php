@@ -48,6 +48,7 @@ class Dimension_model extends CI_Model {
             $this->db->where("dim_id", $id);
             $this->db->set("est_id", 3);
             $this->db->update("dimension");
+            return true;
         } catch (exception $e) {
             
         }

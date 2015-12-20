@@ -157,14 +157,20 @@
 
     });
 
+    var res = function(valor,callback){
+        callback(valor);
+    }
+
     $('body').delegate(".eliminar", "click", function() {
         var eliminar = $(this);
         if (confirm("Esta seguro de eliminar la dimension") == true) {
             $.post("<?php echo base_url('index.php/administrativo/eliminardimension') ?>",
                     {id: $(this).attr('dim_id')}
             ).done(function(msg) {
-                eliminar.parents('tr').remove();
-                alerta("verde", "Eliminado Correctamente");
+                if(!jQuery.isEmptyObject(msg.message))alerta("rojo",msg['message']);
+                else {eliminar.parents('tr').remove();
+                    alerta("verde", "Eliminado Correctamente");
+                }
             }).fail(function(msg) {
                 alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
             });
@@ -177,7 +183,8 @@
                         descripcion: $('#descripcion').val()
                     })
                     .done(function(msg) {
-                        if (msg != 1) {
+                       if(!jQuery.isEmptyObject(msg.message))alerta("amarillo",msg['message'])
+                       else{
                             $('#bodydimension *').remove();
                             var bodydimension = "";
                             $.each(msg, function(key, val) {
@@ -194,9 +201,7 @@
                             });
                             $('#bodydimension').append(bodydimension);
                             alerta("verde", "Guardado Correctamente");
-                        } else {
-                            alerta("amarillo", "datos ya existentes en el sistema");
-                        }
+                        } 
                     })
                     .fail(function(msg) {
                         alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");

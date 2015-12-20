@@ -333,15 +333,13 @@ class Ingreso_model extends CI_Model {
         try {
             $this->db->select("modulo.menu_controlador clase");
             $this->db->select("modulo.menu_accion metodo");
+            $this->db->select("permisos.usu_id");
             $this->db->where("modulo.menu_controlador", $controller);
             $this->db->where("modulo.menu_accion", $method);
-            $this->db->where("permisos.usu_id", $usu_id);
-            $this->db->where("user.usu_id", $usu_id);
-            $this->db->join("permisos", "permisos.rol_id = user.rol_id");
-            $this->db->join("permisos_rol", "permisos_rol.rol_id = permisos.rol_id");
-            $this->db->join("modulo", "permisos_rol.menu_id = modulo.menu_id");
-            $query = $this->db->get("user");
-            
+            $this->db->join("permisos_rol", "permisos_rol.menu_id = modulo.menu_id ","left");
+            $this->db->join("roles", "roles.rol_id = permisos_rol.rol_id","left");
+            $this->db->join("permisos", "permisos.rol_id = roles.rol_id and usu_id = $usu_id");
+            $query = $this->db->get("modulo");
             return $query->result_array();
             
         } catch (exception $e) {
@@ -349,17 +347,18 @@ class Ingreso_model extends CI_Model {
         }
     }
     function consultaPermisosAccion($usu_id, $controller, $method){
-        $this->db->select("permisos_metodo.perMet_clase clase");
-        $this->db->select("permisos_metodo.perMet_metodo metodo");
-        $this->db->where("modulo.menu_controlador", $controller);
-        $this->db->where("modulo.menu_accion", $method);
-        $this->db->where("permisos.usu_id", $usu_id);
-        $this->db->where("user.usu_id", $usu_id);
-        $this->db->join("permisos", "permisos.rol_id = user.rol_id");
-        $this->db->join("permisos_rol", "permisos_rol.rol_id = permisos.rol_id");
-        $this->db->join("modulo", "permisos_rol.menu_id = modulo.menu_id");
+        
+        
+        $this->db->select("modulo.menu_controlador clase");
+        $this->db->select("modulo.menu_accion metodo");
+        $this->db->select("permisos.usu_id");
+        $this->db->where("permisos_metodo.perMet_clase", $controller);
+        $this->db->where("permisos_metodo.perMet_metodo", $method);
+        $this->db->join("permisos_rol", "permisos_rol.menu_id = modulo.menu_id ","left");
+        $this->db->join("roles", "roles.rol_id = permisos_rol.rol_id","left");
+        $this->db->join("permisos", "permisos.rol_id = roles.rol_id and usu_id = $usu_id");
         $this->db->join("permisos_metodo", "permisos_metodo.mod_id = modulo.menu_id","LEFT");
-        $query = $this->db->get("user");
+        $query = $this->db->get("modulo");
         return $query->result_array();
     }
 
