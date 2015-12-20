@@ -198,18 +198,18 @@
             data = jQuery.parseJSON(data);
             $.each(data, function(key, val) {
                 $('.seleccionados[value="' + val.menu_id + '"]').parent("span").addClass("checked");
-                $('.seleccionados[value="' + val.menu_id + '"]').attr('checked', true);
+                $('.seleccionados[value="' + val.menu_id + '"]').prop('checked', true);
                 if (val.perRol_crear != 0) {
                     $('.crear2[value="' + val.menu_id + '"]').parent("span").addClass("checked");
-                    $('.crear2[value="' + val.menu_id + '"]').attr('checked', true);
+                    $('.crear2[value="' + val.menu_id + '"]').prop('checked', true);
                 }
                 if (val.perRol_modificar != 0) {
                     $('.modificar2[value="' + val.menu_id + '"]').parent("span").addClass("checked");
-                    $('.modificar2[value="' + val.menu_id + '"]').attr('checked', true);
+                    $('.modificar2[value="' + val.menu_id + '"]').prop('checked', true);
                 }
                 if (val.perRol_eliminar != 0) {
                     $('.eliminar2[value="' + val.menu_id + '"]').parent("span").addClass("checked");
-                    $('.eliminar2[value="' + val.menu_id + '"]').attr('checked', true);
+                    $('.eliminar2[value="' + val.menu_id + '"]').prop('checked', true);
                 }
             });
         });
