@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('layout', 'layout_main');
         $this->data['user'] = $this->session->userdata();
         $this->load->model('Ingreso_model');
-//        $this->verificacion();
+        $this->verificacion();
     }
     function verificacion(){
         $ci = & get_instance();
@@ -61,6 +61,10 @@ class MY_Controller extends CI_Controller {
                     exit;
                 }else if($permisosPeticion[0]['accion'] == 2 && empty($permisosPeticion[0]['perRol_modificar'])){
                     $this->data['respuesta'] = array("message" => "No tiene permisos de modificar");
+                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                    exit;
+                }else if($permisosPeticion[0]['accion'] == 3 && empty($permisosPeticion[0]['perRol_id'])){
+                    $this->data['respuesta'] = array("message" => "No tiene permisos de consultar");
                     $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
                     exit;
                 }
