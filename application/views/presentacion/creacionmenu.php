@@ -250,8 +250,8 @@
     };
     
     function htmlModal(datos){
-        var clases = ["TxtClaseEliminar[]","TxtMetodoActualizar[]","TxtClaseConsultar[]","TxtClaseInsertar[]"];
-        var metodos = ["TxtMetodoEliminar[]","TxtClaseActualizar[]","TxtMetodoConsultar[]","TxtMetodoInsertar[]"];
+        var clases = ["TxtClaseEliminar[]","TxtClaseActualizar[]","TxtClaseConsultar[]","TxtClaseInsertar[]"];
+        var metodos = ["TxtMetodoEliminar[]","TxtMetodoActualizar[]","TxtMetodoConsultar[]","TxtMetodoInsertar[]"];
         var idEtiqueta = ["filaEliminar","filaActualizar","filaConsultar","filaInsertar"];
         var titulo = ["Eliminar","Actualizar","Consultar","Insertar"];
         var html = "";
