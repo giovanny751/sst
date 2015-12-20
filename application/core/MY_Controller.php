@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('layout', 'layout_main');
         $this->data['user'] = $this->session->userdata();
         $this->load->model('Ingreso_model');
-        
+        $this->verificacion();
     }
     function verificacion(){
         $ci = & get_instance();
@@ -43,15 +43,18 @@ class MY_Controller extends CI_Controller {
             $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
             if (!empty($view)) {
                 if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
-                    return 1;
+                    echo "No tiene permisos por favor comunicarse con el administrador";
                 }
             } else if (!empty($permisosPeticion)) {
                 if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
-                    return 2;
-
+                    $this->data['respuesta'] = array("message" => "No tiene permisos de ejecutar la acción");
+                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                    exit;
                 }
             } else if (empty($permisosPeticion) || empty($view)) {
-                return 3;
+                $this->data['respuesta'] = array("message" => "No tiene permisos por favor comunicarse con el administrador");
+                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                exit;
             }
         }
     }

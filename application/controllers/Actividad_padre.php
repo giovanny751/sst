@@ -18,6 +18,7 @@ class Actividad_padre extends My_Controller {
         parent::__construct();
         $this->load->model('Actividad_padre__model');
         validate_login($this->session->userdata('usu_id'));
+        
     }
     function index(){
         $this->data['post']=$this->input->post();

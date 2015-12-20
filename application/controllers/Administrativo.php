@@ -20,21 +20,8 @@ class Administrativo extends My_Controller {
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data["usu_id"]);
         $this->load->library('PHPExcel/Classes/PHPExcel.php');
-        switch ($this->verificacion()) {
-            case 1:
-                $this->layout->view("permisos");
-                break;
-            case 2:
-                $this->data['respuesta'] = array("message" => "No tiene permisos de ejecutar la acción");
-                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta']));
-                break;
-            case 3:
-                $this->data['respuesta'] = array("message" => "No tiene permisos por favor comunicarse con el administrador");
-                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta']));
-                break;
-            default:
-                break;
-        }
+        
+           
     }
 
     function creacionempleados() {
