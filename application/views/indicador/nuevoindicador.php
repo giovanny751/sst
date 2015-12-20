@@ -206,7 +206,7 @@
                                 <th>Comentario</th>
                                 <th>Valor</th>
                                 <th>Usuario</th>
-                                <th>Costo</th>
+                                <th>Acción</th>
                                 </thead>
                                 <tbody id="bodyvalores">
                                     <?php
@@ -217,7 +217,7 @@
                                     $e = 0;
                                     foreach ($valores as $v):
                                         $e++;
-                                    $valores3.=$indicador->ind_meta. ',';
+                                        $valores3.=$indicador->ind_meta . ',';
                                         if ($contador == $e) {
                                             $fechas.='"' . $v->indVal_fecha . '"';
                                             $valores2.=$v->indVal_valor;
@@ -232,7 +232,10 @@
                                             <td><?php echo $v->indVal_comentario ?></td>
                                             <td><?php echo $v->indVal_valor ?></td>
                                             <td><?php echo $v->usu_nombre . " " . $v->usu_apellido ?></td>
-                                            <td></td>
+                                            <td>
+                                                <a href="javascript:"><i class="fa fa-pencil-square-o fa-2x modificar_indicador_valores" id="<?php echo $v->indVal_id ?>" title="Modificar" ></i></a>
+                                                <a href="javascript:"><i class="fa fa-trash-o fa-2x eliminar" id="<?php echo $v->indVal_id ?>" title="Eliminar"></i></a>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -240,8 +243,11 @@
                         </div>
                         <div id="tab2" class="tab-pane">
                             <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><p><br></p></div>
+                                </div>
                                 <form method="post" id="frmvalores">
-                                    <input type="hidden" id="ind_id" name="ind_id" value="<?php echo (!empty($ind_id)) ? $ind_id : ""; ?>" />
+                                    <input type="hidden" class="ind_id_ind_id" id="ind_id" name="ind_id" value="<?php echo (!empty($ind_id)) ? $ind_id : ""; ?>" />
                                     <div class="col-lg-6 col-md-6 col-sx-6 col-sm-6">
                                         <div class="row">
                                             <label for="valor" class="col-lg-3 col-md-3 col-sx-3 col-sm-3">
@@ -264,7 +270,7 @@
                                                 Fecha
                                             </label>
                                             <div class="col-lg-9 col-md-9 col-sx-9 col-sm-9">
-                                                <input type="text" name="fecha" value="<?= date("Y-m-d"); ?>" id="fecha" class="form-control fecha valorobligatorio">
+                                                <input type="text" name="fecha" value="<?= date("Y-m-d"); ?>" id="fecha" class="form-control fecha valorobligatorio fecha_formulario">
                                             </div>
                                         </div>
                                     </div>
@@ -272,10 +278,15 @@
                                         <label for="comentarios">Comentarios</label>
                                         <textarea name="comentarios" id="comentarios" class="form-control"></textarea>
                                     </div>
+                                    <input type="hidden" class="form-control" name="indVal_id" id="indVal_id">
                                 </form>   
                             </div>
-                            <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12" style="text-align: center">
-                                <button type="button" class="btn btn-success" id="guardarindicador">Guardar</button>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12" style="text-align: center">
+                                    <br>
+                                    
+                                    <button type="button" class="btn btn-success" id="guardarindicador">Guardar</button>
+                                </div>
                             </div>
                         </div>
                         <div id="tab3" class="tab-pane">
@@ -481,13 +492,48 @@
 
         })
     });
+    $('body').delegate(".eliminar", "click", function () {
+        var indVal_valor = $(this).attr("id");
+        $.post(
+                "<?php echo base_url("index.php/indicador/eliminar_indicador_valores") ?>",
+                {indVal_valor: indVal_valor,ind_id:$('#ind_id').val()}
+        ).done(function (msg) {
+            tabla(msg);
+        }).fail(function (msg) {
+
+        })
+    });
+    $('body').delegate(".modificar_indicador_valores", "click", function () {
+        var indVal_valor = $(this).attr("id");
+        $.post(
+                "<?php echo base_url("index.php/indicador/modificar_indicador_valores") ?>",
+                {indVal_valor: indVal_valor,ind_id:$('#ind_id').val()}
+        ).done(function (msg) {
+            $('a[href="#tab2"]').trigger('click')
+            $('#comentarios').val(msg[0].indVal_comentario);
+            $('#indVal_id').val(msg[0].indVal_id);
+            $('#valor').val(msg[0].indVal_valor);
+            $('#unidad').val(msg[0].indVal_unidad);
+//            alert(msg[0].indVal_fecha)
+            $('.fecha_formulario').val(msg[0].indVal_fecha);
+            
+        }).fail(function (msg) {
+
+        })
+    });
+    $('a[href="#tab2"]').click(function(){
+        $('#indVal_id').val('');
+        $('#frmvalores input').val('');
+        $('#frmvalores textarea').val('');
+        $('.ind_id_ind_id').val($('#ind_id').val());
+        $('.fecha_formulario').val('<?= date("Y-m-d"); ?>');
+    })
 
     $('body').delegate(".eliminarcarpeta", "click", function () {
         if (confirm("Confirma la eliminación")) {
             var carpeta = $(this).attr("car_id");
             var url = "<?php echo base_url("index.php/planes/eliminarcarpeta") ?>";
-            $.post(url,
-                    {carpeta: carpeta}
+            $.post(url,{carpeta: carpeta}
             ).done(function (msg) {
                 $('a[href="#collapse_' + carpeta + '"]').parents('.panel-default').remove();
             }).fail(function (msg) {
@@ -536,7 +582,7 @@
                     var filas = "";
                     $.each(result, function (key, val) {
                         filas += "<tr>";
-                        filas += "<td><a target'_black' href='<?php echo base_url(); ?>"+val.reg_ruta+val.reg_id+"/"+val.reg_archivo+"'>" + val.reg_archivo + "</a></td>";
+                        filas += "<td><a target'_black' href='<?php echo base_url(); ?>" + val.reg_ruta + val.reg_id + "/" + val.reg_archivo + "'>" + val.reg_archivo + "</a></td>";
                         filas += "<td>" + val.reg_descripcion + "</td>";
                         filas += "<td>" + val.reg_version + "</td>";
                         filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
@@ -649,11 +695,19 @@
                     "<?php echo base_url("index.php/indicador/guardarvalores") ?>",
                     $('#frmvalores').serialize()
                     ).done(function (msg) {
-                $("#graficar,#tab3").siblings().removeClass("active");
+                        tabla(msg);
+            }).fail(function (msg) {
+                alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
+            });
+        }
+    });
+    function tabla(msg){
+        $("#graficar,#tab3").siblings().removeClass("active");
                 $("#graficar").attr("class", "active")
                 $("#tab3").attr("class", "tab-pane active")
                 $("#graficar").trigger("click");
-                var body = $("#bodyvalores *").remove();
+                $("#bodyvalores *").remove();
+                var body = ''
                 var label = [];
                 var valores = [];
                 var valores2 = [];
@@ -667,19 +721,19 @@
                     body += "<td>" + val.indVal_comentario + "</td>";
                     body += "<td>" + val.indVal_valor + "</td>";
                     body += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
-                    body += "<td></td>";
+                    body += "<td>";
+                    body += '<a href="javascript:">\n\
+                <i class="fa fa-pencil-square-o fa-2x modificar_indicador_valores" id="'+val.indVal_id+'" title="Modificar" ></i></a>\n\
+                <a href="javascript:"><i class="fa fa-trash-o fa-2x eliminar" id="'+val.indVal_id+'" title="Eliminar"></i></a>';
+                    body += "</td>";
                     body += "</tr>";
                 });
                 $("#bodyvalores").append(body);
-                grafi(label, valores,valores2);
+                grafi(label, valores, valores2);
                 $('#frmvalores').find('input[type="text"]').val('');
                 $('#frmvalores').find('textarea').val('');
                 alerta("verde", "Guardado correctamente");
-            }).fail(function (msg) {
-                alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
-            });
-        }
-    });
+    }
 
     $('body').delegate('.nuevoregistro', 'click', function () {
         $('#carpeta,#version,#descripcion,#nombreactividad').val('');
@@ -687,7 +741,7 @@
         $('#reg_id').val('');
     });
     $('body').delegate('.modificarregistro', 'click', function () {
-        var registro=$(this).attr('reg_id');
+        var registro = $(this).attr('reg_id');
         $.post(
                 "<?php echo base_url("index.php/planes/modificarregistro") ?>",
                 {registro: registro}
@@ -707,7 +761,7 @@
             $('#frmagregarregistro').append(fila);
             $('#myModal').modal('show')
         }).fail(function (msg) {
-            alerta("rojo","Error, por favor comunicarse con el administrador del sistema");
+            alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
         });
     });
     $('body').delegate("#guardarcarpeta", "click", function () {
@@ -764,7 +818,7 @@
         }
     });
 
-    function grafi(label, valor,valor2) {
+    function grafi(label, valor, valor2) {
         var lineChartData = {
             labels: label,
             datasets: [
@@ -796,14 +850,19 @@
     }
 
 <?php if (!empty($fechas) && !empty($valores2)) { ?>
-        grafi([<?php echo $fechas; ?>], [<?php echo $valores2; ?>],[<?php echo $valores3; ?>]);
+        grafi([<?php echo $fechas; ?>], [<?php echo $valores2; ?>], [<?php echo $valores3; ?>]);
 <?php } ?>
 
-$('.envio').click(function() {
+    $('.envio').click(function () {
         $('#pla_id_3').val($(this).attr('nuevo'));
         $('#formulario_siguiente').submit();
     })
 </script>
+<style>
+    .tab-content{
+        color: #000;
+    }
+</style>
 <form id="formulario_siguiente" action="<?php echo base_url('index.php/indicador/nuevoindicador') ?>" method="POST">
     <input type="hidden" id="pla_id_3" name="ind_id">
 </form>

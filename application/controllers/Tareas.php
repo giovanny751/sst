@@ -234,9 +234,9 @@ class Tareas extends My_Controller {
             //De la carpeta idRegistro, creamos carpeta con el id del empleado
             $post['reg_ruta'] = $targetPath;
             $idregistro = $this->Registro_model->guardar_registro($post);
-            $targetPath = $targetPath .'/'. $idregistro;
+            $targetPath = $targetPath . '/' . $idregistro;
             if (!file_exists($targetPath))
-            mkdir($targetPath, 0777, true);
+                mkdir($targetPath, 0777, true);
             $targetPath = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $targetPath)) {
                 
@@ -508,7 +508,7 @@ class Tareas extends My_Controller {
                         "nombre" => $t->Emp_Nombre,
                         "tipo" => $t->tip_tipo,
                         "cantidadriesgo" => $t->cantidadriesgo,
-                        "progreso" => (!empty($t->progreso)?$t->progreso.'%':'0%')
+                        "progreso" => (!empty($t->progreso) ? $t->progreso . '%' : '0%')
                     )
                 );
             endforeach;
@@ -630,16 +630,15 @@ class Tareas extends My_Controller {
             $post = $this->input->post();
             $this->load->model('Registro_model');
 
+            $post['empReg_archivo'] = "";
             if (isset($_FILES['archivo']['name']))
                 if (!empty($_FILES['archivo']['name']))
                     $post['empReg_archivo'] = basename($_FILES['archivo']['name']);
 
-            $targetPath = "./uploads/empleado";
+            $targetPath = "./uploads/tareas/".$this->input->post("plan").'/';
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
-            $targetPath = "./uploads/registro/";
-
             $data = array(
                 "pla_id" => $this->input->post("plan"),
                 "tar_id" => $this->input->post("tarea"),
@@ -648,17 +647,19 @@ class Tareas extends My_Controller {
                 "reg_descripcion" => $this->input->post("descripcion"),
                 "reg_fechaCreacion" => date('Y-m-d H:i:s'),
                 "userCreator" => $this->data["usu_id"],
-                "reg_ruta" => $targetPath
+                "reg_ruta" => $targetPath,
+                "reg_archivo" => $post['empReg_archivo']
             );
 
 
 
-            $this->Registro_model->create($data);
+            $id = $this->Registro_model->create($data);
 
+            $targetPath = $targetPath.$id.'/';
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
-
+            
             $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 

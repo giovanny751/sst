@@ -47,16 +47,25 @@ class Planes extends My_Controller {
                 mkdir($targetPath, 0777, true);
             }
 
-            $post['reg_ruta'] = $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
+            $post['reg_ruta'] = $targetPath;
             $post['reg_archivo'] = basename($_FILES['archivo']['name']);
+            
+            $post['userCreator'] = $this->data["usu_id"];
+            if (empty($this->input->post('reg_id')))
+                $id=$this->Registro_model->guardar_registro($post);
+            else
+                $id=$this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
+            
+            $target_path = $targetPath . '/'.$id.'/';
+            if (!file_exists($target_path)) {
+                mkdir($target_path, 0777, true);
+            }
+            $target_path = $target_path  . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
             }
-            $post['userCreator'] = $this->data["usu_id"];
-            if (empty($this->input->post('reg_id')))
-                $this->Registro_model->guardar_registro($post);
-            else
-                $this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
+            
+            
             $data = $this->Registro_model->registroxcarpeta($post['regCar_id']);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {

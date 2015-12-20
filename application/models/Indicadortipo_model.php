@@ -79,6 +79,24 @@ class Indicadortipo_model extends CI_Model {
             
         }
     }
+    function delete_indicador_valores($id) {
+        try {
+            $this->db->where("indVal_id", $id);
+            $this->db->delete("indicador_valores");
+        } catch (exception $e) {
+            
+        }
+    }
+    function modificar_indicador_valores($id) {
+        try {
+            $this->db->where("indVal_id", $id);
+            $datos=$this->db->get("indicador_valores");
+            return $datos->result();
+        } catch (exception $e) {
+            
+        }
+    }
+    
 
 }
 

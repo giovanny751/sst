@@ -1096,7 +1096,8 @@ echo (empty($plan[0]->pla_id)) ? base_url('index.php/planes/guardarplan') : base
                 var filas = "";
                 $.each(result, function(key, val) {
                     filas += "<tr>";
-                    filas += "<td>" + val.reg_archivo + "</td>";
+                    filas += "<td><a target='_black' href='<?php echo base_url('') ?>"+val.reg_ruta+'/'+val.reg_id+'/'+val.reg_archivo+"'>" + (val.reg_archivo == null ? '' : val.reg_archivo) + "</a></td>";
+//                    filas += "<td>" + val.reg_archivo + "</td>";
                     filas += "<td>" + val.reg_descripcion + "</td>";
                     filas += "<td>" + val.reg_version + "</td>";
                     filas += "<td>" +val.usu_nombre +" "+val.usu_apellido +"</td>";

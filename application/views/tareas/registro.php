@@ -261,31 +261,13 @@
             data: form_data,
             type: 'post',
             success: function(result) {
-                $('#datatable_ajax tbody *').remove();
-                $("#myModal15").modal("hide");
-                result = jQuery.parseJSON(result);
-                var idcarpeta = $('#carpeta').val()
-                var filas = "";
-                $.each(result, function(key, val) {
-                    filas += "<tr>";
-                    filas += "<td>" + val.reg_archivo + "</td>";
-                    filas += "<td>" + val.reg_descripcion + "</td>";
-                    filas += "<td>" + val.reg_version + "</td>";
-                    filas += "<td></td>";
-                    filas += "<td></td>";
-                    filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
-                    filas += "<td>" + val.reg_tamano + "</td>";
-                    filas += "<td>" + val.reg_fechaCreacion + "</td>";
-                    filas += "<td></td>";
-                    filas += "<td><i class='fa fa-pencil-square-o fa-2x modificarregistro btn btn-info' title='Modificar' reg_id='" + val.reg_id + "'  data-target='#myModal15' data-toggle='modal'></i></td>";
-                    filas += "<td><i class='fa fa-times fa-2x eliminarregistro btn btn-danger' title='Eliminar' reg_id='" + val.reg_id + "'></i></td>";
-                    filas += "</tr>";
-                });
-                $('#datatable_ajax tbody').append(filas);
+                $('#consultar').trigger('click')
+//                $('#datatable_ajax tbody').append(filas);
                 $('#carpeta').val('');
                 $('#version').val('');
                 $('#reg_descripcion').val('');
                 $('#archivo').val('');
+                $("#myModal15").modal("hide");
                 alerta('verde', 'Registro guardado con exito.');
             }
         });
@@ -353,7 +335,7 @@
                     $.each(msg.Json, function(key, val) {
                         body += "<tr>";
                         body += "<td>" + (val.pla_nombre == null ? '' : val.pla_nombre) + "</td>";
-                        body += "<td>" + (val.reg_archivo == null ? '' : val.reg_archivo) + "</td>";
+                        body += "<td><a target='_black' href='<?php echo base_url('') ?>"+val.reg_ruta+'/'+val.reg_id+'/'+val.reg_archivo+"'>" + (val.reg_archivo == null ? '' : val.reg_archivo) + "</a></td>";
                         body += "<td>" + (val.reg_descripcion == null ? '' : val.reg_descripcion) + "</td>";
                         body += "<td>" + val.reg_version + "</td>";
                         body += "<td></td>";

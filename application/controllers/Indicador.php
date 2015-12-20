@@ -252,7 +252,11 @@ class Indicador extends My_Controller {
             "indVal_unidad" => $this->input->post("unidad"),
             "indVal_fechaCreacion" => date("Y-m-d H:i:s")
         );
-        $this->Indicadorvalores_model->guardarvalores($data);
+        $this->Indicadorvalores_model->guardarvalores($data,$this->input->post("indVal_id"));
+        $this->traer_listado();
+    }
+    function traer_listado(){
+        $this->load->model("Indicadorvalores_model");
         $data = $this->Indicadorvalores_model->consultaIndicadorxId($this->input->post("ind_id"));
 
         $a = array();
@@ -328,6 +332,16 @@ class Indicador extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
         } else
             echo 1;
+    }
+    function eliminar_indicador_valores(){
+        $this->load->model('Indicadortipo_model');
+        $this->Indicadortipo_model->delete_indicador_valores($this->input->post('indVal_valor'));
+        $this->traer_listado();
+    }
+    function modificar_indicador_valores(){
+        $this->load->model('Indicadortipo_model');
+        $datos=$this->Indicadortipo_model->modificar_indicador_valores($this->input->post('indVal_valor'));
+        $this->output->set_content_type('application/json')->set_output(json_encode($datos));
     }
 
 }

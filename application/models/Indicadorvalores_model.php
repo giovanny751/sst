@@ -6,8 +6,12 @@ class Indicadorvalores_model extends CI_Model {
         parent::__construct();
     }
 
-    function guardarvalores($data) {
+    function guardarvalores($data,$id) {
         try {
+            if (!empty($id)){
+                $this->db->where("indVal_id", $id);    
+                $this->db->update("indicador_valores", $data);    
+            }else
             $this->db->insert("indicador_valores", $data);
         } catch (exception $e) {
             

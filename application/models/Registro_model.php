@@ -86,6 +86,7 @@ class Registro_model extends CI_Model {
         try {
             $this->db->where("reg_id",$idregistro);
             $this->db->update("registro", $post);
+            return $idregistro;
         } catch (exception $e) {
             
         }

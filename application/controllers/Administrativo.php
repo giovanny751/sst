@@ -911,6 +911,7 @@ class Administrativo extends My_Controller {
         $creados = 0;
         $actulizados = 0;
         $registros = 0;
+        $incosistencias = "";
         for ($row = 10; $row <= $lastRow; $row++) {
             $registros++;
             $info = array();
@@ -954,28 +955,35 @@ class Administrativo extends My_Controller {
                 $info['Dim_IdDos'] = $this->Empleado_model->buscar_dimencion2($excel->getCell('U' . $row)->getValue());
             if (($excel->getCell('V' . $row)->getValue()) != '')
                 $info['Car_id'] = $this->Empleado_model->cargo($excel->getCell('V' . $row)->getValue());
-            if (($excel->getCell('W' . $row)->getValue()) != '')
-                $info['TipDoc_id'] = $this->Empleado_model->tipo_documento($excel->getCell('W' . $row)->getValue());
-            $info['Est_id'] = $excel->getCell('X' . $row)->getValue();
-            $info['emp_fondo'] = $excel->getCell('Y' . $row)->getValue();
-            $info['Emp_contacto'] = $excel->getCell('Z' . $row)->getValue();
+            if (!empty($info['Car_id'])) {
+                if (($excel->getCell('W' . $row)->getValue()) != '')
+                    $info['TipDoc_id'] = $this->Empleado_model->tipo_documento($excel->getCell('W' . $row)->getValue());
+                $info['Est_id'] = $excel->getCell('X' . $row)->getValue();
+                $info['emp_fondo'] = $excel->getCell('Y' . $row)->getValue();
+                $info['Emp_contacto'] = $excel->getCell('Z' . $row)->getValue();
 
-            $this->db->select('Emp_Id');
-            $this->db->where('Emp_Cedula', $info['Emp_Cedula']);
-            $datos = $this->db->get('empleado');
-            $datos = $datos->result();
-            if (count($datos)) {
+                $this->db->select('Emp_Id');
                 $this->db->where('Emp_Cedula', $info['Emp_Cedula']);
-                $this->db->update('empleado', $info);
-                $actulizados++;
+                $datos = $this->db->get('empleado');
+                $datos = $datos->result();
+                if (count($datos)) {
+                    $this->db->where('Emp_Cedula', $info['Emp_Cedula']);
+                    $this->db->update('empleado', $info);
+                    $actulizados++;
+                } else {
+                    $this->db->insert('empleado', $info);
+                    $creados++;
+                }
             } else {
-                $this->db->insert('empleado', $info);
-                $creados++;
+                $incosistencias.='<br> Cargo no encontrado para la cedula: ' . $info['Emp_Cedula'];
             }
         }
         echo "<p><br>Numero de registros: " . $registros;
         echo "<br>Registros actualizados : " . $actulizados;
         echo "<br>Registros Creados : " . $creados;
+        if (!empty($incosistencias)) {
+            echo "<br>Datos con errores : " . $incosistencias;
+        }
     }
 
     function accidente() {
