@@ -349,8 +349,10 @@ class Ingreso_model extends CI_Model {
     function consultaPermisosAccion($usu_id, $controller, $method){
         
         
-        $this->db->select("modulo.menu_controlador clase");
-        $this->db->select("modulo.menu_accion metodo");
+        $this->db->select("permisos_metodo.perMet_clase clase");
+        $this->db->select("permisos_metodo.perMet_metodo metodo");
+        $this->db->select("permisos_metodo.tipCru_id accion");
+        $this->db->select("permisos_rol.*");
         $this->db->select("permisos.usu_id");
         $this->db->where("permisos_metodo.perMet_clase", $controller);
         $this->db->where("permisos_metodo.perMet_metodo", $method);
@@ -359,6 +361,7 @@ class Ingreso_model extends CI_Model {
         $this->db->join("permisos", "permisos.rol_id = roles.rol_id and usu_id = $usu_id");
         $this->db->join("permisos_metodo", "permisos_metodo.mod_id = modulo.menu_id","LEFT");
         $query = $this->db->get("modulo");
+//        echo $this->db->last_query();die;
         return $query->result_array();
     }
 

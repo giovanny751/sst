@@ -41,6 +41,7 @@ class MY_Controller extends CI_Controller {
                 )) {
             $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
             $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
+//            var_dump($permisosPeticion);die;
             if (!empty($view)) {
                 if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
                     echo "No tiene permisos por favor comunicarse con el administrador";
@@ -48,6 +49,18 @@ class MY_Controller extends CI_Controller {
             } else if (!empty($permisosPeticion)) {
                 if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
                     $this->data['respuesta'] = array("message" => "No tiene permisos de ejecutar la acción");
+                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                    exit;
+                }else if($permisosPeticion[0]['accion'] == 4 && empty($permisosPeticion[0]['perRol_crear'])){
+                    $this->data['respuesta'] = array("message" => "No tiene permisos de crear");
+                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                    exit;
+                }else if($permisosPeticion[0]['accion'] == 1 && empty($permisosPeticion[0]['perRol_eliminar'])){
+                    $this->data['respuesta'] = array("message" => "No tiene permisos de eliminar");
+                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+                    exit;
+                }else if($permisosPeticion[0]['accion'] == 2 && empty($permisosPeticion[0]['perRol_modificar'])){
+                    $this->data['respuesta'] = array("message" => "No tiene permisos de modificar");
                     $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
                     exit;
                 }
