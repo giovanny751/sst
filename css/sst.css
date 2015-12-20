@@ -203,4 +203,9 @@
     display:inline-block;
     float: right;
 }
+.derechaCheck{
+    display:inline-block;
+    float: right;
+    clear: right;
+}
 
