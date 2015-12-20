@@ -939,11 +939,15 @@
         if (compararfecha($("#fechaIncio").val(), $("#fechafinalizacion").val(), "compararfecha")) {
             $('#fechaIncio').addClass("obligado");
             $('#fechafinalizacion').addClass("obligado");
+            if($(this).attr("title") == 'Actualizar')var ruta = "<?php echo base_url("index.php/tareas/listadotareas") ?>"
+            else ruta = "<?php echo base_url("index.php/planes/nuevoplan") ?>";
             if (obligatorio("obligatorio")) {
                 $.post("<?php echo base_url("index.php/tareas/guardartarea") ?>",
                         $('#f8').serialize()
                         ).done(function (msg) {
-                    var form = "<form method='post' id='enviotarea' action='<?php echo base_url("index.php/planes/nuevoplan") ?>'>";
+                            
+                            
+                    var form = "<form method='post' id='enviotarea' action='"+ruta+"'>";
                     form += "<input type='hidden' value='" + msg.pla_id + "' name='pla_id'>";
                     form += "</form>"
                     $('#planes').append(form);
