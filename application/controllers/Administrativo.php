@@ -15,59 +15,27 @@ class Administrativo extends My_Controller {
 
     function __construct() {
         parent::__construct();
-//        $data = array("message"=>"");
-//        $this->output->set_content_type('application/json')->set_output(json_encode($data));die;
-        
-        switch (1) {
+        $this->load->model('Ingreso_model');
+        $this->load->model('Roles_model');
+        $this->data["usu_id"] = $this->session->userdata('usu_id');
+        validate_login($this->data["usu_id"]);
+        $this->load->library('PHPExcel/Classes/PHPExcel.php');
+        switch ($this->verificacion()) {
             case 1:
-                $data = array("message"=>"");
-                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-                die;
-            break;
+                $this->layout->view("permisos");
+                break;
             case 2:
-                $data = array("message"=>"");
-                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-                die;
-            break;
+                $this->data['respuesta'] = array("message" => "No tiene permisos de ejecutar la acción");
+                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta']));
+                break;
             case 3:
-                $data = array("message"=>"");
-                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-                die;
-            break;
-
+                $this->data['respuesta'] = array("message" => "No tiene permisos por favor comunicarse con el administrador");
+                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta']));
+                break;
             default:
-            break;
+                break;
         }
     }
-    
-//    function __construct() {
-//        parent::__construct();
-////        $this->load->model('Ingreso_model');
-////        $this->load->model('Roles_model');
-////        $this->data["usu_id"] = $this->session->userdata('usu_id');
-////        validate_login($this->data["usu_id"]);
-//        switch ($this->consultaacceso()) {
-//            case 1:
-//                $data = array("message"=>"");
-//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-//                die;
-//            break;
-//            case 2:
-//                $data = array("message"=>"");
-//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-//                die;
-//            break;
-//            case 3:
-//                $data = array("message"=>"");
-//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-//                die;
-//            break;
-//
-//            default:
-//            break;
-//        }
-//        $this->load->library('PHPExcel/Classes/PHPExcel.php');
-//    }
 
     function creacionempleados() {
 
@@ -771,8 +739,8 @@ class Administrativo extends My_Controller {
             $this->Dimension2_model->create($data);
             $dimension = $this->Dimension2_model->detail();
             $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else{
-            $respuesta["message"] = "Datos existente en el sistema"; 
+        } else {
+            $respuesta["message"] = "Datos existente en el sistema";
             $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
         }
     }
@@ -820,15 +788,15 @@ class Administrativo extends My_Controller {
             $this->Dimension_model->create($data);
             $dimension = $this->Dimension_model->detail();
             $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else{
-            $respuesta["message"] = "Datos existente en el sistema"; 
+        } else {
+            $respuesta["message"] = "Datos existente en el sistema";
             $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
         }
     }
 
     function eliminardimension() {
-        $this->load->model('Dimension_model');
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
+//        $this->load->model('Dimension_model');
+//        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
     }
 
     function actualizardimension() {
@@ -836,25 +804,25 @@ class Administrativo extends My_Controller {
     }
 
     function empresa() {
-            $this->load->model("Empresa_model");
-            $this->load->model('Tamano_empresa_model');
-            $this->load->model('Numero_empleados_model');
-            $this->load->model('Ingreso_model');
-            $this->load->model('Actividadeconomica_model');
-            $this->data['mensaje'] = "";
-            if ($this->session->guardadoexito == "guardado con exito") {
+        $this->load->model("Empresa_model");
+        $this->load->model('Tamano_empresa_model');
+        $this->load->model('Numero_empleados_model');
+        $this->load->model('Ingreso_model');
+        $this->load->model('Actividadeconomica_model');
+        $this->data['mensaje'] = "";
+        if ($this->session->guardadoexito == "guardado con exito") {
 //                echo "esta aca";die;
-                $this->data['mensaje'] = "guardado con exito";
-                $this->session->guardadoexito = "xyz";
-            }
+            $this->data['mensaje'] = "guardado con exito";
+            $this->session->guardadoexito = "xyz";
+        }
 
-            $this->data['ciudad'] = $this->Ingreso_model->ciudades();
-            $this->data['tamano'] = $this->Tamano_empresa_model->detail();
-            $this->data['numero'] = $this->Numero_empleados_model->detail();
-            $this->data['informacion'] = $this->Empresa_model->detail();
-            $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
+        $this->data['ciudad'] = $this->Ingreso_model->ciudades();
+        $this->data['tamano'] = $this->Tamano_empresa_model->detail();
+        $this->data['numero'] = $this->Numero_empleados_model->detail();
+        $this->data['informacion'] = $this->Empresa_model->detail();
+        $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
 //        var_dump($this->data['informacion']);die;
-            $this->layout->view("administrativo/empresa", $this->data);
+        $this->layout->view("administrativo/empresa", $this->data);
     }
 
     function guardarempresa() {

@@ -29,30 +29,28 @@ class MY_Controller extends CI_Controller {
         $this->load->model('Ingreso_model');
         
     }
-
-    public function consultaacceso() {
+    function verificacion(){
         $ci = & get_instance();
         $controller = $ci->router->fetch_class();
         $method = $ci->router->fetch_method();
-        if (
+         if (
                 ((strtoupper($controller) != strtoupper('login')) &&
                 (
-                strtoupper($method) != strtoupper('index') ||
-                strtoupper($method) != strtoupper('verify')
+                strtoupper($method) != strtoupper('index') || strtoupper($method) != strtoupper('verify')
                 )
                 )) {
             $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
             $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
-            if(!empty($view) ){
-                if(!empty($view[0]['clase']) &&  !empty($view[0]['metodo']) && empty($view[0]['usu_id'])){
+            if (!empty($view)) {
+                if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
                     return 1;
                 }
-            }else if(!empty($permisosPeticion)){
-                if(!empty($permisosPeticion[0]['clase']) &&  !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])){
+            } else if (!empty($permisosPeticion)) {
+                if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
                     return 2;
+
                 }
-            }
-            else if(empty($permisosPeticion) || empty($view)){
+            } else if (empty($permisosPeticion) || empty($view)) {
                 return 3;
             }
         }

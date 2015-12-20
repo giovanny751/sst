@@ -18,6 +18,14 @@ class Planes extends My_Controller {
         $this->load->model('Roles_model');
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data["usu_id"]);
+        $this->prueba();
+
+    }
+    function prueba (){
+            $this->load->model('Tarea_model');
+            $this->data['tarea'] = $this->Tarea_model->detailxidplan($this->input->post('pla_id'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($this->data['tarea']));
+        
     }
     
     function guardarregistroempleado() {
