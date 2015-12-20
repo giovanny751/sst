@@ -27,9 +27,9 @@ class Presentacion extends My_Controller {
         $this->load->model('Tipo_model');
         $this->load->model('Planes_model');
         $this->data['tipo'] = $this->Tipo_model->avanceciclophva();
-        $id = $this->data['user']['emp_id'];
+//        $id = $this->data['user']['emp_id'];
         $this->data['inicio'] = $this->Ingreso_model->admin_inicio();
-        $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
+//        $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
         
         
         $id_plan=$this->input->post('pla_id');

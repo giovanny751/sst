@@ -34,7 +34,6 @@ class MY_Controller extends CI_Controller {
         $ci = & get_instance();
         $controller = $ci->router->fetch_class();
         $method = $ci->router->fetch_method();
-        $data['option'] = "uuu";
         if (
                 ((strtoupper($controller) != strtoupper('login')) &&
                 (

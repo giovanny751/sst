@@ -15,28 +15,59 @@ class Administrativo extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->model('Ingreso_model');
-        $this->load->model('Roles_model');
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
-        switch ($this->consultaacceso()) {
+//        $data = array("message"=>"");
+//        $this->output->set_content_type('application/json')->set_output(json_encode($data));die;
+        
+        switch (1) {
             case 1:
-                echo "No tiene permisos para ingresar a visualizar la vista";
+                $data = array("message"=>"");
+                $this->output->set_content_type('application/json')->set_output(json_encode($data));
                 die;
             break;
             case 2:
-                $data =  array("message"=>"No tiene permisos para ejecutar a la acción");
+                $data = array("message"=>"");
                 $this->output->set_content_type('application/json')->set_output(json_encode($data));
                 die;
             break;
             case 3:
-                $data = array('message'=>"No tiene permisos por favor verificar con el administrador");
+                $data = array("message"=>"");
                 $this->output->set_content_type('application/json')->set_output(json_encode($data));
                 die;
             break;
+
+            default:
+            break;
         }
-        $this->load->library('PHPExcel/Classes/PHPExcel.php');
     }
+    
+//    function __construct() {
+//        parent::__construct();
+////        $this->load->model('Ingreso_model');
+////        $this->load->model('Roles_model');
+////        $this->data["usu_id"] = $this->session->userdata('usu_id');
+////        validate_login($this->data["usu_id"]);
+//        switch ($this->consultaacceso()) {
+//            case 1:
+//                $data = array("message"=>"");
+//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+//                die;
+//            break;
+//            case 2:
+//                $data = array("message"=>"");
+//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+//                die;
+//            break;
+//            case 3:
+//                $data = array("message"=>"");
+//                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+//                die;
+//            break;
+//
+//            default:
+//            break;
+//        }
+//        $this->load->library('PHPExcel/Classes/PHPExcel.php');
+//    }
 
     function creacionempleados() {
 

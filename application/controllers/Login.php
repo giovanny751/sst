@@ -17,32 +17,6 @@ class Login extends My_Controller {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->model('Ingreso_model');
-        if (
-                ((strtoupper($controller) != strtoupper('login')) &&
-                (
-                strtoupper($method) != strtoupper('index') ||
-                strtoupper($method) != strtoupper('verify')
-                )
-                )) {
-            $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
-            $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
-            if (!empty($view)) {
-                if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
-                    echo "No tiene permisos para ingresar a visualizar la vista";
-                    die;
-                }
-            } else if (!empty($permisosPeticion)) {
-                if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
-                    $data["message"] = array("No tiene permisos para ejecutar a la acción");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($data));
-                    die;
-                }
-            } else if (empty($permisosPeticion) || empty($view)) {
-                $data = array('message' => "No tiene permisos por favor verificar con el administrador");
-                $this->output->set_content_type('application/json')->set_output(json_encode($data));
-                die;
-            }
-        }
     }
 
     public function index() {
