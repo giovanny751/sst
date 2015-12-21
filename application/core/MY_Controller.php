@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('layout', 'layout_main');
         $this->data['user'] = $this->session->userdata();
         $this->load->model('Ingreso_model');
-//        $this->verificacion();
+        $this->verificacion();
     }
     function verificacion(){
         $ci = & get_instance();
