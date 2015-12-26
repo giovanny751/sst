@@ -44,7 +44,7 @@ class Riesgo extends My_Controller {
                 $d = array();
                 foreach ($carpeta as $c) {
                     $d[$c->regCar_id][$c->regCar_nombre . " - " . $c->regCar_descripcion][] = array(
-                        $c->reg_archivo,
+                        '<a target="_black" href="'.  base_url().$c->reg_ruta."/".$c->reg_id.'/'.$c->reg_archivo.'">'.$c->reg_archivo."</a>",
                         $c->reg_descripcion,
                         $c->reg_version,
                         $c->usu_nombre . " " . $c->usu_apellido,
@@ -61,7 +61,7 @@ class Riesgo extends My_Controller {
                 $this->data['tipo'] = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->data['riesgo']->rieCla_id);
                 $this->data['color'] = $this->Estadoaceptacioncolor_model->colorxestado($this->data['riesgo']->estAce_id);
                 $this->data['cargoId'] = $this->Riesgocargo_model->detailxid($this->input->post("rie_id"));
-                $this->data['tareas'] = $this->Planes_model->tareaxplanriesgo($this->data['riesgo']->rieCla_id);
+                $this->data['tareas'] = $this->Planes_model->tareaxplanriesgo($this->data['rie_id']);
                 $this->data['tareasinactivas'] = $this->Planes_model->tareaxplaninactivasriesgo($this->data['riesgo']->rieCla_id);
             }
             $this->data['dimension'] = $this->Dimension_model->detail();
@@ -100,6 +100,7 @@ class Riesgo extends My_Controller {
                 endfor;
                 $this->Riesgocargo_model->guardarcargo($dataCargo);
             endif;
+            echo $id;
         } catch (Exception $ex) {
             
         }
@@ -140,7 +141,7 @@ class Riesgo extends My_Controller {
 
     function listadoavance2() {
         $this->load->model('Avancetarea_model');
-        $clasificacion = $this->Avancetarea_model->listado_avanceriesgo($this->input->post('clasificacionriesgo'));
+        $clasificacion = $this->Avancetarea_model->listado_avanceriesgo($this->input->post('rie_id'));
         $this->output->set_content_type('application/json')->set_output(json_encode($clasificacion));
     }
 
@@ -178,10 +179,15 @@ class Riesgo extends My_Controller {
     }
 
     function consultatiporiesgo() {
-
-        $this->load->model("Riesgoclasificaciontipo_model");
-        $data = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->input->post("categoria"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model("Riesgoclasificaciontipo_model");
+            $data['Json'] = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->input->post("categoria"));
+            if (count($data['Json']) == 0)
+                $data["message"] = "No hay tipos para la categoria";
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        }
     }
 
     function clasificacionriesgo() {
@@ -221,8 +227,10 @@ class Riesgo extends My_Controller {
 
     function listadoriesgocargos() {
         $this->load->model('Riesgocargo_model');
-        $data["cargoId"] = $this->Riesgocargo_model->detailxcargoxid($this->input->post('rie_id'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data["cargoId"]));
+        $data["Json"] = $this->Riesgocargo_model->detailxcargoxid($this->input->post('rie_id'));
+        if (count($data["Json"]) == 0) 
+            $data["message"] = "No hay información";
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
     function estadosaceptacion() {
@@ -397,10 +405,14 @@ class Riesgo extends My_Controller {
     }
 
     function consultatiporiesgoxclasificacion() {
-
+        try{
         $this->load->model("Riesgoclasificaciontipo_model");
-        $data = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->input->post("categoria"));
+        $data['Json'] = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->input->post("categoria"));
+        if(count($data['Json']) == 0) $data['message'] = "No hay tipos asociados a la clasificación";
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }catch(exception $e){
+            
+        }
     }
 
     function busquedariesgo() {
@@ -421,18 +433,25 @@ class Riesgo extends My_Controller {
                     "rie_fecha" => $t->rie_fecha,
                     "rieClaTip_tipo" => $t->rieClaTip_tipo,
                     "rieCol_colorhtml" => $t->rieCol_colorhtml,
-                    "rie_actividad" => $t->rie_actividad
+                    "rie_actividad" => $t->rie_actividad,
+                    "cantidadTareas" => $t->cantidadTareas
                 );
             }
             $this->output->set_content_type('application/json')->set_output(json_encode($i));
         } else {
-            echo 1;
+            $data["message"] = "No se encontraron datos en el sistema";
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function eliminar_riesgos() {
-        $this->load->model("Riesgo_model");
-        $this->Riesgo_model->eliminar_riesgos($this->input->post());
+        try{
+            $this->load->model("Riesgo_model");
+            $data['Json'] = $this->Riesgo_model->eliminar_riesgos($this->input->post());
+            if($data['Json'] != true)$data["message"] = "No se pudo eliminar por favor comunicarse con el administrador";
+        }catch(exception $e){
+            
+        }
     }
 
     function eliminar() {

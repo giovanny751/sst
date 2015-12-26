@@ -41,6 +41,7 @@ class Tareas extends My_Controller {
         $this->load->model('Normaarticulo_model');
         $this->data['empresa'] = $this->Empresa_model->detail();
         $this->data['norma'] = $this->Norma_model->detail();
+        if(!empty($this->input->post('rie_id')))$this->data['rie_id'] = $this->input->post('rie_id');
         if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
             if (!empty($this->input->post("tar_id"))):
 
@@ -57,9 +58,6 @@ class Tareas extends My_Controller {
                 if (empty($this->data['derecha'])) {
                     $this->data['derecha'] = $this->data['max_der'];
                 }
-
-
-
                 if (!empty($this->input->post("nuevoavance")))
                     $this->data["nuevoavance"] = $this->input->post("nuevoavance");
                 $this->data['riesgos_guardada'] = $this->Tarea_model->lista_riesgos_guardados($this->input->post('tar_id'));
@@ -85,6 +83,8 @@ class Tareas extends My_Controller {
                 endif;
                 $this->data['carpeta'] = $d;
                 $this->data['tarea'] = $this->Tarea_model->detailxid($this->input->post("tar_id"))[0];
+                $this->load->model("Riesgoclasificaciontipo_model");
+                $this->data['tipoClasificacion'] = $this->Riesgoclasificaciontipo_model->tipoxcategoria($this->data['tarea']->rieCla_id);
 
                 $this->data['tarea_norma'] = $this->Tarea_model->tarea_norma($this->input->post("tar_id"));
                 $this->data['normaarticulo'] = $this->Normaarticulo_model->detailxId($this->data['tarea']->nor_id);
@@ -116,7 +116,6 @@ class Tareas extends My_Controller {
             $this->data['dimension2'] = $this->Dimension2_model->detail();
             $this->data['post'] = $this->input->post();
             $this->data['riesgos'] = $this->Tarea_model->lista_riesgos();
-
             $this->layout->view("tareas/nuevatarea", $this->data);
         } else {
             redirect('index.php/administrativo/empresa', 'location');
@@ -303,9 +302,14 @@ class Tareas extends My_Controller {
     }
 
     function listadoavance2() {
+        try{
         $this->load->model('Avancetarea_model');
-        $datos = $this->Avancetarea_model->listado_avance($this->input->post('tar_id'));
+        $datos['Json'] = $this->Avancetarea_model->listado_avance($this->input->post('tar_id'));
+        if(count($datos['Json']) == 0) $datos["message"] = "No hay avances";
         $this->output->set_content_type('application/json')->set_output(json_encode($datos));
+        }catch(exception $e){
+            
+        }
     }
 
     function listadotareasxplanfiltro() {

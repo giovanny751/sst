@@ -3,11 +3,21 @@
         <a href="<?php echo base_url()."index.php/administrativo/creacionempleados" ?>"><div class="circuloIcon" title="Nuevo Empleado" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
-<div class="row">
+<!--<div class="row">
     <div class="col-md-12">
         <div class="tituloCuerpo">
             <span class="txtTitulo"><a href="<?php echo base_url('index.php/presentacion/principal')?>">HOME</a>/
-                <!--<a href="<?php echo base_url('index.php/administrativo/empresa')?>">DATOS EMPRESA</a>/-->
+                <a href="<?php echo base_url('index.php/administrativo/empresa')?>">DATOS EMPRESA</a>/
+                LISTADO EMPLEADOS</span>
+        </div>
+    </div>
+</div>-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="tituloCuerpo">
+            <span class="txtTitulo">
+                <a href="<?php echo base_url("index.php/presentacion/principal") ?>">HOME</a>/
+                <a href="<?php echo base_url("index.php/administrativo/empresa") ?>">EMPRESA</a>/
                 LISTADO EMPLEADOS</span>
         </div>
     </div>

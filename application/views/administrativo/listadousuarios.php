@@ -190,9 +190,9 @@
                         $('input[rol="' + val.rol_id + '"]').parent("span").addClass('checked');
                         $('input[rol="' + val.rol_id + '"]').prop('checked', true);
                         $('input[rol="' + val.rol_id + '"]').is(":checked");
-                        $("#myModal3").modal("toggle");
+                        
                     });
-                    
+                    $("#myModal3").modal("show");
 //                    $('#myModal3').show(); 
                 }).fail(function (msg) {
                     alerta("rojo","Error, por favor comunicarse con el administrador del sistema");

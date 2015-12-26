@@ -291,6 +291,11 @@ class Empleado_model extends CI_Model {
             return $this->db->insert_id();
         }
     }
+    function validarExistencia($id){
+        $this->db->where("car_id",$id);
+        $empleado = $this->db->get('empleado');
+        return $empleado->result();
+    }
 
 }
 

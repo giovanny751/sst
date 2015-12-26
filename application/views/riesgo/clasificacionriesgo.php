@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <th style="text-align:center"><b><?= $categoria ?></b></th>  
-                            <th><i class="fa fa-pencil-square-o fa-2x modificar2" rieCla_id="<?php echo $id ?>" title="Modificar" data-target="#myModal2" data-toggle="modal"></i></th>
+                            <th><i class="fa fa-pencil-square-o fa-2x modificar2" nombre='<?= $categoria ?>' rieCla_id="<?php echo $id ?>" title="Modificar" data-target="#myModal2" data-toggle="modal"></i></th>
                             <th><i class="fa fa-trash-o fa-2x eliminarcategoria"  title="Eliminar" rieCla_id="<?php echo $id ?>"></i></th>
                         </tr>
                         <tr>
@@ -139,6 +139,7 @@
     $('body').delegate('.modificar2', 'click', function () {
         $("#accion").val('2')
         $('#tip_id').val($(this).attr('rieclatip_id'))
+        $('#categoria_m').val($(this).attr('nombre'))
         $('#rieCla_id').val($(this).attr("riecla_id"));
         $('#categoria_id').val($(this).attr('rieCla_id'));
         $('#tipo').val($(this).attr('rieClaTip_tipo'));
@@ -185,7 +186,7 @@
                 cuerpo += "<thead>";
                 cuerpo += "<tr>";
                 cuerpo += "<th   style='text-align:center'><b>" + indice + "</b></th>";
-                cuerpo += "<th  style='text-align:center'> <i class='fa fa-pencil-square-o fa-2x modificarcategoria' data-toggle='modal' data-target='#myModal2' riecla_id='" + key + "'  title='Modificar'></i></th>";
+                cuerpo += "<th  style='text-align:center'> <i class='fa fa-pencil-square-o fa-2x modificar2' data-toggle='modal' nombre='" + indice + "' data-target='#myModal2' riecla_id='" + key + "'  title='Modificar'></i></th>";
                 cuerpo += "<th><i class='fa fa-trash-o fa-2x eliminarcategoria' rieCla_id='" + key + "'  title='Eliminar'></i></th>";
                 cuerpo += "</tr>";
                 cuerpo += "<tr>";

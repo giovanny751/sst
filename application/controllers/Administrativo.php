@@ -633,13 +633,21 @@ class Administrativo extends My_Controller {
     function eliminarcargo() {
 
         $this->load->model('Cargo_model');
-        $consulta = $this->Cargo_model->consultahijos($this->input->post('id'));
-        if ($consulta > 0) {
-            echo 1;
+        $this->load->model('Empleado_model');
+        $validar = $this->Empleado_model->validarExistencia($this->input->post('id'));
+        if (empty($validar)) {
+            $consulta = $this->Cargo_model->consultahijos($this->input->post('id'));
+            if ($consulta > 0) {
+                $data['message'] = "Tiene personas a cargo";
+                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+            } else {
+                $this->Cargo_model->delete($this->input->post('id'));
+                $this->data["cargo"] = $this->Cargo_model->detail();
+                $this->output->set_content_type('application/json')->set_output(json_encode($this->data["cargo"]));
+            }
         } else {
-            $this->Cargo_model->delete($this->input->post('id'));
-            $this->data["cargo"] = $this->Cargo_model->detail();
-            $this->output->set_content_type('application/json')->set_output(json_encode($this->data["cargo"]));
+            $data['message'] = "Tiene empleados asociados al cargo";
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 

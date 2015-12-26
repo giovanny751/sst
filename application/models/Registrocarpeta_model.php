@@ -45,6 +45,7 @@ class Registrocarpeta_model extends CI_Model {
         $this->db->select("registro.reg_version");
         $this->db->select("registro.reg_descripcion");
         $this->db->select("registro.reg_fechaCreacion");
+        $this->db->select("registro.reg_ruta");
         $this->db->select("registro.reg_id");
         $this->db->select("registro.reg_archivo");
         $this->db->select("registro.reg_tamano");

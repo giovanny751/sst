@@ -141,7 +141,7 @@
                             <a data-toggle="tab" href="#tab4">Actividades</a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#tab5">Gráfica de Grantt</a>
+                            <a data-toggle="tab" href="#tab5">Gráfica de Gantt</a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#tab6">Registros</a>

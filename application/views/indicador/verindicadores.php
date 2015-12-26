@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        <a href="<?php echo base_url()."/index.php/indicador/nuevoindicador" ?>"><div class="circuloIcon" title="Nuevo Indicador" ><i class="fa fa-folder-open fa-3x"></i></div></a>
+        <a href="<?php echo base_url() . "/index.php/indicador/nuevoindicador" ?>"><div class="circuloIcon" title="Nuevo Indicador" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
 <div class="row">
@@ -62,7 +62,7 @@
     </form>
     <hr>
     <div class="row" id="bodyIndicador">
-        
+
     </div>
 </div>
 <form method="post" id="fEnvio" action="<?php echo base_url("index.php/indicador/nuevoindicador") ?>">
@@ -83,10 +83,12 @@
                 .done(function (msg) {
                     $('#bodyIndicador *').remove();
                     var tbody = "";
-                    if(msg != 1){
-                    $.each(msg.Json, function (id, tipos) {
-                        $.each(tipos, function (tipo, data) {
-                            tbody += "<table class='tablesst'>\n\
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("amarillo", msg['message'])
+                    else {
+                        $.each(msg.Json, function (id, tipos) {
+                            $.each(tipos, function (tipo, data) {
+                                tbody += "<table class='tablesst'>\n\
                                         <thead style='text-align:center;'>\n\
                                         <tr>\n\
                                         <th colspan='10' style='width:20%'>" + tipo + "</th></tr>\n\
@@ -100,8 +102,8 @@
                                         <th style='width:15%'>Responsable</th>\n\
                                         <th style='width:5%'>Editar</th></tr>\n\
                                     </thead>";
-                            $.each(data, function(key, val){
-                                tbody += "<tr>";
+                                $.each(data, function (key, val) {
+                                    tbody += "<tr>";
                                     tbody += "<td>" + val.ind_indicador + "</td>";
                                     tbody += "<td>" + val.dimuno + "</td>";
                                     tbody += "<td>" + val.dimdos + "</td>";
@@ -114,11 +116,11 @@
                                 <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" ind_id="' + val.ind_id + '"></i>\n\
                                 <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" ind_id="' + val.ind_id + '"></i>\n\
 </td>';
-                                tbody += "</tr>";
+                                    tbody += "</tr>";
+                                });
+                                tbody += "</table>";
                             });
-                            tbody += "</table>";
                         });
-                    });
                     }
                     $('#bodyIndicador').append(tbody);
 //                    

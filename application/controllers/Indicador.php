@@ -38,9 +38,6 @@ class Indicador extends My_Controller {
             $this->data['dimension'] = $this->Dimension_model->detail();
             $this->data['dimension2'] = $this->Dimension2_model->detail();
             if (!empty($this->input->post("ind_id"))) {
-                
-                
-                
                 $this->data['todo_izq'] = $this->Indicador_model->min_id();
                 $this->db->where('ind_id <', $this->input->post('ind_id'));
                 $this->data['izq'] = $this->Indicador_model->max_id();
@@ -54,10 +51,6 @@ class Indicador extends My_Controller {
                 if (empty($this->data['derecha'])) {
                     $this->data['derecha'] = $this->data['max_der'];
                 }
-                
-                
-                
-                
                 $this->load->model("Indicadorvalores_model");
                 $this->load->model("Indicadorcarpeta_model");
                 $this->load->model("Registrocarpeta_model");
@@ -236,7 +229,7 @@ class Indicador extends My_Controller {
             );
         }
         if (empty($i))
-            $i = 1;
+            $i['message'] = "No se encontro Información en el sistema";
         $this->output->set_content_type('application/json')->set_output(json_encode($i));
     }
 

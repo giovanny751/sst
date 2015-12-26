@@ -74,7 +74,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($dimension as $d1) { ?>
                                 <option <?php echo ((!empty($riesgo->dim1_id)) && ($d1->dim_id == $riesgo->dim1_id)) ? "selected" : ""; ?> value="<?php echo $d1->dim_id; ?>"><?php echo $d1->dim_descripcion; ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select> 
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($dimension2 as $d2) { ?>
                                 <option <?php echo ((!empty($riesgo->dim2_id)) && ($d2->dim_id == $riesgo->dim2_id) ? "selected" : "") ?> value="<?php echo $d2->dim_id ?>"><?php echo $d2->dim_descripcion ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($estadoaceptacionxcolor as $ec): ?>
                                 <option <?php echo ((!empty($riesgo->estAce_id)) && ($ec->estAce_id == $riesgo->estAce_id) ? "selected" : "") ?> value="<?php echo $ec->estAce_id ?>"><?php echo $ec->estAce_estado ?></option>
-<?php endforeach; ?>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
@@ -140,7 +140,8 @@
                                 foreach ($color as $co):
                                     ?>
                                     <option <?php echo ((!empty($riesgo->col_id)) && ($co->estAceCol_id == $riesgo->col_id) ? "selected" : "") ?> value="<?php echo $co->estAceCol_id; ?>"><?php echo $co->rieCol_color; ?></option> 
-                                    <?php endforeach;
+                                    <?php
+                                endforeach;
                             endif;
                             ?>
                         </select>
@@ -170,7 +171,7 @@
                             $select[] = 0;
                         }
                         ?>
-<?php echo listaMultiple2("cargo[]", "cargo", "form-control", "cargo", "car_id", "car_nombre", $select, array("cargo.est_id"=>1), null) ?> 
+                        <?php echo listaMultiple2("cargo[]", "cargo", "form-control", "cargo", "car_id", "car_nombre", $select, array("cargo.est_id" => 1), null) ?> 
                     </div>
                 </div>
                 <div class="row">
@@ -185,7 +186,7 @@
             <input type="hidden" name="rie_id" id="rie_id" value="<?php echo (!empty($rie_id)) ? $rie_id : ""; ?>" />
         </form>
     </div>
-<?php if (!empty($rie_id)): ?>
+    <?php if (!empty($rie_id)): ?>
         <div class="portlet box blue">
             <div class="portlet-title">
                 <div class="caption">
@@ -206,7 +207,7 @@
                             <a data-toggle="tab" href="#tab3">Avance de tareas</a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#tab4">Gráfica de Grantt</a>
+                            <a data-toggle="tab" href="#tab5">Gráfica de Gantt</a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#tab4">Registros</a>
@@ -227,7 +228,7 @@
                                 <th>Responsables</th>
                                 </thead> 
                                 <tbody>
-    <?php if (empty($tareas)) { ?>
+                                    <?php if (empty($tareas)) { ?>
                                         <tr>
                                             <td colspan="9">
                                     <center>
@@ -239,7 +240,18 @@
                                     </tr>
                                     <?php
                                 } else {
+                                    $fecha_minima = '1000-12-26';
+                                    $fecha_maxima = '1000-12-26';
                                     foreach ($tareas as $tar) {
+                                        $f = strtotime($tar->tar_fechaInicio);
+                                        $er = strtotime($fecha_minima);
+                                        if ($er < $f)
+                                            $fecha_minima = $tar->tar_fechaInicio;
+                                        $D = strtotime($tar->tar_fechaFinalizacion);
+                                        $H = strtotime($fecha_maxima);
+                                        echo $H . '***' . $D . '||';
+                                        if ($H < $D)
+                                            $fecha_maxima = $tar->tar_fechaFinalizacion;
                                         ?>
                                         <tr>
                                             <td style="text-align: center"><i class='fa fa-pencil btn btn-default editartarea' tar_id='<?php echo $tar->tar_id ?>' ></i></td>
@@ -272,7 +284,7 @@
                                 <th>Responsables</th>
                                 </thead>
                                 <tbody >
-    <?php foreach ($tareasinactivas as $ti): ?>
+                                    <?php foreach ($tareasinactivas as $ti): ?>
                                         <tr>
                                             <td><i class='fa fa-pencil btn btn-default editartarea' tar_id='<?php echo $ti->tar_id ?>' ></i></td>
                                             <td></td>
@@ -283,7 +295,7 @@
                                             <td><?php echo $ti->diferencia ?>&nbsp;Días</td>
                                             <td><?php echo $ti->nombre ?></td>
                                         </tr>
-    <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -354,7 +366,7 @@
                                                                         <th>Acción</th>
                                                                         </thead>
                                                                         <tbody>
-            <?php foreach ($numcar as $numerocar => $campocar): ?>
+                                                                            <?php foreach ($numcar as $numerocar => $campocar): ?>
                                                                                 <tr>
                                                                                     <td><?php echo $campocar[0] ?></td>
                                                                                     <td><?php echo $campocar[1] ?></td>
@@ -367,7 +379,7 @@
                                                                                         <i class="fa fa-pencil-square-o fa-2x modificarregistro btn btn-info" title="Modificar" reg_id="<?php echo $campocar[6] ?>" data-target="#myModal15" data-toggle="modal"></i>
                                                                                     </td>
                                                                                 </tr>   
-            <?php endforeach; ?>
+                                                                            <?php endforeach; ?>
                                                                         </tbody>
                                                                     </table>
                                                                 </div>
@@ -385,7 +397,24 @@
                             </div>
                         </div>
                         <div id="tab5" class="tab-pane">
-
+                            <p><br></p>
+                            <?php if (!empty($tareas)) { ?>
+                                <div id="grafica_granf">
+                                    <form id="formulario_grant">
+                                        <input type="text" id="fecha_maxima" name="fecha_maxima" value="<?php echo (isset($fecha_maxima) ? $fecha_maxima : '') ?>">
+                                        <input type="text" id="fecha_minima" name="fecha_minima" value="<?php echo (isset($fecha_minima) ? $fecha_minima : '') ?>">
+                                        <?php foreach ($tareas as $value) { ?>
+                                            <input type="text" id="tar_fechaInicio" name="tar_fechaInicio[]" value="<?php echo $value->tar_fechaInicio ?>">        
+                                            <input type="text" id="tar_nombre" name="tar_nombre[]" value="<?php echo $value->tar_nombre ?>">        
+                                            <input type="text" id="diferencia" name="diferencia[]" value="<?php echo $value->diferencia ?>">        
+                                            <input type="text" id="tar_fechaFinalizacion" name="tar_fechaFinalizacion[]" value="<?php echo $value->tar_fechaFinalizacion ?>">        
+                                            <input type="text" id="ultimafechacreacion" name="ultimafechacreacion[]" value="<?php echo $value->ultimafechacreacion ?>">        
+                                            <input type="text" id="tar_id" name="tar_id[]" value="<?php echo $value->tar_id ?>">        
+                                            <input type="text" id="progreso" name="progreso[]" value="<?php echo $value->progreso ?>">        
+                                        <?php } ?>                                        
+                                    </form>
+                                </div>
+                            <?php } ?>                                        
                         </div>
                         <div id="tab6" class="tab-pane">
                             <table class="tablesst">
@@ -448,67 +477,83 @@
                 </div>
             </div>
         </div>
-    <div class="modal fade" id="myModal15" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">NUEVO REGISTRO</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post" id="frmagregarregistro">
-                                <input type="hidden" value="<?php echo (!empty($riesgo->rie_id)) ? $riesgo->rie_id : ""; ?>" name="rie_id" id="rie_id"/>
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <label for="idactividad">Carpeta:</label>
-                                    </div>
-                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                        <select id="carpeta" name="carpeta" class="form-control ">
-                                            <option value="">::Seleccionar::</option>
-                                            <?php foreach ($carpetas as $carp): ?>
-                                                <option value="<?php echo $carp->regCar_id ?>"><?php echo $carp->regCar_nombre." ".$carp->regCar_descripcion ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
+        <div class="modal fade" id="myModal15" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">NUEVO REGISTRO</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="frmagregarregistro">
+                            <input type="hidden" value="<?php echo (!empty($riesgo->rie_id)) ? $riesgo->rie_id : ""; ?>" name="rie_id" id="rie_id"/>
+                            <input type="hidden" value="" name="reg_id" id="reg_id"/>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <label for="idactividad">Carpeta:</label>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <label for="version">Versión:</label>
-                                    </div>
-                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                        <input type="text" id="version" name="version" class="form-control ">
-                                    </div>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <select id="carpeta" name="carpeta" class="form-control ">
+                                        <option value="">::Seleccionar::</option>
+                                        <?php foreach ($carpetas as $carp): ?>
+                                            <option value="<?php echo $carp->regCar_id ?>"><?php echo $carp->regCar_nombre . " " . $carp->regCar_descripcion ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <label for="reg_descripcion">Descripción:</label>
-                                    </div>
-                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                        <textarea id="reg_descripcion" name="reg_descripcion" class="form-control "></textarea>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <label for="version">Versión:</label>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <label for="archivo">Adjuntar archivo:</label>
-                                    </div>
-                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                        <input type="file" id="archivo" name="archivo" class="form-control ">
-                                    </div>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <input type="text" id="version" name="version" class="form-control ">
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary" id="btnguardarregistro">Guardar</button>
-                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <label for="reg_descripcion">Descripción:</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <textarea id="reg_descripcion" name="reg_descripcion" class="form-control "></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <label for="archivo">Adjuntar archivo:</label>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <input type="file" id="archivo" name="archivo" class="form-control ">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="btnguardarregistro">Guardar</button>
                     </div>
                 </div>
             </div>
-<?php endif; ?>
+        </div>
+    <?php endif; ?>
 </div>
 <script>
-
-    $('body').delegate(".eliminarcarpeta", "click", function() {
+    $('body').delegate(".editartarea", "click", function () {
+        var form = "<form method='post' id='frmFormAvance' action='<?php echo base_url("index.php/tareas/nuevatarea") ?>'>";
+        form += "<input type='hidden' name='tar_id' value='" + $(this).attr("tar_id") + "'>";
+        form += "<input type='hidden' name='rie_id' value='" + $(this).attr("tar_id") + "'>";
+        form += "</form>";
+        $("body").append(form);
+        $('#frmFormAvance').submit();
+    });
+    $('body').delegate(".nuevoavance", "click", function () {
+        var form = "<form method='post' id='frmFormAvance' action='<?php echo base_url("index.php/tareas/nuevatarea") ?>'>";
+        form += "<input type='hidden' name='tar_id' value='" + $(this).attr("tar_id") + "'>"
+        form += "<input type='hidden' name='nuevoavance' value='" + $(this).attr("tar_id") + "'>"
+        form += "</form>";
+        $("body").append(form);
+        $('#frmFormAvance').submit();
+    });
+    $('body').delegate(".eliminarcarpeta", "click", function () {
         if (confirm("Confirma la eliminación")) {
             var carpeta = $(this).attr("car_id");
             var tipo = $(this).attr("tipo");
@@ -518,19 +563,19 @@
                 var url = "<?php echo base_url("index.php/planes/eliminaractividad") ?>";
             $.post(url,
                     {carpeta: carpeta}
-            ).done(function(msg) {
+            ).done(function (msg) {
                 $('a[href="#collapse_' + carpeta + tipo + '"]').parents('.panel-default').remove();
-            }).fail(function(msg) {
+            }).fail(function (msg) {
                 alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
             });
         }
     });
-    $('body').delegate(".editarcarpeta", "click", function() {
+    $('body').delegate(".editarcarpeta", "click", function () {
         $.post(
                 "<?php echo base_url("index.php/planes/cargarplanescarpeta") ?>",
                 {carpeta: $(this).attr("car_id")}
         )
-                .done(function(msg) {
+                .done(function (msg) {
                     if ($('#plaCar_id').length == 0)
                         $('#frmcarpetaregistro').append("<input type='hidden' value='" + msg.regCar_id + "' name='plaCar_id' id='plaCar_id' >");
                     $('#nombrecarpeta').val(msg.regCar_nombre);
@@ -538,17 +583,29 @@
                     $('#guardarcarpeta').replaceWith("<button type='button' empCar_id='" + msg.regCar_id + "' class='btn btn-primary modificarcarpeta'>Actualizar</button>");
                     $('#myModal4').modal("show");
                 })
-                .fail(function(msg) {
+                .fail(function (msg) {
                     alerta("rojo", "Error,por favor comunicarse con el administrador del sistema");
                 });
 
     });
-    $('#guardarcarpeta').click(function() {
+    $('body').delegate(".eliminarregistro", "click", function () {
+        var reg_id = $(this).attr("reg_id");
+        var registro = $(this);
+        $.post(
+                "<?php echo base_url("index.php/planes/eliminarregistroplan") ?>",
+                {reg_id: reg_id}
+        ).done(function (msg) {
+            registro.parents('tr').remove();
+        }).fail(function (msg) {
+
+        })
+    });
+    $('#guardarcarpeta').click(function () {
         if (obligatorio("carbligatorio")) {
             $.post("<?php echo base_url("index.php/planes/guardarcarpetaregistroriesgo") ?>",
                     $('#frmcarpetaregistro').serialize()
-                    ).done(function(msg) {
-                var option = "<option value='" + msg.uno + "'>" + msg.dos +" "+msg.tres+"</option>"
+                    ).done(function (msg) {
+                var option = "<option value='" + msg.uno + "'>" + msg.dos + " - " + msg.tres + "</option>"
                 var contenido = "<table class='tablesst'>\n\
                                         <thead>\n\
                                             <th>Nombre de archivo</th>\n\
@@ -572,16 +629,31 @@
                 $('.carbligatorio').val("");
                 $('#myModal4').modal("toggle")
                 alerta("verde", "Carpeta agregada con exito")
-            }).fail(function(msg) {
+            }).fail(function (msg) {
                 alerta("rojo", "ha ocurrido un error por favor cumunicarse con el administrador del sistema")
             });
         }
     });
-    $('#btnguardarregistro').click(function() {
+
+    $('body').delegate(".modificarcarpeta", "click", function () {
+
+        $.post("<?php echo base_url("index.php/planes/modificarpeta") ?>",
+                $('#frmcarpetaregistro').serialize()
+                ).done(function (msg) {
+            $('a[href="#collapse_' + msg.regCar_id + 'r"]').text(msg.regCar_nombre + " - " + msg.regCar_descripcion);
+            $('#myModal4').modal("toggle");
+            alerta("verde", "Se actualizaron los datos correctamente");
+        }).fail(function (msg) {
+
+        });
+    });
+
+    $('#btnguardarregistro').click(function () {
         var file_data = $('#archivo').prop('files')[0];
         var form_data = new FormData();
         form_data.append('archivo', file_data);
         form_data.append('rie_id', $('#rie_id').val());
+        form_data.append('reg_id', $('#reg_id').val());
         form_data.append('regCar_id', $('#carpeta').val());
         form_data.append('reg_version', $('#version').val());
         form_data.append('reg_descripcion', $('#reg_descripcion').val());
@@ -593,19 +665,19 @@
             processData: false,
             data: form_data,
             type: 'post',
-            success: function(result) {
+            success: function (result) {
 
                 $("#myModal15").modal("toggle");
                 result = jQuery.parseJSON(result);
                 var idcarpeta = $('#carpeta').val()
                 $('#collapse_' + idcarpeta + 'r').find('table tbody *').remove();
                 var filas = "";
-                $.each(result, function(key, val) {
+                $.each(result, function (key, val) {
                     filas += "<tr>";
-                    filas += "<td>" + val.reg_archivo + "</td>";
+                    filas += "<td>"+'<a target="_black" href="<?php echo base_url() ?>'+val.reg_ruta+"/"+val.reg_id+'/'+val.reg_archivo+'">' + val.reg_archivo + "</a></td>";
                     filas += "<td>" + val.reg_descripcion + "</td>";
                     filas += "<td>" + val.reg_version + "</td>";
-                    filas += "<td>" +val.usu_nombre +" "+val.usu_apellido +"</td>";
+                    filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
                     filas += "<td>" + val.reg_tamano + "</td>";
                     filas += "<td>" + val.reg_fechaCreacion + "</td>";
                     filas += "<td>";
@@ -623,6 +695,39 @@
             }
         });
     });
+
+    $('body').delegate(".nuevoregistro,.modificarregistro", "click", function () {
+        $('#reg_id').val("");
+        $('#carpeta').val("");
+        $('#version').val("");
+        $('#reg_descripcion').val("");
+        $("#archivoadescargar").remove();
+        $('#carpeta').val($(this).attr('car_id'));
+    });
+    
+    $('body').delegate('.modificarregistro', 'click', function () {
+        var reg_id=$(this).attr('reg_id');
+        $.post(
+                "<?php echo base_url("index.php/planes/modificarregistro") ?>",
+                {registro: $(this).attr('reg_id')}
+        ).done(function (msg) {
+            $('#reg_id').val(reg_id);
+            $('#carpeta').val(msg.regCar_id);
+            $('#version').val(msg.reg_version);
+            $('#reg_descripcion').val(msg.reg_descripcion);
+            var fila = "<div class='row' id='archivoadescargar' >\n\
+                                    <label style='color:black' class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>\n\
+                                        ARCHIVO\n\
+                                    </label>\n\
+                                    <div class='col-lg-10 col-md-10 col-sm-10 col-xs-10'>\n\
+                                        <a target='_blank' href='" + "<?php echo base_url() ?>" + msg.reg_ruta + "'>" + msg.reg_archivo + "</a>\n\
+                                    </div>\n\
+                                </div>"
+            $('#frmagregarregistro').append(fila);
+        }).fail(function (msg) {
+
+        });
+    });
     function agregarregistro(tabla, msg, contenido, destino, clase) {
         var acordeon = '<div class="panel panel-default" id="' + msg.uno + '">\n\
                                             <div class="panel-heading">\n\
@@ -631,12 +736,12 @@
                                                         <i class="fa fa-folder-o carpeta"></i> ' + msg.dos + " - " + msg.tres + '\n\
                                                     </a>\n\
                                                     <div class="posicionIconoAcordeon">';
-                                                        if (destino == 'c')
-                                                            acordeon += '<i class="fa fa-file-o carpeta nuevo_hijo" data-toggle="modal" data-target="#myModal8" title="ACTIVIDAD HIJO" car_id="' + msg.uno + '"></i> ';
-                                                        if (destino == 'r')
-                                                            acordeon += '<i class="fa fa-file-archive-o nuevoregistro"   data-toggle="modal" data-target="#myModal15" car_id="' + msg.uno + '"></i> ';
+        if (destino == 'c')
+            acordeon += '<i class="fa fa-file-o carpeta nuevo_hijo" data-toggle="modal" data-target="#myModal8" title="ACTIVIDAD HIJO" car_id="' + msg.uno + '"></i> ';
+        if (destino == 'r')
+            acordeon += '<i class="fa fa-file-archive-o nuevoregistro"   data-toggle="modal" data-target="#myModal15" car_id="' + msg.uno + '"></i> ';
 
-                                                        acordeon += '<i class="fa fa-edit ' + clase + '" car_id="' + msg.uno + '"></i>\n\
+        acordeon += '<i class="fa fa-edit ' + clase + '" car_id="' + msg.uno + '"></i>\n\
                                                         <i class="fa fa-times eliminarcarpeta" title="Eliminar" tipo="' + destino + '" car_id="' + msg.uno + '"></i>\n\
                                                     </div>\n\
                                                 </h4>\n\
@@ -649,7 +754,7 @@
                                     </div>';
         $('#' + tabla).append(acordeon);
     }
-    
+
     $('document').ready(function () {
         $('body').delegate(".editarhistorial", "click", function () {
 
@@ -733,12 +838,16 @@
                     "<?php echo base_url("index.php/riesgo/consultatiporiesgo") ?>",
                     {categoria: $(this).val()}
             ).done(function (msg) {
-                $('#tipo *').remove();
-                var option = "<option value=''>::Seleccionar::</option>"
-                $.each(msg, function (key, val) {
-                    option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
-                })
-                $('#tipo').append(option);
+                if (!jQuery.isEmptyObject(msg.message))
+                    alerta("amarillo", msg['message'])
+                else {
+                    $('#tipo *').remove();
+                    var option = "<option value=''>::Seleccionar::</option>"
+                    $.each(msg.Json, function (key, val) {
+                        option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
+                    })
+                    $('#tipo').append(option);
+                }
             }).fail(function (msg) {
                 alerta("rojo", "Error en el sistema por favor comunicarse con el administrador del sistema");
             });
@@ -806,7 +915,11 @@
                     $("#riesgos").find("select").val("");
                     $("#riesgos").find("#tipo").html("<option>::Seleccionar::</option>");
                 } else {
-                    window.location = "<?php echo base_url("index.php/riesgo/listadoriesgo"); ?>";
+                    var form = "<form method='post' id='frmEditarPlan'>";
+                    form += "<input type='hidden' value='" + msg + "' name='rie_id'>";
+                    form += "</form>";
+                    $('body').append(form);
+                    $('#frmEditarPlan').submit();
                 }
             })
                     .fail(function (msg) {
@@ -826,4 +939,14 @@
                     });
         }
     });
+
+    var url = '<?php echo base_url("grant/index.php") ?>';
+    $.post(url, $('#formulario_grant').serialize())
+            .done(function (msg) {
+                var imagen = '<img src="<?php echo base_url("grant") ?>/imagenprueba.jpg">';
+                $('#grafica_granf').html(imagen)
+            })
+            .fail(function () {
+
+            })
 </script>    

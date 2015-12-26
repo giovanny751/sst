@@ -199,9 +199,8 @@
         if (confirm("Esta seguro de eliminar el cargo") == true) {
             $.post("<?php echo base_url('index.php/administrativo/eliminarcargo') ?>", {id: $(this).attr('car_id')})
                     .done(function (msg) {
-                        if (msg == 1) {
-                            alerta("rojo", "Tiene personas a cargo");
-                        } else {
+                        if(!jQuery.isEmptyObject(msg.message))alerta("rojo",msg['message']);
+                        else {
                             $('select *').remove();
                             var select = "";
                             $.each(msg, function (key, val) {

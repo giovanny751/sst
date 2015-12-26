@@ -99,17 +99,13 @@ class Presentacion extends My_Controller {
 
     function guardarmodulo() {
         try {
-            if (!empty($this->data['user'])) {
                 $modulo = $this->input->post('modulo');
                 $padre = $this->input->post('padre');
                 $general = $this->input->post('general');
                 $actualizamodulo = $this->Ingreso_model->actualizahijos($general);
                 $guardamodulo = $this->Ingreso_model->guardarmodulo($modulo, $padre, $general);
-                $menu = $this->Ingreso_model->cargamenu($general);
+                $menu['Json'] = $this->Ingreso_model->cargamenu($general);
                 $this->output->set_content_type('application/json')->set_output(json_encode($menu));
-            } else {
-                redirect('auth/login', 'refresh');
-            }
         } catch (exception $e) {
             
         }
@@ -380,7 +376,7 @@ class Presentacion extends My_Controller {
 
     function guardarcontrasena() {
         try {
-            $this->Ingreso_model->guardarcontrasena($this->input->post('password'), $this->data['user']['usu_id']);
+            $this->Ingreso_model->guardarcontrasena($this->input->post('password'), $this->data["usu_id"]);
         } catch (exception $e) {
             
         }

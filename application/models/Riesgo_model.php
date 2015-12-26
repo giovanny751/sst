@@ -35,6 +35,7 @@ class Riesgo_model extends CI_Model {
     function eliminar_riesgos($post) {
         $this->db->where("rie_id", $post['rie_id']);
         $this->db->delete('riesgo');
+        return true;
     }
     function detailxid($id) {
         try {
@@ -52,7 +53,7 @@ class Riesgo_model extends CI_Model {
             if (!empty($cargo))
                 $this->db->where("riesgo_cargo.rieCar_id", $cargo);
             if (!empty($categoria))
-                $this->db->where("riesgo.cat_id", $categoria);
+                $this->db->where("riesgo.rieCla_id", $categoria);
             if (!empty($dimension2))
                 $this->db->where("riesgo.dim2_id", $dimension2);
             if (!empty($dimension))

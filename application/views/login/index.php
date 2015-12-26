@@ -25,7 +25,7 @@
         <link href="<?php echo base_url('/assets/admin/layout/css/custom.css') ?>" rel="stylesheet" type="text/css"/>
         <style type="text/css">
             html{
-                background-image: url("<?php echo base_url("/img/principal.png") ?>");
+                background-image: url("<?php echo base_url("/img/Ingreso_ultima.png") ?>");
                 background-size: 100%;
                 background-repeat: no-repeat;
             }
@@ -162,16 +162,7 @@
                 Login.init();
                 UIConfirmations.init(); // init page demo
                 // init background slide images
-                $.backstretch([
-                    base_url_js + "/assets/admin/pages/media/bg/1.jpg",
-                    base_url_js + "/assets/admin/pages/media/bg/2.jpg",
-                    base_url_js + "/assets/admin/pages/media/bg/3.jpg",
-                    base_url_js + "/assets/admin/pages/media/bg/4.jpg"
-                ], {
-                    fade: 1000,
-                    duration: 8000
-                }
-                );
+                
             });
         </script>
         <!-- END JAVASCRIPTS -->

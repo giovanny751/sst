@@ -10,7 +10,7 @@
             <div class="envio flechaHeader Izquierda" metodo="flechaIzquierda" nuevo="<?php echo (isset($izq) ? $izq : '') ?>"><i class="fa fa-arrow-left fa-2x"></i></div>
             <div class="envio flechaHeader Derecha" metodo="flechaDerecha" nuevo="<?php echo (isset($derecha) ? $derecha : '') ?>"><i class="fa fa-arrow-right fa-2x"></i></div>
             <div class="envio flechaHeader DerechaDoble" metodo="flechaDerechaDoble" nuevo="<?php echo (isset($max_der) ? $max_der : '') ?>"><i class="fa fa-step-forward fa-2x"></i></div>
-            <a href="<?php echo base_url('index.php/indicador/nuevoindicador') ?>"><div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div></a>
+            <a href="<?php echo base_url('index.php/indicador/verindicadores') ?>"><div class="flechaHeader Archivo" metodo="documento"><i class="fa fa-sticky-note fa-2x"></i></div></a>
         </div>
     </div>
 </div>
@@ -284,7 +284,7 @@
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12" style="text-align: center">
                                     <br>
-                                    
+
                                     <button type="button" class="btn btn-success" id="guardarindicador">Guardar</button>
                                 </div>
                             </div>
@@ -480,6 +480,26 @@
 </style>
 <script type="text/javascript" src="<?php echo base_url('js/graficas/Chart.min.js') ?>"></script>
 <script>
+
+    $('body').delegate(".editarcarpeta", "click", function () {
+        $.post(
+                "<?php echo base_url("index.php/planes/cargarplanescarpeta") ?>",
+                {carpeta: $(this).attr("car_id")}
+        )
+                .done(function (msg) {
+                    if ($('#plaCar_id').length == 0)
+                        $('#frmcarpetaregistro').append("<input type='hidden' value='" + msg.regCar_id + "' name='plaCar_id' id='plaCar_id' >");
+                    $('#nombrecarpeta').val(msg.regCar_nombre);
+                    $('#descripcioncarpeta').val(msg.regCar_descripcion);
+                    $('#guardarcarpeta').replaceWith("<button type='button' empCar_id='" + msg.regCar_id + "' class='btn btn-primary modificarcarpeta'>Actualizar</button>");
+                    $('#modalCarpeta').modal("show");
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error,por favor comunicarse con el administrador del sistema");
+                });
+
+    });
+
     $('body').delegate(".eliminarregistro", "click", function () {
         var reg_id = $(this).attr("reg_id");
         var registro = $(this);
@@ -496,7 +516,7 @@
         var indVal_valor = $(this).attr("id");
         $.post(
                 "<?php echo base_url("index.php/indicador/eliminar_indicador_valores") ?>",
-                {indVal_valor: indVal_valor,ind_id:$('#ind_id').val()}
+                {indVal_valor: indVal_valor, ind_id: $('#ind_id').val()}
         ).done(function (msg) {
             tabla(msg);
         }).fail(function (msg) {
@@ -507,7 +527,7 @@
         var indVal_valor = $(this).attr("id");
         $.post(
                 "<?php echo base_url("index.php/indicador/modificar_indicador_valores") ?>",
-                {indVal_valor: indVal_valor,ind_id:$('#ind_id').val()}
+                {indVal_valor: indVal_valor, ind_id: $('#ind_id').val()}
         ).done(function (msg) {
             $('a[href="#tab2"]').trigger('click')
             $('#comentarios').val(msg[0].indVal_comentario);
@@ -516,12 +536,12 @@
             $('#unidad').val(msg[0].indVal_unidad);
 //            alert(msg[0].indVal_fecha)
             $('.fecha_formulario').val(msg[0].indVal_fecha);
-            
+
         }).fail(function (msg) {
 
         })
     });
-    $('a[href="#tab2"]').click(function(){
+    $('a[href="#tab2"]').click(function () {
         $('#indVal_id').val('');
         $('#frmvalores input').val('');
         $('#frmvalores textarea').val('');
@@ -529,11 +549,21 @@
         $('.fecha_formulario').val('<?= date("Y-m-d"); ?>');
     })
 
+    $('body').delegate(".carpeta", "click", function () {
+
+        $('#eliminaractividad').remove();
+        $('#actPad_id').remove();
+        $('#nombrecarpeta').val("");
+        $('#descripcioncarpeta').val("");
+        $('.modificaractividad').replaceWith('<button class="btn btn-primary" id="guardaractividadpadre" type="button">Guardar</button>');
+
+    });
+
     $('body').delegate(".eliminarcarpeta", "click", function () {
         if (confirm("Confirma la eliminación")) {
             var carpeta = $(this).attr("car_id");
             var url = "<?php echo base_url("index.php/planes/eliminarcarpeta") ?>";
-            $.post(url,{carpeta: carpeta}
+            $.post(url, {carpeta: carpeta}
             ).done(function (msg) {
                 $('a[href="#collapse_' + carpeta + '"]').parents('.panel-default').remove();
             }).fail(function (msg) {
@@ -541,7 +571,19 @@
             });
         }
     });
+    $('body').delegate(".modificarcarpeta", "click", function () {
 
+        $.post("<?php echo base_url("index.php/planes/modificarpeta") ?>",
+                $('#frmcarpetaregistro').serialize()
+                ).done(function (msg) {
+            $('a[href="#collapse_' + msg.regCar_id + '"]').text(msg.regCar_nombre + " - " + msg.regCar_descripcion);
+            $('#carpeta option[value="' + msg.regCar_id + '"]').replaceWith("<option value='" + msg.regCar_id + "'>" + msg.regCar_nombre + " - " + msg.regCar_descripcion + "</option>");
+            $('#modalCarpeta').modal("hide");
+            alerta("verde", "Se actualizaron los datos correctamente");
+        }).fail(function (msg) {
+
+        });
+    });
     $('#valor').change(function () {
         if ((parseInt($(this).val()) >= parseInt($('#minimo').val())) && (parseInt($(this).val()) <= parseInt($('#maximo').val()))) {
             return true;
@@ -663,8 +705,7 @@
                             $('body').append(form);
                             $('#frmindicador').submit();
                         }
-                    })
-                    .fail(function (msg) {
+                    }).fail(function (msg) {
                         alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
                     });
         }
@@ -695,44 +736,44 @@
                     "<?php echo base_url("index.php/indicador/guardarvalores") ?>",
                     $('#frmvalores').serialize()
                     ).done(function (msg) {
-                        tabla(msg);
+                tabla(msg);
             }).fail(function (msg) {
                 alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
             });
         }
     });
-    function tabla(msg){
+    function tabla(msg) {
         $("#graficar,#tab3").siblings().removeClass("active");
-                $("#graficar").attr("class", "active")
-                $("#tab3").attr("class", "tab-pane active")
-                $("#graficar").trigger("click");
-                $("#bodyvalores *").remove();
-                var body = ''
-                var label = [];
-                var valores = [];
-                var valores2 = [];
-                $.each(msg[0], function (key, val) {
-                    label.push(val.indVal_fecha);
-                    valores.push(parseInt(val.indVal_valor));
-                    valores2.push(parseInt($('#meta').val()));
-                    body += "<tr>";
-                    body += "<td>" + val.indVal_fecha + "</td>";
-                    body += "<td>" + val.indVal_unidad + "</td>";
-                    body += "<td>" + val.indVal_comentario + "</td>";
-                    body += "<td>" + val.indVal_valor + "</td>";
-                    body += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
-                    body += "<td>";
-                    body += '<a href="javascript:">\n\
-                <i class="fa fa-pencil-square-o fa-2x modificar_indicador_valores" id="'+val.indVal_id+'" title="Modificar" ></i></a>\n\
-                <a href="javascript:"><i class="fa fa-trash-o fa-2x eliminar" id="'+val.indVal_id+'" title="Eliminar"></i></a>';
-                    body += "</td>";
-                    body += "</tr>";
-                });
-                $("#bodyvalores").append(body);
-                grafi(label, valores, valores2);
-                $('#frmvalores').find('input[type="text"]').val('');
-                $('#frmvalores').find('textarea').val('');
-                alerta("verde", "Guardado correctamente");
+        $("#graficar").attr("class", "active")
+        $("#tab3").attr("class", "tab-pane active")
+        $("#graficar").trigger("click");
+        $("#bodyvalores *").remove();
+        var body = ''
+        var label = [];
+        var valores = [];
+        var valores2 = [];
+        $.each(msg[0], function (key, val) {
+            label.push(val.indVal_fecha);
+            valores.push(parseInt(val.indVal_valor));
+            valores2.push(parseInt($('#meta').val()));
+            body += "<tr>";
+            body += "<td>" + val.indVal_fecha + "</td>";
+            body += "<td>" + val.indVal_unidad + "</td>";
+            body += "<td>" + val.indVal_comentario + "</td>";
+            body += "<td>" + val.indVal_valor + "</td>";
+            body += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
+            body += "<td>";
+            body += '<a href="javascript:">\n\
+                <i class="fa fa-pencil-square-o fa-2x modificar_indicador_valores" id="' + val.indVal_id + '" title="Modificar" ></i></a>\n\
+                <a href="javascript:"><i class="fa fa-trash-o fa-2x eliminar" id="' + val.indVal_id + '" title="Eliminar"></i></a>';
+            body += "</td>";
+            body += "</tr>";
+        });
+        $("#bodyvalores").append(body);
+        grafi(label, valores, valores2);
+        $('#frmvalores').find('input[type="text"]').val('');
+        $('#frmvalores').find('textarea').val('');
+        alerta("verde", "Guardado correctamente");
     }
 
     $('body').delegate('.nuevoregistro', 'click', function () {
@@ -755,10 +796,11 @@
                                         ARCHIVO\n\
                                     </label>\n\
                                     <div class='col-lg-10 col-md-10 col-sm-10 col-xs-10'>\n\
-                                        <a target='_blank' href='" + "<?php echo base_url() ?>" + msg.reg_ruta + "'>" + msg.reg_archivo + "</a>\n\
+                                        <a target='_blank' href='" + "<?php echo base_url() ?>" + msg.reg_ruta +registro+"/"+ msg.reg_archivo+ "'>" + msg.reg_archivo + "</a>\n\
                                     </div>\n\
                                 </div>"
-            $('#frmagregarregistro').append(fila);
+            $('#archivoadescargar').remove();
+            $('#formactividadpadre').append(fila);
             $('#myModal').modal('show')
         }).fail(function (msg) {
             alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");

@@ -6,7 +6,7 @@
         <!--<div class="circuloIcon" ><i class="fa fa-folder-open fa-3x"></i></div>-->
     </div>
     <div class="col-md-6">
-            <div id="posicionFlecha">
+        <div id="posicionFlecha">
             <div class="envio flechaHeader IzquierdaDoble" metodo="flechaIzquierdaDoble" nuevo="<?php echo (isset($todo_izq) ? $todo_izq : '') ?>"><i class="fa fa-step-backward fa-2x"></i></div>
             <div class="envio flechaHeader Izquierda" metodo="flechaIzquierda" nuevo="<?php echo (isset($izq) ? $izq : '') ?>"><i class="fa fa-arrow-left fa-2x"></i></div>
             <div class="envio flechaHeader Derecha" metodo="flechaDerecha" nuevo="<?php echo (isset($derecha) ? $derecha : '') ?>"><i class="fa fa-arrow-right fa-2x"></i></div>
@@ -78,11 +78,12 @@
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name="registro" id="registro" class="form-control" >
                             <option value="">::Seleccionar::</option>
-                            <?php if (!empty($actividadhijo))
+                            <?php
+                            if (!empty($actividadhijo))
                                 foreach ($actividadhijo as $ah) {
                                     ?>
                                     <option   <?php echo ((!empty($tarea->actHij_id)) && $tarea->actHij_id == $ah->actHij_id) ? "selected" : ""; ?> value="<?php echo $ah->actHij_id ?>"><?php echo $ah->actHij_nombre ?></option>
-    <?php } ?>
+                                <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -93,7 +94,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($dimension as $d1) { ?>
                                 <option  <?php echo ((!empty($tarea->dim_id)) && $tarea->dim_id == $d1->dim_id) ? "selected" : ""; ?> value="<?php echo $d1->dim_id ?>"><?php echo $d1->dim_descripcion ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select> 
                     </div>
                 </div>
@@ -104,7 +105,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($dimension2 as $d2) { ?>
                                 <option  <?php echo ((!empty($tarea->dim2_id)) && $tarea->dim2_id == $d2->dim_id) ? "selected" : ""; ?> value="<?php echo $d2->dim_id ?>"><?php echo $d2->dim_descripcion ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -115,7 +116,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($tipo as $t) { ?>
                                 <option  <?php echo (!empty($tarea->tip_id) && $tarea->tip_id == $t->tip_id) ? "selected" : ""; ?> value="<?php echo $t->tip_id ?>"><?php echo $t->tip_tipo ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -126,7 +127,7 @@
                             <option value="">::Seleccionar::</option>
                             <?php foreach ($norma as $value) { ?>
                                 <option <?php echo (!empty($tarea->nor_id) && ($value->nor_id == $tarea->nor_id)) ? "selected" : ""; ?> value="<?= $value->nor_id ?>"><?= $value->nor_norma ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div> 
@@ -146,7 +147,7 @@
                                 ?>
 
                                 <option <?php echo $select; ?> value="<?= $value->norArt_id ?>"><?= $value->norArt_articulo ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div> 
@@ -180,9 +181,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name="cargo" id="cargo" class="form-control">
                             <option value="">::Seleccionar::</option>
-<?php foreach ($cargo as $c) { ?>
+                            <?php foreach ($cargo as $c) { ?>
                                 <option  <?php echo (!empty($tarea->car_id) && $tarea->car_id == $c->car_id) ? "selected" : ""; ?> value="<?php echo $c->car_id ?>"><?php echo $c->car_nombre ?></option> 
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -196,10 +197,10 @@
                                 foreach ($empleado as $e):
                                     ?>
                                     <option <?php echo ($e->Emp_Id == $tarea->emp_id) ? "Selected" : ""; ?> value='<?php echo $e->Emp_Id ?>'><?php echo $e->Emp_Nombre . " " . $e->Emp_Apellidos ?></option>
-        <?php
-    endforeach;
-}
-?>
+                                    <?php
+                                endforeach;
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -208,9 +209,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name="tareapadre" id="tareapadre" class="form-control">
                             <option value="">::Seleccionar::</option>
-<?php foreach ($tareas as $t): ?>
+                            <?php foreach ($tareas as $t): ?>
                                 <option <?php echo (!empty($tarea->tar_idpadre) && $t->tar_id == $tarea->tar_idpadre) ? "Selected" : ""; ?> value="<?php echo $t->tar_id ?>"><?php echo $t->tar_nombre ?></option>
-<?php endforeach; ?>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
@@ -223,9 +224,9 @@
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <select name="estado" id="estado" class="form-control" >
                                     <option value="">::Seleccionar::</option>
-<?php foreach ($estados as $e) { ?>
+                                    <?php foreach ($estados as $e) { ?>
                                         <option <?php echo ((!empty($tarea->est_id) && $tarea->est_id == $e->est_id) ? "selected" : ((empty($tarea->est_id) && $e->est_id == 1) ? "selected" : "" )); ?>  value="<?php echo $e->est_id ?>"><?php echo $e->est_nombre ?></option>
-<?php } ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
@@ -263,9 +264,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name='clasificacionriesgo' id='clasificacionriesgo' class="form-control">
                             <option value=''>::Seleccionar::</option>
-<?php foreach ($categoria as $ca) { ?>
-                                <option value="<?php echo $ca->rieCla_id ?>"><?php echo $ca->rieCla_categoria ?></option>
-<?php } ?>
+                            <?php foreach ($categoria as $ca) { ?>
+                                <option <?php echo (!empty($tarea->rieCla_id) && $ca->rieCla_id == $tarea->rieCla_id ) ? "Selected" : ""; ?> value="<?php echo $ca->rieCla_id ?>"><?php echo $ca->rieCla_categoria ?></option>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -274,6 +275,9 @@
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name='tiposriesgos' id='tiposriesgos' class="form-control">
                             <option value=''>::Seleccionar::</option>
+                            <?php foreach($tipoClasificacion as $tc): ?>
+                            <option <?php echo (!empty($tarea->tipRie_id) && $tc->rieClaTip_id == $tarea->tipRie_id ) ? "Selected" : ""; ?> vale="<?php echo $tc->rieClaTip_id ?>"><?php echo $tc->rieClaTip_tipo ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
@@ -293,7 +297,7 @@
                                     }
                                 ?>
                                 <option <?php echo $select; ?>  value="<?php echo $e->rie_id ?>"><?php echo $e->rie_descripcion ?></option>
-<?php } ?>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -301,7 +305,7 @@
         </div>
 
     </form>
-<?php if (!empty($tarea->tar_id)): ?>
+    <?php if (!empty($tarea->tar_id)): ?>
         <div class="portlet box blue">
             <div class="portlet-body">
                 <div class="tabbable tabbable-tabdrop">
@@ -362,9 +366,9 @@
                                             <div class="col-lg-9 col-md-9 col-sx-9 col-sm-9">
                                                 <select name="progreso" id="progreso" class="form-control avance" style="text-align: center">
                                                     <option value="">::Seleccionar::</option>
-    <?php for ($i = 1; $i < 101; $i++) { ?>
+                                                    <?php for ($i = 1; $i < 101; $i++) { ?>
                                                         <option <?php echo ((!empty($avance[0]->avaTar_progreso)) && ($avance[0]->avaTar_progreso == $i)) ? "selected" : ""; ?> value="<?php echo $i; ?>"><?php echo $i . " " . "%"; ?></option>
-    <?php } ?>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -398,7 +402,7 @@
                                                     <input type="checkbox" name="notificar[]" value="<?php echo $n->not_id ?>" id="creotarea" class="form-control avance">
                                                 </div>
                                             </div>
-    <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                     </div>
 
                                 </div>
@@ -421,11 +425,11 @@
                                         <div class="tab-content">
                                             <br>
                                             <div class="panel-group accordion" id="accordion5">
-    <?php
-    $o = 1;
-    foreach ($carpeta as $idcar => $nomcar):
-        foreach ($nomcar as $nombrecar => $numcar):
-            ?>
+                                                <?php
+                                                $o = 1;
+                                                foreach ($carpeta as $idcar => $nomcar):
+                                                    foreach ($nomcar as $nombrecar => $numcar):
+                                                        ?>
                                                         <div class="panel panel-default" id="<?php echo $idcar ?>">
                                                             <div class="panel-heading">
                                                                 <h4 class="panel-title">
@@ -452,7 +456,7 @@
                                                                         <th>Acción</th>
                                                                         </thead>
                                                                         <tbody>
-            <?php foreach ($numcar as $numerocar => $campocar): ?>
+                                                                            <?php foreach ($numcar as $numerocar => $campocar): ?>
                                                                                 <tr>
                                                                                     <td><?php echo $campocar[0] ?></td>
                                                                                     <td><?php echo $campocar[1] ?></td>
@@ -465,17 +469,17 @@
                                                                                         <i class="fa fa-pencil-square-o fa-2x modificarregistro btn btn-info" title="Modificar" reg_id="<?php echo $campocar[6] ?>" data-target="#myModal" data-toggle="modal"></i>
                                                                                     </td>
                                                                                 </tr>   
-                                                        <?php endforeach; ?>
+                                                                            <?php endforeach; ?>
                                                                         </tbody>
                                                                     </table>
                                                                 </div>
                                                             </div>
                                                         </div>
-            <?php
-            $o++;
-        endforeach;
-    endforeach;
-    ?>
+                                                        <?php
+                                                        $o++;
+                                                    endforeach;
+                                                endforeach;
+                                                ?>
                                             </div> 
                                         </div>
                                     </div>
@@ -542,9 +546,9 @@
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                                     <select id="carpeta" name="regCar_id" class="form-control tarRegObligatorio">
                                         <option value=""></option>
-    <?php foreach ($carpetas as $carp): ?>
+                                        <?php foreach ($carpetas as $carp): ?>
                                             <option value="<?php echo $carp->regCar_id ?>"><?php echo $carp->regCar_nombre . ' - ' . $carp->regCar_descripcion ?></option>
-    <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -582,7 +586,7 @@
             </div>
         </div>
 
-<?php endif; ?>
+    <?php endif; ?>
     <input type="hidden" id="tareid" name="tareid" />
 </div> 
 <div id='planes'></div>
@@ -729,23 +733,28 @@
             TableAjax.init();
 
         });
-
-        $('#clasificacionriesgo').change(function () {
-
+        function clasificacionRiesgoTipo() {
             $.post(
                     "<?php echo base_url("index.php/riesgo/consultatiporiesgoxclasificacion") ?>",
-                    {categoria: $(this).val()}
+                    {categoria: $("#clasificacionriesgo").val()}
             )
                     .done(function (msg) {
-                        $('#tiposriesgos *').remove();
-                        var option = "<option value=''>::Seleccionar::</option>";
-                        $.each(msg, function (key, val) {
-                            option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
-                        });
-                        $('#tiposriesgos').append(option);
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("amarillo", msg['message'])
+                        else {
+                            $('#tiposriesgos *').remove();
+                            var option = "<option value=''>::Seleccionar::</option>";
+                            $.each(msg.Json, function (key, val) {
+                                option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
+                            });
+                            $('#tiposriesgos').append(option);
+                        }
                     }).fail(function (msg) {
                 alerta("rojo", "fallo al traer los tipos de riesgo");
             });
+        }
+        $('#clasificacionriesgo').change(function () {
+               clasificacionRiesgoTipo(); 
         });
     });
 
@@ -754,34 +763,39 @@
         var tar_id = $('#interno').val();
         $.post(url, {tar_id: tar_id})
                 .done(function (msg) {
-                    $('.datatable_ajax12').html('');
-                    var html = "";
-                    var totalhoras = 0;
-                    var costo = 0;
-                    $.each(msg, function (key, val) {
-                        totalhoras += parseInt(val.avaTar_horasTrabajadas);
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("amarillo", msg['message'])
+                    else {
+                        $('.datatable_ajax12').html('');
+                        var html = "";
+                        var totalhoras = 0;
+                        var costo = 0;
+                        $.each(msg.Json, function (key, val) {
+                            totalhoras += Number(val.avaTar_horasTrabajadas);
+                            console.log(val.avaTar_costo);
 //                        console.log(val.avaTar_costo.replace(',','').replace(',','').replace(',','').replace('.',''));
-                        costo = parseInt(val.avaTar_costo.replace(',','').replace(',','').replace(',','').replace('.','')) + parseInt(costo);
+                            costo += Number(val.avaTar_costo.replace(',', '').replace(',', '').replace('.', '')) ;
 //                        console.log(costo);
-                        html += "<tr>"
-                                + "<td>"
-                                + "<a href='javascript:' class='avances_ fa fa-pencil-square-o fa-2x btn btn-info' avaTar_id='" + val.avaTar_id + "' ></a>"
-                                + "<i class='fa fa-times btn btn-danger eliminaravance'  avaTar_id='" + val.avaTar_id + "'></i></td>"
-                                + "<td>" + val.avaTar_fecha + "</td>"
-                                + "<td>" + val.tar_nombre + "</td>"
-                                + "<td>" + val.nombre + "</td>"
-                                + "<td>" + val.avaTar_horasTrabajadas + "</td>"
-                                + "<td style='text-align:right'>" + val.avaTar_costo + "</td>"
-                                + "<td>" + val.avaTar_comentarios + "</td>"
-                                + "</tr>";
-                    });
-                    html += "<tr>\n\
+                            html += "<tr>"
+                                    + "<td>"
+                                    + "<a href='javascript:' class='avances_ fa fa-pencil-square-o fa-2x btn btn-info' avaTar_id='" + val.avaTar_id + "' ></a>"
+                                    + "<i class='fa fa-times btn btn-danger eliminaravance'  avaTar_id='" + val.avaTar_id + "'></i></td>"
+                                    + "<td>" + val.avaTar_fecha + "</td>"
+                                    + "<td>" + val.tar_nombre + "</td>"
+                                    + "<td>" + val.nombre + "</td>"
+                                    + "<td>" + val.avaTar_horasTrabajadas + "</td>"
+                                    + "<td style='text-align:right'>" + val.avaTar_costo + "</td>"
+                                    + "<td>" + val.avaTar_comentarios + "</td>"
+                                    + "</tr>";
+                        });
+                        html += "<tr>\n\
                                         <td colspan='4' style='text-align:right;'><b>Total</b></td>\n\
                                         <td>" + totalhoras + "</td>\n\
                                         <td style='text-align:right'>" + num_miles(costo) + "</td>\n\
                                         <td></td>\n\
                                         </tr>"
-                    $('.datatable_ajax12').html(html);
+                        $('.datatable_ajax12').html(html);
+                    }
                 })
                 .fail(function () {
                     alerta("rojo", "Error, comunicarse con el administrador del sistema")
@@ -941,15 +955,17 @@
         if (compararfecha($("#fechaIncio").val(), $("#fechafinalizacion").val(), "compararfecha")) {
             $('#fechaIncio').addClass("obligado");
             $('#fechafinalizacion').addClass("obligado");
-            if($(this).attr("title") == 'Actualizar')var ruta = "<?php echo base_url("index.php/tareas/listadotareas") ?>"
-            else ruta = "<?php echo base_url("index.php/planes/nuevoplan") ?>";
+            if ($(this).attr("title") == 'Actualizar')
+                var ruta = "<?php echo base_url("index.php/tareas/listadotareas") ?>"
+            else
+                ruta = "<?php echo base_url("index.php/planes/nuevoplan") ?>";
             if (obligatorio("obligatorio")) {
                 $.post("<?php echo base_url("index.php/tareas/guardartarea") ?>",
                         $('#f8').serialize()
                         ).done(function (msg) {
-                            
-                            
-                    var form = "<form method='post' id='enviotarea' action='"+ruta+"'>";
+
+
+                    var form = "<form method='post' id='enviotarea' action='" + ruta + "'>";
                     form += "<input type='hidden' value='" + msg.pla_id + "' name='pla_id'>";
                     form += "</form>"
                     $('#planes').append(form);
@@ -1040,7 +1056,7 @@
                     var filas = "";
                     $.each(result, function (key, val) {
                         filas += "<tr>";
-                        filas += "<td><a href='<?php echo base_url('')?>"+val.reg_ruta+'/'+val.reg_id+'/'+val.reg_archivo+"'>" + val.reg_archivo + "</a></td>";
+                        filas += "<td><a href='<?php echo base_url('') ?>" + val.reg_ruta + '/' + val.reg_id + '/' + val.reg_archivo + "'>" + val.reg_archivo + "</a></td>";
                         filas += "<td>" + val.reg_descripcion + "</td>";
                         filas += "<td>" + val.reg_version + "</td>";
                         filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
@@ -1147,7 +1163,7 @@
 
 
 
-$('.envio').click(function() {
+    $('.envio').click(function () {
         $('#tar_id3').val($(this).attr('nuevo'));
         $('#formulario_siguiente').submit();
     })
