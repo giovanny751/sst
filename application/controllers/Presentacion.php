@@ -2,6 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
 /**
  *
  * @package     NYGSOFT
@@ -30,19 +31,20 @@ class Presentacion extends My_Controller {
 //        $id = $this->data['user']['emp_id'];
         $this->data['inicio'] = $this->Ingreso_model->admin_inicio();
 //        $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
-        
-        
-        $id_plan=$this->input->post('pla_id');
-        if(!isset($id_plan)){
-            $id_plan=$this->Planes_model->min_plan();
+
+
+        $id_plan = $this->input->post('pla_id');
+        if (!isset($id_plan)) {
+            $id_plan = $this->Planes_model->min_plan();
         }
         $this->data['tareas'] = $this->Planes_model->tareaxplan($id_plan);
-        $this->data['id_plan']=$id_plan;
+        $this->data['id_plan'] = $id_plan;
         $this->data['plan_grant'] = $this->Planes_model->plan_grant($id_plan);
-        
+
         $this->layout->view('presentacion/principal', $this->data);
     }
-    function NoTienePermisos(){
+
+    function NoTienePermisos() {
         $this->layout->view("permisos");
     }
 
@@ -91,21 +93,23 @@ class Presentacion extends My_Controller {
         $this->data['hijo'] = $this->input->post('menu');
         $this->data['nombrepadre'] = $this->input->post('nombrepadre');
         $this->data['idgeneral'] = $this->input->post('idgeneral');
-        if (empty($this->data['idgeneral']))$this->data['hijo'] = 0;
+        if (empty($this->data['idgeneral']))
+            $this->data['hijo'] = 0;
         $this->data['menu'] = $this->Ingreso_model->consultahijos($this->data['idgeneral']);
-        if (!empty($this->data['idgeneral'])) $this->data['menu'] = $this->Ingreso_model->hijos($this->data['idgeneral']);
+        if (!empty($this->data['idgeneral']))
+            $this->data['menu'] = $this->Ingreso_model->hijos($this->data['idgeneral']);
         $this->layout->view('presentacion/creacionmenu', $this->data);
     }
 
     function guardarmodulo() {
         try {
-                $modulo = $this->input->post('modulo');
-                $padre = $this->input->post('padre');
-                $general = $this->input->post('general');
-                $actualizamodulo = $this->Ingreso_model->actualizahijos($general);
-                $guardamodulo = $this->Ingreso_model->guardarmodulo($modulo, $padre, $general);
-                $menu['Json'] = $this->Ingreso_model->cargamenu($general);
-                $this->output->set_content_type('application/json')->set_output(json_encode($menu));
+            $modulo = $this->input->post('modulo');
+            $padre = $this->input->post('padre');
+            $general = $this->input->post('general');
+            $actualizamodulo = $this->Ingreso_model->actualizahijos($general);
+            $guardamodulo = $this->Ingreso_model->guardarmodulo($modulo, $padre, $general);
+            $menu['Json'] = $this->Ingreso_model->cargamenu($general);
+            $this->output->set_content_type('application/json')->set_output(json_encode($menu));
         } catch (exception $e) {
             
         }
@@ -229,9 +233,9 @@ class Presentacion extends My_Controller {
 
     function roles() {
         $this->load->model("Roles_model");
-            $this->data['content'] = "<table border='0' width='100%'>" . $this->permisoroles('prueba', null) . "</table>";
-            $this->data['roles'] = $this->Roles_model->roles();
-            $this->layout->view('presentacion/roles', $this->data);
+        $this->data['content'] = "<table border='0' width='100%'>" . $this->permisoroles('prueba', null) . "</table>";
+        $this->data['roles'] = $this->Roles_model->roles();
+        $this->layout->view('presentacion/roles', $this->data);
     }
 
     function guardarroles() {
@@ -296,9 +300,16 @@ class Presentacion extends My_Controller {
     }
 
     function eliminarrol() {
-        $id = $this->input->post('id');
-        $this->Roles_model->eliminarrol($id);
-        $this->Roles_model->eliminpermisosrol($id);
+
+        $this->load->model("User_model");
+        $data = array();
+        if (!empty($this->User_model->buscar_rol_usuario($this->input->post()))) {
+            $data["message"] = "Usuarios asociados al rol";
+        } else {
+            $id = $this->input->post('id');
+            $this->Roles_model->eliminarrol($id);
+            $this->Roles_model->eliminpermisosrol($id);
+        }
     }
 
     function guardaratributosmenu() {
@@ -393,90 +404,90 @@ class Presentacion extends My_Controller {
         $usu_id = $this->session->userdata('usu_id');
         $this->User_model->rolxdefecto($rol, $usu_id);
     }
-    function buscar_rol_usuario(){
-        $this->load->model("User_model");
-        echo $dato=$this->User_model->buscar_rol_usuario($this->input->post());
-    }
-    function obtener_clasificacion($id){
+
+    function obtener_clasificacion($id) {
         $this->load->model('Planes_model');
         return $this->Planes_model->obtener_clasificacion($id);
     }
-    function obtener_tipo($id){
+
+    function obtener_tipo($id) {
         $this->load->model('Planes_model');
         return $this->Planes_model->obtener_tipo($id);
     }
-    function guardarMetodos(){
-        try{
+
+    function guardarMetodos() {
+        try {
             $this->load->model('Planes_model');
             $modulo = $this->input->post("modulo");
             $metodoEliminar = $this->input->post("TxtMetodoEliminar");
             $claseEliminar = $this->input->post("TxtClaseEliminar");
             $data = array();
-            if(!empty($metodoEliminar[0]) && !empty($claseEliminar[0]))
-            for($i = 0;$i < count($metodoEliminar); $i++ ){
-                $crud = 1;
-                $data[] = array(
-                    "mod_id"=>$modulo,
-                    "perMet_metodo"=>$metodoEliminar[$i],
-                    "perMet_clase"=>$claseEliminar[$i],
-                    "tipCru_id"=>$crud
+            if (!empty($metodoEliminar[0]) && !empty($claseEliminar[0]))
+                for ($i = 0; $i < count($metodoEliminar); $i++) {
+                    $crud = 1;
+                    $data[] = array(
+                        "mod_id" => $modulo,
+                        "perMet_metodo" => $metodoEliminar[$i],
+                        "perMet_clase" => $claseEliminar[$i],
+                        "tipCru_id" => $crud
                     );
-            }
-            
+                }
+
             $metodoConsultar = $this->input->post("TxtMetodoConsultar");
             $claseConsultar = $this->input->post("TxtClaseConsultar");
-            if(!empty($metodoConsultar[0]) && !empty($claseConsultar[0]))
-            for($i = 0;$i < count($metodoConsultar); $i++ ){
-                $crud = 3;
-                $data[] = array(
-                    "mod_id"=>$modulo,
-                    "perMet_metodo"=>$metodoConsultar[$i],
-                    "perMet_clase"=>$claseConsultar[$i],
-                    "tipCru_id"=>$crud
+            if (!empty($metodoConsultar[0]) && !empty($claseConsultar[0]))
+                for ($i = 0; $i < count($metodoConsultar); $i++) {
+                    $crud = 3;
+                    $data[] = array(
+                        "mod_id" => $modulo,
+                        "perMet_metodo" => $metodoConsultar[$i],
+                        "perMet_clase" => $claseConsultar[$i],
+                        "tipCru_id" => $crud
                     );
-            }
-            
+                }
+
             $metodoActualizar = $this->input->post("TxtMetodoActualizar");
             $claseActualizar = $this->input->post("TxtClaseActualizar");
-            if(!empty($metodoActualizar[0]) && !empty($claseActualizar[0]))
-            for($i = 0;$i < count($metodoActualizar); $i++ ){
-                $crud = 2;
-                $data[] = array(
-                    "mod_id"=>$modulo,
-                    "perMet_metodo"=>$metodoActualizar[$i],
-                    "perMet_clase"=>$claseActualizar[$i],
-                    "tipCru_id"=>$crud
+            if (!empty($metodoActualizar[0]) && !empty($claseActualizar[0]))
+                for ($i = 0; $i < count($metodoActualizar); $i++) {
+                    $crud = 2;
+                    $data[] = array(
+                        "mod_id" => $modulo,
+                        "perMet_metodo" => $metodoActualizar[$i],
+                        "perMet_clase" => $claseActualizar[$i],
+                        "tipCru_id" => $crud
                     );
-            }
-            
+                }
+
             $metodoInsertar = $this->input->post("TxtMetodoInsertar");
             $claseInsertar = $this->input->post("TxtClaseInsertar");
-            if(!empty($metodoInsertar[0]) && !empty($claseInsertar[0]))
-            for($i = 0;$i < count($metodoInsertar); $i++ ){
-            $crud = 4;
-                $data[] = array(
-                    "mod_id"=>$modulo,
-                    "perMet_metodo"=>$metodoInsertar[$i],
-                    "perMet_clase"=>$claseInsertar[$i],
-                    "tipCru_id"=>$crud
+            if (!empty($metodoInsertar[0]) && !empty($claseInsertar[0]))
+                for ($i = 0; $i < count($metodoInsertar); $i++) {
+                    $crud = 4;
+                    $data[] = array(
+                        "mod_id" => $modulo,
+                        "perMet_metodo" => $metodoInsertar[$i],
+                        "perMet_clase" => $claseInsertar[$i],
+                        "tipCru_id" => $crud
                     );
-            }
+                }
             $this->Ingreso_model->eliminarPermisoMetodo($modulo);
             $this->Ingreso_model->guardarPermisosMetodo($data);
-        }catch(exception $e){
+        } catch (exception $e) {
             
         }
     }
-    function cargarMetodos(){
-        try{
+
+    function cargarMetodos() {
+        try {
             $this->load->model("Ingreso_model");
             $datos = $this->Ingreso_model->cargarPermisoMetodo($this->input->post("modulo"));
             $array = array();
-            foreach($datos as $value):
-                $array[$value->crud][] = array($value->clase, $value->metodo); 
+            foreach ($datos as $value):
+                $array[$value->crud][] = array($value->clase, $value->metodo);
             endforeach;
             $this->output->set_content_type('application/json')->set_output(json_encode($array));
-        }catch(exception $e){
+        } catch (exception $e) {
             
         }
     }

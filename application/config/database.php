@@ -68,7 +68,7 @@ $db['default'] = array(
 	'hostname' => '107.180.51.78',       
 	'username' => 'nygsoft',    
 	'password' => '=LvH8;M}A%{l',
-	'database' => 'basc', 
+	'database' => 'sst', 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

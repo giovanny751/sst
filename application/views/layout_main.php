@@ -84,13 +84,13 @@
                             echo "</li>";
                         endforeach;
             if ($datosmodulos == 'prueba') {
-                echo "<li class='has-sub'>";
-                echo "<a href='#'>OPCIONES</a>";
-                echo "<ul>";
-                echo "<li><a href='" . base_url('index.php/presentacion/recordarcontrasena') . "' >CAMBIAR CONTRASEÑA</a></li>";
-                echo "<li><a href='" . base_url('index.php/presentacion/rol') . "'>CAMBIAR ROL</a></li>";
-                echo "</ul>";
-                echo "</li>";
+//                echo "<li class='has-sub'>";
+//                echo "<a href='#'>OPCIONES</a>";
+//                echo "<ul>";
+//                echo "<li><a href='" . base_url('index.php/presentacion/recordarcontrasena') . "' >CAMBIAR CONTRASEÑA</a></li>";
+//                echo "<li><a href='" . base_url('index.php/presentacion/rol') . "'>CAMBIAR ROL</a></li>";
+//                echo "</ul>";
+//                echo "</li>";
                 echo "<li><a href='" . base_url('index.php/login/logout') . "'>CERRAR SESION</a></li>";
 //            echo "<li><a href='#'> strtoupper($nombre) </a></li>";
             }

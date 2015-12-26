@@ -80,47 +80,47 @@
 <script>
 
 
-    $('.seleccionados').click(function() {
+    $('.seleccionados').click(function () {
         var atr = $(this).attr('atr')
         var marcado = $(this).is(":checked");
         if (marcado == true)
             var r = true;
         else
             var r = false;
-        $("." + atr).each(function() {
+        $("." + atr).each(function () {
             $(this).prop('checked', r);
         });
     })
-    $('.crear2').click(function() {
+    $('.crear2').click(function () {
         var atr = $(this).attr('atr')
         var marcado = $(this).is(":checked");
         if (marcado == true)
             var r = true;
         else
             var r = false;
-        $("." + atr+'_c').each(function() {
+        $("." + atr + '_c').each(function () {
             $(this).prop('checked', r);
         });
     })
-    $('.modificar2').click(function() {
+    $('.modificar2').click(function () {
         var atr = $(this).attr('atr')
         var marcado = $(this).is(":checked");
         if (marcado == true)
             var r = true;
         else
             var r = false;
-        $("." + atr+'_m').each(function() {
+        $("." + atr + '_m').each(function () {
             $(this).prop('checked', r);
         });
     })
-    $('.eliminar2').click(function() {
+    $('.eliminar2').click(function () {
         var atr = $(this).attr('atr')
         var marcado = $(this).is(":checked");
         if (marcado == true)
             var r = true;
         else
             var r = false;
-        $("." + atr+'_e').each(function() {
+        $("." + atr + '_e').each(function () {
             $(this).prop('checked', r);
         });
     })
@@ -128,42 +128,34 @@
 //------------------------------------------------------------------------------
 //                      ELIMINAR ROL    
 //------------------------------------------------------------------------------ 
-    $('body').delegate('.eliminar', 'click', function() {
+    $('body').delegate('.eliminar', 'click', function () {
         var r = confirm('Desea eliminar este Rol');
         if (r == false) {
             return false;
         }
-        var url = "<?php echo base_url('index.php/presentacion/buscar_rol_usuario'); ?>";
-        $.post(url, {id: $(this).attr('rol')})
-                .done(function(msg) {
-                    if (msg == 0) {
-                        $.post("<?php echo base_url('index.php/presentacion/eliminarrol'); ?>", {id: $(this).attr('rol')})
-                                .done(function(msg) {
-                                    $(this).parents('tr').remove();
-                                    alerta("verde", "Eliminado con exito");
-                                }).fail(function(msg) {
-                            alerta("rojo", "Error por favor comunicarse con el administrador del sistema");
-                        });
-                    } else {
-                        alerta('azul', 'No se puede eliminar porque hay usuarios asignados');
+        var posicion = $(this);
+        $.post("<?php echo base_url('index.php/presentacion/eliminarrol'); ?>", {id: $(this).attr('rol')})
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("amarillo", msg['message'])
+                    else {
+                        posicion.parents('tr').remove();
+                        alerta("verde", "Eliminado con exito");
                     }
-                })
-                .fail(function() {
-                    alerta('rojo', 'Error al Consultar usuarios')
-                })
-
-
+                }).fail(function (msg) {
+            alerta("rojo", "Error por favor comunicarse con el administrador del sistema");
+        });
     });
 //------------------------------------------------------------------------------
 //                      NUEVO ROL    
 //------------------------------------------------------------------------------    
-    $('body').delegate('.guardar', 'click', function() {
+    $('body').delegate('.guardar', 'click', function () {
         if (obligatorio("obligatorio")) {
-            $.post("<?php echo base_url('index.php/presentacion/guardarroles'); ?>", $('#nuevorol').serialize(), function(data) {
+            $.post("<?php echo base_url('index.php/presentacion/guardarroles'); ?>", $('#nuevorol').serialize(), function (data) {
                 $('#myModal').modal('hide');
                 var filas = "";
                 data = jQuery.parseJSON(data);
-                $.each(data, function(key, val) {
+                $.each(data, function (key, val) {
                     filas += "<tr>";
                     filas += "<td>" + val.rol_nombre + "</td>";
                     filas += "<td>" + val.rol_fechaCreacion + "</td>";
@@ -179,7 +171,7 @@
         }
     });
 
-    $('.opciones').click(function() {
+    $('.opciones').click(function () {
         $(".nombres").remove()
         $('input[type="checkbox"]').prop('checked', false);
         $('.agregarrol').append('<label class="nombres">Nombre</label><input type="text" id="nombre" name="nombre" class="form-control nombres obligatorio">');
@@ -187,16 +179,16 @@
         $('.seleccionados').prop('checked', false);
     });
 
-    $("body").delegate(".modificar", "click", function() {
+    $("body").delegate(".modificar", "click", function () {
 
 //        alert("444");
         $('#rolesuser').val($(this).attr('rol'));
         $('input[type="checkbox"]').parent("span").removeClass("checked");
         $('input[type="checkbox"]').prop('checked', false);
         $('.agregarrol *').remove();
-        $.post("<?php echo base_url('index.php/presentacion/rolesasignados'); ?>", {id: $(this).attr('rol')}, function(data) {
+        $.post("<?php echo base_url('index.php/presentacion/rolesasignados'); ?>", {id: $(this).attr('rol')}, function (data) {
             data = jQuery.parseJSON(data);
-            $.each(data, function(key, val) {
+            $.each(data, function (key, val) {
                 $('.seleccionados[value="' + val.menu_id + '"]').parent("span").addClass("checked");
                 $('.seleccionados[value="' + val.menu_id + '"]').prop('checked', true);
                 if (val.perRol_crear != 0) {
@@ -218,9 +210,9 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
-  $(function() {
-      $('body').tooltip();
-  });
+    $(function () {
+        $('body').tooltip();
+    });
 </script>
 <style>
     label {

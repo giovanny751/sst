@@ -22,7 +22,7 @@
     </table>
     <div class="row" style="text-align:center">
         <!--<button type="button" class="btn btn-success ingresar">Ingresar</button>-->
-        <button type="button" class="btn-sst">Rol por defecto</button>
+        <button type="button" class="btn-sst ingresar">Rol por defecto</button>
     </div>
     </form>   
 </div>
