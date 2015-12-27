@@ -416,11 +416,13 @@ class Planes extends My_Controller {
     function eliminarplan() {
         try {
             $this->load->model("Planes_model");
-            $this->Planes_model->delete($this->input->post('id'));
+            $data['Json'] = $this->Planes_model->delete($this->input->post('id'));
+            if($data['Json'] == false)
+                                throw new Exception("Error en la base de datos");
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
         } finally {
-            
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 

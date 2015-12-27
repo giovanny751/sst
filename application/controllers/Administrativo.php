@@ -25,7 +25,6 @@ class Administrativo extends My_Controller {
     function creacionempleados() {
 
         $this->data['empleado'] = "";
-
         $this->load->model('Tipocontrato_model');
         $this->load->model('Sexo_model');
         $this->load->model('Estadocivil_model');
@@ -38,7 +37,6 @@ class Administrativo extends My_Controller {
         $this->load->model('Empresa_model');
         $this->load->model('Empleadoregistro_model');
         $this->load->model('Empleadoresponsable_model');
-
         $empleadoId = null;
         if (!empty($this->input->post('emp_id')))
             $empleadoId = $this->input->post('emp_id');
@@ -50,17 +48,14 @@ class Administrativo extends My_Controller {
             $this->load->model('Empleado_model');
             $this->data['empleado'] = $this->Empleado_model->consultaempleadoxid($empleadoId);
             $this->data["aserguradorasxempleado"] = $this->Empleadotipoaseguradora_model->consult_empleado($empleadoId);
-//                var_dump($this->data["aserguradorasxempleado"]);die;
             $this->data["carpeta"] = $this->Empleadocarpeta_model->detail($empleadoId);
             $registro = $this->Empleadoregistro_model->detailxIdEmpleado($empleadoId);
-
             $i = array();
             foreach ($registro as $campo) {
                 $i[$campo->empCar_id][$campo->empCar_nombre . " - " . $campo->empCar_descripcion][] = array($campo->nombreempleado, $campo->empReg_archivo, $campo->empReg_descripcion, $campo->empReg_version, $campo->empReg_id, $campo->empReg_tamano, $campo->empgReg_fecha);
             }
             $this->data['registro'] = $i;
             $this->session->guardadoExitoIdEmpleado = null;
-
             $this->data['empleadoresponsable'] = $this->Empleadoresponsable_model->detail();
         }
         $this->data['empresa'] = $this->Empresa_model->detail();
@@ -125,7 +120,6 @@ class Administrativo extends My_Controller {
     function guardarincapacidad() {
         try {
             $this->load->model('Empleadoincapacidad_model');
-
             $data = array(
                 'empRes_id' => $this->input->post('responsable'),
                 'empInc_fechaInicio' => $this->input->post('fechaInicioInc'),
@@ -138,6 +132,8 @@ class Administrativo extends My_Controller {
             );
             $this->Empleadoincapacidad_model->create($data);
         } catch (exception $e) {
+            
+        }finally{
             
         }
     }
@@ -364,20 +360,25 @@ class Administrativo extends My_Controller {
     }
 
     function consultaempleados() {
-        $this->load->model('Empleado_model');
-        $cedula = $this->input->post('cedula');
-        $nombre = $this->input->post('nombre');
-        $apellido = $this->input->post('apellido');
-        $codigo = $this->input->post('codigo');
-        $cargo = $this->input->post('cargo');
-        $estado = $this->input->post('estado');
-        $dim1 = $this->input->post('dimension1');
-        $dim2 = $this->input->post('dimension2');
-        $estado = $this->input->post('estado');
-        $tipocontrato = $this->input->post('tipocontrato');
-        $contratosvencidos = $this->input->post('contratosvencidos');
-        $this->data['listado'] = $this->Empleado_model->filtroempleados($cedula, $nombre, $apellido, $codigo, $cargo, $estado, $contratosvencidos, $tipocontrato, $dim1, $dim2);
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data['listado']));
+        try {
+            $this->load->model('Empleado_model');
+            $cedula = $this->input->post('cedula');
+            $nombre = $this->input->post('nombre');
+            $apellido = $this->input->post('apellido');
+            $codigo = $this->input->post('codigo');
+            $cargo = $this->input->post('cargo');
+            $estado = $this->input->post('estado');
+            $dim1 = $this->input->post('dimension1');
+            $dim2 = $this->input->post('dimension2');
+            $estado = $this->input->post('estado');
+            $tipocontrato = $this->input->post('tipocontrato');
+            $contratosvencidos = $this->input->post('contratosvencidos');
+            $data['Json'] = $this->Empleado_model->filtroempleados($cedula, $nombre, $apellido, $codigo, $cargo, $estado, $contratosvencidos, $tipocontrato, $dim1, $dim2);
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function consultacontratosvencidos() {
@@ -387,8 +388,18 @@ class Administrativo extends My_Controller {
     }
 
     function eliminarempleado() {
-        $this->load->model('Empleado_model');
-        $this->Empleado_model->eliminarempleado($this->input->post('id'));
+        try {
+            $this->load->model('Empleado_model');
+            $respuesta = $this->Empleado_model->eliminarempleado($this->input->post('id'));
+            if ($respuesta == true)
+                $data['Json'] = $respuesta;
+            else
+                throw new Exception("Error en la base de datos");
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function creacionusuarios() {
@@ -399,7 +410,6 @@ class Administrativo extends My_Controller {
         $this->load->model('User_model');
         $this->load->model('Roles_model');
         $this->data['roles'] = $this->Roles_model->roles();
-//            var_dump($this->data['roles']);die;
         $this->data['empleado'] = $this->Empleado_model->detail();
         $this->data['estado'] = $this->Estados_model->detail();
         $this->data['sexo'] = $this->Sexo_model->detail();
@@ -409,7 +419,6 @@ class Administrativo extends My_Controller {
         if (!empty($user)) {
             $this->data['usuario'] = $this->User_model->consultausuarioxid($this->input->post('usu_id'));
             $this->data['empleado'] = $this->Empleado_model->empleadoxcargo($this->data['usuario'][0]->car_id);
-//            var_dump($this->data['usuario']);die;
         }
         $this->layout->view("administrativo/creacionusuarios", $this->data);
     }
@@ -427,14 +436,19 @@ class Administrativo extends My_Controller {
     }
 
     function consultarusuario() {
-        $this->load->model('User_model');
-        $this->data['usuarios'] = $this->User_model->filteruser(
-                $this->input->post('apellido')
-                , $this->input->post('cedula')
-                , $this->input->post('estado')
-                , $this->input->post('nombre')
-        );
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data['usuarios']));
+        try {
+            $this->load->model('User_model');
+            $data['Json'] = $this->User_model->filteruser(
+                    $this->input->post('apellido')
+                    , $this->input->post('cedula')
+                    , $this->input->post('estado')
+                    , $this->input->post('nombre')
+            );
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function guardarusuario() {
@@ -497,9 +511,6 @@ class Administrativo extends My_Controller {
             $html .='<ul id="org" style="display:none">';
         else
             $html .='<ul id="org" style="display:none">';
-
-//        var_dump($i);die;
-
         foreach ($i as $padre => $nombrepapa)
             foreach ($nombrepapa as $nombrepapa => $menuidpadre)
                 foreach ($menuidpadre as $modulos => $menu):
@@ -531,30 +542,33 @@ class Administrativo extends My_Controller {
     function cargoriesgo() {
         try {
             $this->load->model('Cargo_model');
-            $riesgocargo = $this->Cargo_model->cargoriesgo($this->input->post('car_id'));
-            $this->output->set_content_type('application/json')->set_output(json_encode($riesgocargo));
+            $data['Json'] = $this->Cargo_model->cargoriesgo($this->input->post('car_id'));
         } catch (exception $e) {
             
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function dimensionunoriesgo() {
         try {
             $this->load->model('Dimension_model');
-            $riesgocargo = $this->Dimension_model->dimensionunoriesgo($this->input->post('dim_id'));
-            $this->output->set_content_type('application/json')->set_output(json_encode($riesgocargo));
+            $data['Json'] = $this->Dimension_model->dimensionunoriesgo($this->input->post('dim_id'));
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function dimensiondosriesgo() {
         try {
             $this->load->model('Dimension2_model');
-            $riesgocargo = $this->Dimension2_model->dimensionunoriesgo($this->input->post('dim_id'));
-            $this->output->set_content_type('application/json')->set_output(json_encode($riesgocargo));
+            $data['Json'] = $this->Dimension2_model->dimensionunoriesgo($this->input->post('dim_id'));
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
@@ -598,9 +612,14 @@ class Administrativo extends My_Controller {
     }
 
     function consultacargoxid() {
-        $this->load->model('Cargo_model');
-        $this->data["cargo"] = $this->Cargo_model->consultacargoxid($this->input->post('car_id'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data["cargo"][0]));
+        try {
+            $this->load->model('Cargo_model');
+            $data['Json'] = $this->Cargo_model->consultacargoxid($this->input->post('car_id'));
+        } catch (exception $e) {
+            
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function guardarcargo() {
@@ -608,45 +627,47 @@ class Administrativo extends My_Controller {
             $this->load->model('Cargo_model');
             $cargo = $this->input->post("cargo");
             $cargojefe = $this->input->post("cargojefe");
-            $porcentaje = $this->input->post("porcentaje");
-
-            if (empty($this->Cargo_model->existe($cargo[0], $cargojefe[0]))) {
-                $data = array();
-                for ($i = 0; $i < count($cargo); $i++) {
-                    $data[$i] = array(
-                        "car_nombre" => $cargo[$i],
-                        "car_jefe" => $cargojefe[$i],
-                        "car_porcentajearl" => $porcentaje[$i],
-                    );
-                }
-                $this->Cargo_model->create($data);
-                $this->data["cargo"] = $this->Cargo_model->detail();
-                $this->output->set_content_type('application/json')->set_output(json_encode($this->data["cargo"]));
+            if (empty($this->Cargo_model->existe($cargo, $cargojefe))) {
+                $almacenamiento = array(
+                    "car_nombre" => $cargo,
+                    "car_jefe" => $cargojefe,
+                    "car_porcentajearl" => $this->input->post("porcentaje"),
+                );
+                $creacion = $this->Cargo_model->create($almacenamiento);
+                if ($creacion == true)
+                    $data['Json'] = $this->Cargo_model->detail();
+                else
+                    throw new Exception("Ocurrio un error en la base de datos");
             } else {
-                echo "1";
+                throw new Exception("Cargo ya existente");
             }
         } catch (exception $e) {
-            echo "error";
+            $data['message'] = "Cargo ya existente";
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function eliminarcargo() {
-
-        $this->load->model('Cargo_model');
-        $this->load->model('Empleado_model');
-        $validar = $this->Empleado_model->validarExistencia($this->input->post('id'));
-        if (empty($validar)) {
-            $consulta = $this->Cargo_model->consultahijos($this->input->post('id'));
-            if ($consulta > 0) {
-                $data['message'] = "Tiene personas a cargo";
-                $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Cargo_model');
+            $this->load->model('Empleado_model');
+            if (empty($this->Empleado_model->validarExistencia($this->input->post('id')))) {
+                $consulta = $this->Cargo_model->consultahijos($this->input->post('id'));
+                if ($consulta > 0)
+                    throw new Exception("Tiene personas a cargo");
+                else {
+                    if ($this->Cargo_model->delete($this->input->post('id')) == TRUE)
+                        $data['Json'] = $this->Cargo_model->detail();
+                    else
+                        throw new Exception("Ocurrio un error en la base de datos");
+                }
             } else {
-                $this->Cargo_model->delete($this->input->post('id'));
-                $this->data["cargo"] = $this->Cargo_model->detail();
-                $this->output->set_content_type('application/json')->set_output(json_encode($this->data["cargo"]));
+                throw new Exception("Tiene empleados asociados al cargo");
             }
-        } else {
-            $data['message'] = "Tiene empleados asociados al cargo";
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
@@ -654,24 +675,33 @@ class Administrativo extends My_Controller {
     function eliminarusuario() {
         try {
             $this->load->model("User_model");
-            $this->User_model->eliminarusuario($this->input->post("usu_id"));
+            $data['Json'] = $this->User_model->eliminarusuario($this->input->post("usu_id"));
+            if ($data['Json'] == false)
+                throw new Exception("Error en la base de datos");
         } catch (Exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function modificacioncargo() {
         try {
             $this->load->model('Cargo_model');
-
-            $this->Cargo_model->update(
+            $respuesta = $this->Cargo_model->update(
                     $this->input->post('cargo')
                     , $this->input->post('jefe')
                     , $this->input->post('cotizacion')
                     , $this->input->post('car_id')
             );
+            if ($respuesta == true) {
+                $data['Json'] = $this->Cargo_model->detail();
+            } else
+                throw new Exception("Error en la base de datos");
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
@@ -688,41 +718,67 @@ class Administrativo extends My_Controller {
     }
 
     function consultadimensionxid2() {
-
-        $this->load->model('Dimension2_model');
-        $this->data['dimension'] = $this->Dimension2_model->consultadimensionxid($this->input->post('dim_id'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data['dimension'][0]));
+        try {
+            $this->load->model('Dimension2_model');
+            $data['Json'] = $this->Dimension2_model->consultadimensionxid($this->input->post('dim_id'));
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function guardarmodificaciondimension2() {
         try {
             $this->load->model('Dimension2_model');
-            $this->Dimension2_model->guardarmodificaciondimension(
+            $respuesta = $this->Dimension2_model->guardarmodificaciondimension(
                     $this->input->post('descripcion'), $this->input->post('dimid')
             );
+            if ($respuesta == true)
+                $data['Json'] = $this->Dimension2_model->detail();
+            else
+                throw new Exception("Error en la base de datos");
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function guardardimension2() {
-        $this->load->model('Dimension2_model');
-        $data[0] = array(
-            "dim_descripcion" => $this->input->post('descripcion')
-        );
-        if (empty($this->Dimension2_model->consultxname($this->input->post('descripcion')))) {
-            $this->Dimension2_model->create($data);
-            $dimension = $this->Dimension2_model->detail();
-            $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else {
-            $respuesta["message"] = "Datos existente en el sistema";
-            $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
+        try {
+            $this->load->model('Dimension2_model');
+            $guardar = array(
+                "dim_descripcion" => $this->input->post('descripcion')
+            );
+            if (empty($this->Dimension2_model->consultxname($this->input->post('descripcion')))) {
+                $respuesta = $this->Dimension2_model->create($guardar);
+                if ($respuesta == true)
+                    $data['Json'] = $this->Dimension2_model->detail();
+                else
+                    throw new Exception("Error al guardar en la base de datos");
+            } else
+                throw new Exception("Datos existente en el sistema");
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function eliminardimension2() {
-        $this->load->model('Dimension2_model');
-        $this->Dimension2_model->delete($this->input->post('id'));
+        try {
+            $this->load->model('Dimension2_model');
+            $respuesta = $this->Dimension2_model->delete($this->input->post('id'));
+            if ($respuesta == false)
+                throw new Exception("Error en la base de datos");
+            else
+                $data['Json'] = $respuesta;
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function actualizardimension2() {
@@ -747,31 +803,55 @@ class Administrativo extends My_Controller {
     }
 
     function guardarmodificaciondimension() {
-
-        $this->load->model('Dimension_model');
-        $this->Dimension_model->guardarmodificaciondimension(
-                $this->input->post('descripcion'), $this->input->post('dimid')
-        );
+        try {
+            $this->load->model('Dimension_model');
+            $respuesta = $this->Dimension_model->guardarmodificaciondimension(
+                    $this->input->post('descripcion'), $this->input->post('dimid')
+            );
+            if ($respuesta === FALSE)
+                throw new Exception("Ocurrio un error en la base de datos");
+            else
+                $data['Json'] = $this->Dimension_model->detail();
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function guardardimension() {
-        $this->load->model('Dimension_model');
-        $data[0] = array(
-            "dim_descripcion" => $this->input->post('descripcion')
-        );
-        if (empty($this->Dimension_model->consultxname($this->input->post('descripcion')))) {
-            $this->Dimension_model->create($data);
-            $dimension = $this->Dimension_model->detail();
-            $this->output->set_content_type('application/json')->set_output(json_encode($dimension));
-        } else {
-            $respuesta["message"] = "Datos existente en el sistema";
-            $this->output->set_content_type('application/json')->set_output(json_encode($respuesta));
+        try {
+            $this->load->model('Dimension_model');
+            $data = array(
+                "dim_descripcion" => $this->input->post('descripcion')
+            );
+            if (!empty($this->Dimension_model->consultxname($this->input->post('descripcion'))))
+                throw new Exception("Datos existente en el sistema");
+            else {
+                if ($this->Dimension_model->create($data) == TRUE)
+                    $data['Json'] = $this->Dimension_model->detail();
+                else
+                    throw new Exception("Ocurrio un error en la base de datos");
+            }
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function eliminardimension() {
-        $this->load->model('Dimension_model');
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->Dimension_model->delete($this->input->post('id'))));
+        try {
+            $this->load->model('Dimension_model');
+            $respuesta = $this->Dimension_model->delete($this->input->post('id'));
+            if ($respuesta == FALSE)
+                throw new Exception("Ocurrio un problema en la base de datos");
+            $data['Json'] = $respuesta;
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function actualizardimension() {

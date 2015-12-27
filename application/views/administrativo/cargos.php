@@ -1,8 +1,5 @@
 <div class="row">
     <div class="circuloIcon guardarcargo" tittle="Guardar"><i class="fa fa-floppy-o fa-3x"></i></div>
-<!--    <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-folder-open fa-3x"></i></div>-->
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -15,16 +12,16 @@
     </div>
 </div>
 <div class='cuerpoContenido'>
-<div class="row">
+    <div class="row">
         <form method="post" id="formcargos" class="form-horizontal">
             <div class="form-group">
                 <label for="id" class="col-md-1 control-label"><span class="campoobligatorio">*</span>Cargo</label>
                 <div class="col-md-3">
-                    <input type="text" class="form-control obligatorio texto" name="cargo[]" id="cargo" />
+                    <input type="text" class="form-control obligatorio texto" name="cargo" id="cargo" />
                 </div>
                 <label for="id" class="col-md-1 control-label">Cargo jefe directo</label>
                 <div class="col-md-3">
-                    <select name="cargojefe[]" id="cargojefe" class="form-control texto" >
+                    <select name="cargojefe" id="cargojefe" class="form-control texto" >
                         <option value="">::Seleccionar::</option>
                         <?php foreach ($cargo as $d) { ?>
                             <option value="<?php echo $d->car_id ?>"><?php echo $d->car_nombre ?></option>
@@ -33,7 +30,7 @@
                 </div>
                 <label for="id" class="col-md-1 control-label"><span class="campoobligatorio">*</span>%Cotizacion ARL</label>
                 <div class="col-md-3">
-                    <input type="text" name="porcentaje[]" id="porcentaje" class="form-control obligatorio number2 texto" />
+                    <input type="text" name="porcentaje" id="porcentaje" class="form-control obligatorio number2 texto" />
                 </div>
             </div>
         </form>
@@ -55,9 +52,13 @@
                             <td><?php echo $c->car_nombre ?></td> 
                             <td><?php echo $c->jefe ?></td> 
                             <td style="text-align:center;"><?php echo $c->car_porcentajearl ?></td> 
-                            <td style="text-align: center"><i class="fa fa-child fa-2x riesgo btn btn-default" title="Eliminar" car_id="<?php echo $c->car_id ?>" data-toggle="modal" data-target="#riesgo"></i></td>
+                            <td style="text-align: center" class="transparent">
+                                <?php if ($c->cantidadRiesgos > 0): ?>
+                                    <i class="fa fa-child fa-2x riesgo " title="Eliminar" car_id="<?php echo $c->car_id ?>" ></i>
+                                <?php endif; ?>
+                            </td>
                             <td class="transparent">
-                                <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" car_id="<?php echo $c->car_id ?>"  data-toggle="modal" data-target="#myModal"></i>
+                                <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" car_id="<?php echo $c->car_id ?>"  ></i>
                             </td> 
                             <td class="transparent">
                                 <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" car_id="<?php echo $c->car_id ?>"></i>
@@ -68,7 +69,7 @@
             </table>
         </div>
     </div>
-    
+
 </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -81,7 +82,7 @@
             <div class="modal-body form-horizontal">
                 <div class="row">
                     <input type="hidden" value="" name="car_id" id="idcargo">
-                    
+
                     <div class="form-group">
                         <label for="cargo2" class="col-sm-offset-1 col-sm-3 control-label">Cargo</label>
                         <div class="col-sm-7">
@@ -140,24 +141,28 @@
 </div>
 <script>
     $('body').delegate(".riesgo", "click", function () {
-
         var car_id = $(this).attr("car_id");
         $.post(
                 "<?php echo base_url("index.php/administrativo/cargoriesgo") ?>",
                 {
-                    car_id: car_id,
+                    car_id: car_id
                 }
         ).done(function (msg) {
-            $("#riesgocargo *").remove();
-            var body = "";
-            $.each(msg, function (key, val) {
-                body += "<tr>";
-                body += "<td>" + val.rie_descripcion + "</td>";
-                body += "</tr>";
-            });
-            $("#riesgocargo").append(body);
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message']);
+            else {
+                $("#riesgocargo *").remove();
+                var body = "";
+                $.each(msg.Json, function (key, val) {
+                    body += "<tr>";
+                    body += "<td>" + val.rie_descripcion + "</td>";
+                    body += "</tr>";
+                });
+                $("#riesgocargo").append(body);
+                $('#riesgo').modal('show');
+            }
         }).fail(function (msg) {
-            alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+            alerta("rojo", "Error, Por favor comunicarse con el administrador del sistema");
         });
     });
     $('.guardarmodificacion').click(function () {
@@ -170,10 +175,13 @@
                     car_id: $('#idcargo').val()
                 }
         ).done(function (msg) {
-            alerta("verde", "Modificado correctamente");
-            window.location.href = '';
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message']);
+            else {
+                listadoCargos(msg);
+            }
         }).fail(function (msg) {
-            alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+            alerta("rojo", "Error, Por favor comunicarse con el administrador del sistema");
         });
     });
 
@@ -184,14 +192,18 @@
                     car_id: $(this).attr('car_id')
                 }
         ).done(function (msg) {
-            $('#idcargo').val(msg.car_id);
-            $('#cargo2').val(msg.car_nombre);
-            $('#cargojefedir').val(msg.idjefe);
-            $('#cotizacion').val(msg.car_porcentajearl);
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message']);
+            else {
+                $('#idcargo').val(msg.Json[0].car_id);
+                $('#cargo2').val(msg.Json[0].car_nombre);
+                $('#cargojefedir').val(msg.Json[0].idjefe);
+                $('#cotizacion').val(msg.Json[0].car_porcentajearl);
+                $('#myModal').modal("show");
+            }
         }).fail(function (msg) {
-            alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
-        })
-
+            alerta("rojo", "Error, Por favor comunicarse con el administrador del sistema");
+        });
     });
 
     $('body').delegate(".eliminar", "click", function () {
@@ -199,11 +211,12 @@
         if (confirm("Esta seguro de eliminar el cargo") == true) {
             $.post("<?php echo base_url('index.php/administrativo/eliminarcargo') ?>", {id: $(this).attr('car_id')})
                     .done(function (msg) {
-                        if(!jQuery.isEmptyObject(msg.message))alerta("rojo",msg['message']);
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("rojo", msg['message']);
                         else {
                             $('select *').remove();
                             var select = "";
-                            $.each(msg, function (key, val) {
+                            $.each(msg.Json, function (key, val) {
                                 select += "<option value='" + val.car_id + "'>" + val.car_nombre + "</option>";
                             });
                             $('select').append(select);
@@ -212,62 +225,55 @@
                         }
                     })
                     .fail(function (msg) {
-                        alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+                        alerta("rojo", "Error, Por favor comunicarse con el administrador del sistema");
                     });
         }
     });
-    var agregar = '<div class="form-group" style="margin-top:10px">\n\
-                <label for="cargo">Cargo</label><input type="text" name="cargo[]" id="cargo" class="form-control obligatorio" />\n\
-                <label for="cargojefe">Cargo jefe directo</label><input type="text" name="cargojefe[]" id="cargojefe" class="form-control" />\n\
-                <label for="porcentaje">%Cotizacion ARL</label><input type="text" name="porcentaje[]" id="porcentaje" class="form-control obligatorio number" />\n\
-                <i class="fa fa-plus-circle fa-2x mas btn btn-info" style="cursor:pointer"></i>\n\
-                <i class="fa fa-minus-circle fa-2x menos btn btn-danger"  style="cursor:pointer"></i>\n\
-            </div>';
-    $("body").delegate(".mas", "click", function () {
-        $("#formcargos").append(agregar);
-    });
 
-    $('body').delegate(".menos", "click", function () {
-        $(this).parents('.form-group').remove();
-    });
     $('.guardarcargo').click(function () {
         if (obligatorio('obligatorio') == true) {
             $.post("<?php echo base_url('index.php/administrativo/guardarcargo') ?>",
                     $("#formcargos").serialize())
                     .done(function (msg) {
-                        if (msg != 1) {
-                            $('#bodycargo *').remove()
-                            $('#cargojefe *').remove()
-                            var body = "";
-                            var option = "";
-                            $.each(msg, function (key, val) {
-                                body += "<tr>";
-                                body += "<td>" + val.car_nombre + "</td>";
-                                body += "<td>" + val.jefe + "</td>";
-                                body += "<td style='text-align: center'>" + val.car_porcentajearl + "</td>";
-                                body += '<td style="text-align: center"><i class="fa fa-child fa-2x riesgo btn btn-default" title="Eliminar" car_id="' + val.car_id + '" data-toggle="modal" data-target="#riesgo"></i></td>';
-                                body += '<td class="transparent">\n\
-                                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" car_id="' + val.car_id + '"  data-toggle="modal" data-target="#myModal"></i>\n\
-                                        </td>';
-                                body += '<td class="transparent">\n\
-                                            <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" car_id="' + val.car_id + '"></i>\n\
-                                        </td>'; 
-                                body += "</tr>";
-                                option += "<option value='" + val.car_id + "'>" + val.car_nombre + "</option>";
-                            });
-                            $('#bodycargo').append(body);
-                            $('#cargojefe').append(option);
-                            $('.texto').val("");
-                            alerta("verde", "Guardado Correctamente");
-                        } else {
-                            alerta("amarillo", "Cargo ya existente");
-                        }
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("rojo", msg['message']);
+                        else 
+                            listadoCargos(msg);
                     })
                     .fail(function (msg) {
-
+                        alerta("rojo", "Error, Por favor comunicarse con el administrador del sistema");
                     })
 
         }
-    })
+    });
+    function listadoCargos(msg) {
+        $('#bodycargo *,#cargojefe *').remove();
+        var body = "";
+        var option = "";
+        $.each(msg.Json, function (key, val) {
+            body += "<tr>";
+            body += "<td>" + val.car_nombre + "</td>";
+            body += "<td>" + val.jefe + "</td>";
+            body += "<td style='text-align: center'>" + val.car_porcentajearl + "</td>";
+            body += '<td class="transparent">';
+            if (val.cantidadRiesgos > 0) {
+                body += '<i class="fa fa-child fa-2x riesgo" title="Eliminar" car_id="' + val.car_id + '" ></i>';
+            }
+            body += '</td>';
+            body += '<td class="transparent">\n\
+                                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" car_id="' + val.car_id + '" ></i>\n\
+                                        </td>';
+            body += '<td class="transparent">\n\
+                                            <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" car_id="' + val.car_id + '"></i>\n\
+                                        </td>';
+            body += "</tr>";
+            option += "<option value='" + val.car_id + "'>" + val.car_nombre + "</option>";
+        });
+        $('#bodycargo').append(body);
+        $('#cargojefe').append(option);
+        $('.texto').val("");
+        alerta("verde", "Guardado Correctamente");
+        $('#myModal').modal('hide');
+    }
 
 </script>    

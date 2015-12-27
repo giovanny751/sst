@@ -116,11 +116,19 @@ class Empleado_model extends CI_Model {
 
     function eliminarempleado($id) {
         try {
+            $this->db->trans_begin();
             $this->db->where("emp_id", $id);
             $this->db->set("est_id",3);
             $this->db->update("empleado");
+            if($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+            }else{
+                $this->db->trans_commit();
+            }
         } catch (exception $e) {
             
+        }finally{
+            return $this->db->trans_status();
         }
     }
 

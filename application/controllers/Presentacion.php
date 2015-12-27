@@ -135,10 +135,11 @@ class Presentacion extends My_Controller {
 
     function consultarolxrolidusuario() {
         try {
-            $this->data['rol'] = $this->Roles_model->totalroles($this->input->post('id'));
-            $this->output->set_content_type('application/json')->set_output(json_encode($this->data['rol']));
+            $data['Json'] = $this->Roles_model->totalroles($this->input->post('id'));
         } catch (exception $e) {
             
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
@@ -239,64 +240,70 @@ class Presentacion extends My_Controller {
     }
 
     function guardarroles() {
-        $nombre = $this->input->post('nombre');
-        if (!empty($nombre)) {
+        try {
+            $nombre = $this->input->post('nombre');
+            if (!empty($nombre)) {
+                $permisorol = $this->input->post('permisorol');
+                $id = $this->Roles_model->guardarrol($nombre);
+                $insert = array();
+                for ($i = 0; $i < count($permisorol); $i++) {
+                    $insert[] = array('rol_id' => $id, 'menu_id' => $permisorol[$i]);
+                }
+                if (!empty($insert)) {
+                    $this->Roles_model->insertapermisos($insert);
+                }
+                $roles = $this->Roles_model->rolesall();
+                echo json_encode($roles);
+                die;
+            } else {
+                $id = $this->input->post('rol');
+                $this->Roles_model->eliminpermisosrol($id);
+                $this->Roles_model->modificarrol($id);
+            }
             $permisorol = $this->input->post('permisorol');
-            $id = $this->Roles_model->guardarrol($nombre);
+            $crear = $this->input->post('crear');
+            $modificar = $this->input->post('modificar');
+            $eliminar = $this->input->post('eliminar');
             $insert = array();
+            $c = 0;
+            $m = 0;
+            $e = 0;
             for ($i = 0; $i < count($permisorol); $i++) {
-                $insert[] = array('rol_id' => $id, 'menu_id' => $permisorol[$i]);
+                if (isset($crear[$c]))
+                    if ($crear[$c] == $permisorol[$i]) {
+                        $crear2 = $crear[$c];
+                        $c++;
+                    } else
+                        $crear2 = 0;
+                else
+                    $crear2 = 0;
+                if (isset($modificar[$m]))
+                    if ($modificar[$m] == $permisorol[$i]) {
+                        $modificar2 = $modificar[$m];
+                        $m++;
+                    } else
+                        $modificar2 = 0;
+                else
+                    $modificar2 = 0;
+                if (isset($eliminar[$e]))
+                    if ($eliminar[$e] == $permisorol[$i]) {
+                        $eliminar2 = $eliminar[$e];
+                        $e++;
+                    } else
+                        $eliminar2 = 0;
+                else
+                    $eliminar2 = 0;
+
+                $insert[] = array('rol_id' => $id, 'menu_id' => $permisorol[$i], 'perRol_crear' => $crear2, 'perRol_modificar' => $modificar2, 'perRol_eliminar' => $eliminar2);
             }
-            if (!empty($insert)) {
-                $this->Roles_model->insertapermisos($insert);
-            }
+            $this->Roles_model->insertapermisos($insert);
             $roles = $this->Roles_model->rolesall();
             echo json_encode($roles);
-            die;
-        } else {
-            $id = $this->input->post('rol');
-            $this->Roles_model->eliminpermisosrol($id);
-            $this->Roles_model->modificarrol($id);
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            
         }
-        $permisorol = $this->input->post('permisorol');
-        $crear = $this->input->post('crear');
-        $modificar = $this->input->post('modificar');
-        $eliminar = $this->input->post('eliminar');
-        $insert = array();
-        $c = 0;
-        $m = 0;
-        $e = 0;
-        for ($i = 0; $i < count($permisorol); $i++) {
-            if (isset($crear[$c]))
-                if ($crear[$c] == $permisorol[$i]) {
-                    $crear2 = $crear[$c];
-                    $c++;
-                } else
-                    $crear2 = 0;
-            else
-                $crear2 = 0;
-            if (isset($modificar[$m]))
-                if ($modificar[$m] == $permisorol[$i]) {
-                    $modificar2 = $modificar[$m];
-                    $m++;
-                } else
-                    $modificar2 = 0;
-            else
-                $modificar2 = 0;
-            if (isset($eliminar[$e]))
-                if ($eliminar[$e] == $permisorol[$i]) {
-                    $eliminar2 = $eliminar[$e];
-                    $e++;
-                } else
-                    $eliminar2 = 0;
-            else
-                $eliminar2 = 0;
-
-            $insert[] = array('rol_id' => $id, 'menu_id' => $permisorol[$i], 'perRol_crear' => $crear2, 'perRol_modificar' => $modificar2, 'perRol_eliminar' => $eliminar2);
-        }
-        $this->Roles_model->insertapermisos($insert);
-        $roles = $this->Roles_model->rolesall();
-        echo json_encode($roles);
     }
 
     function eliminarrol() {
@@ -361,19 +368,28 @@ class Presentacion extends My_Controller {
     }
 
     function guardarpermisos() {
-        $rol = $this->input->post('idrol');
-        $usuario = $this->input->post('idusuario');
-        $this->Ingreso_model->eliminarpermisosusuario($usuario);
-//        $this->Ingreso_model->actualizausuariorol($usuario);
-        $data = array();
-        $i = 0;
-        for ($i = 0; $i < count($rol); $i++) {
-            $data[$i] = array(
-                "rol_id" => $rol[$i],
-                "usu_id" => $usuario
-            );
+        try {
+            $rol = $this->input->post('idrol');
+            $usuario = $this->input->post('idusuario');
+            $eliminacion = $this->Ingreso_model->eliminarpermisosusuario($usuario);
+            if ($eliminacion == false)
+                throw new Exception("Error en la base de datos");
+            $data = array();
+            $i = 0;
+            for ($i = 0; $i < count($rol); $i++) {
+                $data[$i] = array(
+                    "rol_id" => $rol[$i],
+                    "usu_id" => $usuario
+                );
+            }
+            $msg['Json'] = $this->Ingreso_model->permisosusuariomenu($data);
+            if ($msg == false)
+                throw new Exception("Error en la base de datos");
+        } catch (exception $e) {
+            $msg['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($msg));
         }
-        $this->Ingreso_model->permisosusuariomenu($data);
     }
 
     function rolesasignados() {

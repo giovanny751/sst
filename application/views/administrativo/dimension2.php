@@ -1,8 +1,5 @@
 <div class="row">
     <div class="circuloIcon guardar"><i class="fa fa-floppy-o fa-3x"></i></div>
-<!--    <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-folder-open fa-3x"></i></div>-->
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -38,10 +35,12 @@
                     <tr>
                         <td><?php echo $d->dim_descripcion ?></td>
                         <td class="transparent">
-                            <i class="fa fa-child fa-2x riesgo btn btn-default" title="Riesgos" dim_id="<?php echo $d->dim_id ?>" data-toggle="modal" data-target="#riesgo"></i>
+                            <?php if($d->cantidadRiesgo > 0): ?>
+                            <i class="fa fa-child fa-2x riesgo" title="Riesgos" dim_id="<?php echo $d->dim_id ?>" ></i>
+                            <?php endif; ?>
                         </td>
                         <td class="transparent">
-                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" dim_id="<?php echo $d->dim_id ?>" data-toggle="modal" data-target="#myModal"></i>
+                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" dim_id="<?php echo $d->dim_id ?>" ></i>
                         </td>
                         <td class="transparent">
                             <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" dim_id="<?php echo $d->dim_id ?>" ></i>
@@ -107,102 +106,133 @@
     </div>
 </div>
 <script>
-    $('body').delegate(".riesgo", "click", function() {
-
+    $('body').delegate('.seleccionRiesgo', "click", function () {
+        var form = "<form method='post' id='frmRiesgo' action='<?php echo base_url("index.php/riesgo/nuevoriesgo") ?>'>";
+        form += "<input type='hidden' value='" + $(this).attr('rie_id') + "' name='rie_id'>";
+        form += "</form>";
+        $('body').append(form);
+        $('#frmRiesgo').submit();
+    });
+    
+    $('body').delegate(".riesgo", "click", function () {
         var dim_id = $(this).attr("dim_id");
         $.post(
                 "<?php echo base_url("index.php/administrativo/dimensiondosriesgo") ?>",
                 {
-                    dim_id: dim_id,
+                    dim_id: dim_id
                 }
-        ).done(function(msg) {
-            $("#riesgodimension *").remove();
-            var body = "";
-            $.each(msg, function(key, val) {
-                body += "<tr>";
-                body += "<td>" + val.rie_descripcion + "</td>";
-                body += "</tr>";
-            });
-            $("#riesgodimension").append(body);
-        }).fail(function(msg) {
-            alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+        ).done(function (msg) {
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("amarillo", msg['message'])
+            else {
+                $("#riesgodimension *").remove();
+                var body = "";
+                $.each(msg.Json, function (key, val) {
+                    body += "<tr>";
+                    body += "<td class='seleccionRiesgo' style='text-align:center;cursor:pointer;' rie_id='"+val.rie_id+"'>" + val.rie_descripcion + "</td>";
+                    body += "</tr>";
+                });
+                $("#riesgodimension").append(body);
+                $('#riesgo').modal('show');
+            }
+        }).fail(function (msg) {
+            alerta("rojo", "Error, por favor comunicarse con el administrador");
         });
     });
-    $('.guardarmodificacion').click(function() {
-
+    $('.guardarmodificacion').click(function () {
         $.post(
                 "<?php echo base_url("index.php/administrativo/guardarmodificaciondimension2") ?>",
                 {
                     dimid: $('#dimid').val(),
                     descripcion: $('#descripcion2').val()
                 }
-        ).done(function() {
-            alerta("verde", "Modificado correctamente");
-            window.location.href = '';
-        }).fail(function() {
-            alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+        ).done(function (msg) {
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("amarillo", msg['message'])
+            else 
+                construccionTabla(msg);
+        }).fail(function () {
+            alerta("rojo", "Error, por favor comunicarse con el administrador");
         })
 
     });
 
-    $('body').delegate(".modificar", "click", function() {
+    $('body').delegate(".modificar", "click", function () {
 
         $.post(
                 "<?php echo base_url("index.php/administrativo/consultadimensionxid2") ?>",
                 {dim_id: $(this).attr('dim_id')}
-        ).done(function(msg) {
-            $('#dimid').val(msg.dim_id);
-            $('#descripcion2').val(msg.dim_descripcion);
-        }).fail(function(msg) {
-
+        ).done(function (msg) {
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message'])
+            else {
+                $('#dimid').val(msg.Json[0].dim_id);
+                $('#descripcion2').val(msg.Json[0].dim_descripcion);
+                $('#myModal').modal('show');
+            }
+        }).fail(function (msg) {
+            alerta("rojo", "Error, por favor comunicarse con el administrador");
         });
 
     });
 
-    $('body').delegate(".eliminar", "click", function() {
+    $('body').delegate(".eliminar", "click", function () {
         var eliminar = $(this);
         if (confirm("Esta seguro de eliminar la dimension") == true) {
             $.post("<?php echo base_url('index.php/administrativo/eliminardimension2') ?>",
                     {id: $(this).attr('dim_id')}
-            ).done(function(msg) {
-                eliminar.parents('tr').remove();
-                alerta("verde", "Eliminado Correctamente");
-            }).fail(function(msg) {
-                alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+            ).done(function (msg) {
+                if (!jQuery.isEmptyObject(msg.message))
+                    alerta("rojo", msg['message'])
+                else {
+                    eliminar.parents('tr').remove();
+                    alerta("verde", "Eliminado Correctamente");
+                }
+            }).fail(function (msg) {
+                alerta("rojo", "Error, por favor comunicarse con el administrador");
             });
         }
     });
-    $('.guardar').click(function() {
+    $('.guardar').click(function () {
         if (obligatorio('obligatorio') == true) {
             $.post("<?php echo base_url("index.php/administrativo/guardardimension2") ?>"
                     , {
                         descripcion: $('#descripcion').val()
                     })
-                    .done(function(msg) {
-                        if (msg != 1) {
-                            $('#bodydimension *').remove();
-                            var bodydimension = "";
-                            $.each(msg, function(key, val) {
-                                bodydimension += "<tr>";
-                                bodydimension += "<td>" + val.dim_descripcion + "</td>";
-                                bodydimension += "<td class='transparent'><i class='fa fa-child fa-2x riesgo btn btn-default' title='Riesgos' dim_id='" + val.dim_id + "' data-toggle='modal' data-target='#riesgo'></i></td>";
-                                bodydimension += '<td class="transparent">\n\
-                                                        <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar"  dim_id="' + val.dim_id + '" data-toggle="modal" data-target="#myModal"></i>\n\
-                                                    </td>';
-                                bodydimension += '<td class="transparent">\n\
-                                                        <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" dim_id="' + val.dim_id + '" ></i>\n\
-                                                    </td>';
-                                bodydimension += "</tr>";
-                            });
-                            $('#bodydimension').append(bodydimension);
-                            alerta("verde", "Guardado Correctamente");
-                        } else {
-                            alerta("amarillo", "datos ya existentes en el sistema");
-                        }
+                    .done(function (msg) {
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("amarillo", msg['message'])
+                        else 
+                            construccionTabla(msg);
                     })
-                    .fail(function(msg) {
-                        alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
+                    .fail(function (msg) {
+                        alerta("rojo", "Error, por favor comunicarse con el administrador");
                     })
         }
     });
+
+    function construccionTabla(msg) {
+        $('#bodydimension *').remove();
+        var bodydimension = "";
+        $.each(msg.Json, function (key, val) {
+            bodydimension += "<tr>";
+            bodydimension += "<td>" + val.dim_descripcion + "</td>";
+            bodydimension += "<td class='transparent'>";
+            if(val.cantidadRiesgo > 0){
+            bodydimension += "<i class='fa fa-child fa-2x riesgo' title='Riesgos' dim_id='" + val.dim_id + "' ></i>";
+            }
+            bodydimension += "</td>";
+            bodydimension += '<td class="transparent">\n\
+                                    <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar"  dim_id="' + val.dim_id + '" ></i>\n\
+                                </td>';
+            bodydimension += '<td class="transparent">\n\
+                                    <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" dim_id="' + val.dim_id + '" ></i>\n\
+                                </td>';
+            bodydimension += "</tr>";
+        });
+        $('#bodydimension').append(bodydimension);
+        $('#myModal').modal('hide');
+        alerta("verde", "Guardado Correctamente");
+
+    }
 </script>

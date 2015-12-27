@@ -515,7 +515,8 @@ class Tareas extends My_Controller {
                         "nombre" => $t->Emp_Nombre,
                         "tipo" => $t->tip_tipo,
                         "cantidadriesgo" => $t->cantidadriesgo,
-                        "progreso" => (!empty($t->progreso) ? $t->progreso . '%' : '0%')
+                        "progreso" => (!empty($t->progreso) ? $t->progreso . '%' : '0%'),
+                        "cantidadRiesgo" => $t->cantidadRiesgo
                     )
                 );
             endforeach;
@@ -757,13 +758,18 @@ class Tareas extends My_Controller {
     }
 
     function obtener_riesgos() {
+        try{
         $this->load->model("Tarea_model");
         $datos = $this->Tarea_model->lista_riesgos_guardados2($this->input->post('tar_id'));
-//        print_r($datos);
-        if (count($datos))
-            echo json_encode($datos);
+        if (count($datos) > 0)
+            $data['Json'] = $datos;
         else
-            echo 1;
+            throw new Exception("No se encontraron riesgos para esta tarea");
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function traer_riesgos() {

@@ -148,8 +148,12 @@
                         id: $(this).attr('pla_id')
                     }
             ).done(function (msg) {
-                objeto.parents('tr').remove();
-                alerta("verde", "Eliminado Correctamente");
+                if (!jQuery.isEmptyObject(msg.message))
+                    alerta("amarillo", msg['message'])
+                else {
+                    objeto.parents('tr').remove();
+                    alerta("verde", "Eliminado Correctamente");
+                }
             }).fail(function (msg) {
                 alerta("rojo", "Error en el sistema por favor verificar la conexion de internet");
             })

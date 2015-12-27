@@ -188,11 +188,19 @@ class User_model extends CI_Model {
 
     function eliminarusuario($id) {
         try {
+            $this->db->trans_begin();
             $this->db->where("usu_id", $id);
             $this->db->set("est_id", "3");
             $this->db->update("user");
+            if($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+            }else{
+                $this->db->trans_commit();
+            }
         } catch (exception $e) {
             
+        }finally{
+            return $this->db->trans_status();
         }
     }
 

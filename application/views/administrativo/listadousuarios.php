@@ -1,9 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        <!-- <div class="circuloIcon" id="guardartarea"><i class="fa fa-floppy-o fa-3x"></i></div>
-        <div class="circuloIcon" id="guardartarea" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-        <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div> -->
-        <a href="<?php echo base_url()."index.php/administrativo/creacionusuarios" ?>"><div class="circuloIcon" title="Nuevo Usuario" ><i class="fa fa-folder-open fa-3x"></i></div></a>
+        <a href="<?php echo base_url() . "index.php/administrativo/creacionusuarios" ?>"><div class="circuloIcon" title="Nuevo Usuario" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
 <div class="row">
@@ -75,11 +72,11 @@
             <th>Eliminar</th>
             </thead>
             <tbody id="bodyuser">
-                    <tr>
-                        <td colspan="10">
-                            <center><b>Ingresar Filtros para realizar la consulta</b></center>
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="10">
+            <center><b>Ingresar Filtros para realizar la consulta</b></center>
+            </td>
+            </tr>
             <?php // } ?>
             </tbody>
         </table>
@@ -151,60 +148,52 @@
 <script>
 
     $('#ingresousuario').hide();
-
     $('.insertarrol').click(function () {
         $("#idusuario").val($(this).attr('usuarioid'));
-        $.post("<?= base_url('index.php/presentacion/guardarpermisos') ?>",
+        $.post("<?php echo base_url('index.php/presentacion/guardarpermisos') ?>",
                 $('#f15').serialize()
-                ).done(function () {
-                   $('#myModal3').modal('hide'); 
-        }).fail(function () {
-            alerta("rojo","Error, por favor comunicarse con el administrador del sistema");
+                ).done(function (msg) {
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message'])
+            else {
+                $('#myModal3').modal('hide');
+            }
+        }).fail(function (msg) {
+            alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
         });
     });
 
-    $('.modificar').click(function () {
-        $('.obligatorio').val('');
-        $.post("<?= base_url('index.php/presentacion/consultausuario') ?>",
-                {id: $(this).attr('idpadre')},
-        function (data) {
-            $('#usuario').val(data.usu_nombres_apellido);
-            $('#email').val(data.usu_correo);
-            $('#celular').val(data.usu_telF);
-        });
+    $('body').delegate(".modificar", "click", function () {
+        $("#usu_id").val($(this).attr("usu_id"));
+        $("#f10").submit();
     });
 
     $('body').delegate('.permiso', 'click', function () {
         var id = $(this).attr('usuarioid');
         $('#usuarioid').val(id);
         $('.insertarrol').attr('usuarioid', id);
-        
         $('input[type="checkbox"]').parent("span").removeClass('checked');
         $('input[type="checkbox"]').attr('checked', false);
-        
         $.post("<?= base_url('index.php/presentacion/consultarolxrolidusuario') ?>",
                 {id: id})
                 .done(function (msg) {
-//                            $('input[type="checkbox"]').attr('checked',false)
-                    $.each(msg, function (key, val) {
-                        $('input[rol="' + val.rol_id + '"]').parent("span").addClass('checked');
-                        $('input[rol="' + val.rol_id + '"]').prop('checked', true);
-                        $('input[rol="' + val.rol_id + '"]').is(":checked");
-                        
-                    });
-                    $("#myModal3").modal("show");
-//                    $('#myModal3').show(); 
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else {
+                        $.each(msg.Json, function (key, val) {
+                            $('input[rol="' + val.rol_id + '"]').parent("span").addClass('checked');
+                            $('input[rol="' + val.rol_id + '"]').prop('checked', true);
+                            $('input[rol="' + val.rol_id + '"]').is(":checked");
+                        });
+                        $("#myModal3").modal("show");
+                    }
                 }).fail(function (msg) {
-                    alerta("rojo","Error, por favor comunicarse con el administrador del sistema");
-        })
-
+            alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
+        });
     });
-
-
     $('#insertarusuario').click(function () {
         $('.obligatorio').val('');
     });
-
 //    -----------------------------------------------------------------------------
     $('#cedula').autocomplete({
         source: "<?php echo base_url("index.php/administrativo/autocompletaruacedula") ?>",
@@ -218,10 +207,7 @@
         source: "<?php echo base_url("index.php/administrativo/autocompletaruapellido") ?>",
         minLength: 1
     });
-    $('body').delegate(".modificar", "click", function () {
-        $("#usu_id").val($(this).attr("usu_id"));
-        $("#f10").submit();
-    });
+
     $('.limpiar').click(function () {
         $('select,input').val('');
     });
@@ -230,48 +216,59 @@
                 "<?php echo base_url("index.php/administrativo/consultarusuario") ?>",
                 $("#f4").serialize()
                 ).done(function (msg) {
-            $('#bodyuser *').remove();
-            var body = "";
-            $.each(msg, function (key, val) {
-                if(val.est_id == 1)var activo = "Activo";
-                if(val.est_id != 1)var activo = "Inactivo";
-                body += "<tr>";
-                body += "<td>" + val.usu_cedula + "</td>";
-                body += "<td>" + val.usu_usuario + "</td>";
-                body += "<td>" + val.usu_nombre + "</td>";
-                body += "<td>" + val.usu_apellido + "</td>";
-                body += "<td>" + activo + "</td>";
-                body += "<td>" + val.usu_fechaActualizacion + "</td>";
-                body += "<td>" + val.usu_fechaCreacion + "</td>";
-                body += "<td>" + val.ing_fechaIngreso + "</td>";
-                body += '<td><button type="button"  class="btn btn-info permiso" usuarioid="' + val.usu_id + '">Roles</button></td>';
-                body += '<td class="transparent">\n\
-                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" usu_id="'+ val.usu_id+'"  data-toggle="modal" data-target="#myModal"></i>\n\
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("rojo", msg['message'])
+            else {
+                $('#bodyuser *').remove();
+                var body = "";
+                $.each(msg.Json, function (key, val) {
+                    if (val.est_id == 1)
+                        var activo = "Activo";
+                    if (val.est_id != 1)
+                        var activo = "Inactivo";
+                    body += "<tr>";
+                    body += "<td>" + val.usu_cedula + "</td>";
+                    body += "<td>" + val.usu_usuario + "</td>";
+                    body += "<td>" + val.usu_nombre + "</td>";
+                    body += "<td>" + val.usu_apellido + "</td>";
+                    body += "<td>" + activo + "</td>";
+                    body += "<td>" + val.usu_fechaActualizacion + "</td>";
+                    body += "<td>" + val.usu_fechaCreacion + "</td>";
+                    body += "<td>" + val.ing_fechaIngreso + "</td>";
+                    body += '<td><button type="button"  class="btn btn-info permiso" usuarioid="' + val.usu_id + '">Roles</button></td>';
+                    body += '<td class="transparent">\n\
+                            <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar" usu_id="' + val.usu_id + '"  data-toggle="modal" data-target="#myModal"></i>\n\
                         </td>';
-                body += '<td class="transparent">\n\
-                            <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" usu_id="'+val.usu_id+'"></i>\n\
+                    body += '<td class="transparent">\n\
+                            <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" usu_id="' + val.usu_id + '"></i>\n\
                         </td>';
-                body += "</tr>";
-            });
-            $('#bodyuser').append(body);
-        }).fail(function (msg) {
-
+                    body += "</tr>";
+                });
+                $('#bodyuser').append(body);
+            }
+        }
+        ).fail(function (msg) {
+            alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
         });
     });
-    
-    $('body').delegate('.eliminar','click',function(){
+
+    $('body').delegate('.eliminar', 'click', function () {
         var asignacion = $(this);
         var usu_id = $(this).attr('usu_id');
-        if(confirm("Esta seguro que desea eliminar el usuario?")){
-        $.post("<?php echo base_url("index.php/administrativo/eliminarusuario") ?>",{usu_id:usu_id})
-                    .done(function(msg){
-                        asignacion.parents('tr').remove();
-                        alerta("verde","Usuario eliminado con exito");
+        if (confirm("Esta seguro que desea eliminar el usuario?")) {
+            $.post("<?php echo base_url("index.php/administrativo/eliminarusuario") ?>", {usu_id: usu_id})
+                    .done(function (msg) {
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("rojo", msg['message'])
+                        else {
+                            asignacion.parents('tr').remove();
+                            alerta("verde", "Usuario eliminado con exito");
+                        }
                     })
-                    .fail(function(msg){
-                        alerta("rojo","Error, por favor comunicase con el administrador del sistema")
+                    .fail(function (msg) {
+                        alerta("rojo", "Error, por favor comunicase con el administrador del sistema")
                     });
-                }
-        
+        }
+
     });
 </script>

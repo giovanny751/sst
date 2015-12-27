@@ -1,8 +1,5 @@
 <div class="row">
     <div class="col-md-6">
-        <!-- <div class="circuloIcon" id="guardartarea"><i class="fa fa-floppy-o fa-3x"></i></div>
-        <div class="circuloIcon" id="guardartarea" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-        <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div> -->
         <a href="<?php echo base_url() . "/index.php/tareas/nuevatarea" ?>"><div class="circuloIcon" title="Nueva Tarea" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
@@ -109,22 +106,22 @@
             else {
                 $('#filtroconsulta *').remove();
                 var table = "";
+                var encabezado = "<tr>";
+                encabezado += "<th width='5%'>AGREGAR AVANCE</th>"
+                encabezado += "<th width='5%'>AVANCE</th>"
+                encabezado += "<th width='5%'>TIPO</th>"
+                encabezado += "<th width='20%'>NOMBRE DE LA TAREA</th>"
+                encabezado += "<th width='8%'>FECHA INICIO</th>"
+                encabezado += "<th width='8%'>FECHA FIN</th>"
+                encabezado += "<th width='14%'>DURACIÓN PRESUPUESTADA</th>"
+                encabezado += "<th width='10%'>RESPONSABLES</th>"
+                encabezado += "<th># RIESGOS</th>"
+                encabezado += "<th>RIESGOS</th>"
+                encabezado += "<th>EDITAR</th>"
+                encabezado += "<th>ELIMINAR</th>"
+                encabezado += "</tr>";
                 $.each(msg.Json, function (idplan, nombreplan) {
                     table += "<table class='tablesst'>";
-                    var encabezado = "<tr>";
-                    encabezado += "<th width='5%'>AGREGAR AVANCE</th>"
-                    encabezado += "<th width='5%'>AVANCE</th>"
-                    encabezado += "<th width='5%'>TIPO</th>"
-                    encabezado += "<th width='20%'>NOMBRE DE LA TAREA</th>"
-                    encabezado += "<th width='8%'>FECHA INICIO</th>"
-                    encabezado += "<th width='8%'>FECHA FIN</th>"
-                    encabezado += "<th width='14%'>DURACIÓN PRESUPUESTADA</th>"
-                    encabezado += "<th width='10%'>RESPONSABLES</th>"
-                    encabezado += "<th># RIESGOS</th>"
-                    encabezado += "<th>RIESGOS</th>"
-                    encabezado += "<th>EDITAR</th>"
-                    encabezado += "<th>ELIMINAR</th>"
-                    encabezado += "</tr>";
                     $.each(nombreplan, function (nombre, tareaid) {
                         table += "<thead><tr><th colspan='12'>" + nombre + "</th></tr>";
                         table += encabezado;
@@ -145,7 +142,9 @@
                                         table += "<td>" + numeracion.nombre + "</td>";
                                         table += "<td>" + numeracion.cantidadriesgo + "</td>";
                                         table += '<td class="transparent">';
-                                        table += '<center><i class="fa fa-file-text-o fa-2x  riesgos" title="Riesgos" tar_id="' + idtar + '"  data-toggle="modal" data-target="#myModal"></i>';
+                                        if(numeracion.cantidadRiesgo > 0){
+                                        table += '<center><i class="fa fa-file-text-o fa-2x  riesgos" title="Riesgos" tar_id="' + idtar + '"  ></i>';
+                                        }
                                         table += "</td>";
                                         table += '<td class="transparent">';
                                         table += '<i class="fa fa-pencil-square-o fa-2x  modificar" title="Modificar" tar_id="' + idtar + '" ></i>';
@@ -180,16 +179,16 @@
                 "<?php echo base_url("index.php/tareas/obtener_riesgos") ?>",
                 {tar_id: $(this).attr("tar_id")}
         ).done(function (msg) {
-            if (msg == 1) {
-                $('.resultado').html('No se encontraron riesgos para esta tarea');
-            } else {
-                var datos = JSON.parse(msg);
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("amarillo", msg['message'])
+            else {
                 var html = "<ul>";
-                $.each(datos, function (key, val) {
+                $.each(msg.Json, function (key, val) {
                     html += "<li>" + val.rie_descripcion + "</li>";
                 })
                 html += "</ul>";
                 $('.resultado').html(html);
+                $('#myModal').modal('show');
             }
 
         }).fail(function (msg) {
