@@ -167,9 +167,15 @@ class Tareas extends My_Controller {
     }
 
     function eliminartarea() {
-
+        try{
         $this->load->model("Tarea_model");
-        $this->Tarea_model->eliminartarea($this->input->post("tarea"));
+        $data['Json'] = $this->Tarea_model->eliminartarea($this->input->post("tarea"));
+        if($data['Json'] == false ) throw new Exception("Error en la base de datos");
+        }catch(Exception $e){
+            $data['message'] = $e->getMessage();
+        }  finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
     function guardarregistrotarea() {

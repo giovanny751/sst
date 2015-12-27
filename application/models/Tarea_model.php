@@ -49,10 +49,18 @@ class Tarea_model extends CI_Model {
 
     function eliminartarea($tar_id) {
         try {
+            $this->db->trans_begin();
             $this->db->where("tar_id", $tar_id);
             $this->db->delete("tarea");
+            if($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+            }else{
+                $this->db->trans_commit();
+            }
         } catch (exception $e) {
             
+        }finally{
+            return $this->db->trans_status();
         }
     }
 

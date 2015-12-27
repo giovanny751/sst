@@ -84,9 +84,6 @@
         $('#tar_id').val($(this).attr('tar_id'));
         $('#f13').submit();
     });
-    $('.limpiar').click(function () {
-        $('select,input').val("");
-    });
 
     $('body').delegate(".nuevoavance", "click", function () {
         var form = "<form method='post' id='frmFormAvance' action='<?php echo base_url("index.php/tareas/nuevatarea") ?>'>";
@@ -142,8 +139,8 @@
                                         table += "<td>" + numeracion.nombre + "</td>";
                                         table += "<td>" + numeracion.cantidadriesgo + "</td>";
                                         table += '<td class="transparent">';
-                                        if(numeracion.cantidadRiesgo > 0){
-                                        table += '<center><i class="fa fa-file-text-o fa-2x  riesgos" title="Riesgos" tar_id="' + idtar + '"  ></i>';
+                                        if (numeracion.cantidadRiesgo > 0) {
+                                            table += '<center><i class="fa fa-file-text-o fa-2x  riesgos" title="Riesgos" tar_id="' + idtar + '"  ></i>';
                                         }
                                         table += "</td>";
                                         table += '<td class="transparent">';
@@ -202,8 +199,12 @@
                 "<?php echo base_url("index.php/tareas/eliminartarea") ?>",
                 {tarea: $(this).attr("tar_id")}
         ).done(function (msg) {
-            seleccion.parents("tr").remove();
-            alerta("verde", "Tarea eliminada correctamente")
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("amarillo", msg['message'])
+            else {
+                seleccion.parents("tr").remove();
+                alerta("verde", "Tarea eliminada correctamente");
+            }
         }).fail(function (msg) {
             alerta("rojo", "Error, por favor comunicarse con el administrador del sistema")
         });
