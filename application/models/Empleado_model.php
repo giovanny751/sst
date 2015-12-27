@@ -89,7 +89,7 @@ class Empleado_model extends CI_Model {
             $this->db->select("estados.*");
             $this->db->select("tipo_contrato.*");
             $this->db->select("cargo.*");
-
+            $this->db->where("empleado.est_id !=",3);
             $this->db->join("estados", "estados.est_id = empleado.est_id");
             $this->db->join("cargo", "cargo.car_id = empleado.car_id","LEFT");
             $this->db->join("tipo_contrato", "tipo_contrato.TipCon_Id = empleado.TipCon_Id","LEFT");
@@ -117,7 +117,8 @@ class Empleado_model extends CI_Model {
     function eliminarempleado($id) {
         try {
             $this->db->where("emp_id", $id);
-            $this->db->delete("empleado");
+            $this->db->set("est_id",3);
+            $this->db->update("empleado");
         } catch (exception $e) {
             
         }

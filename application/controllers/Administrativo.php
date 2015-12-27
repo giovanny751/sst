@@ -781,7 +781,6 @@ class Administrativo extends My_Controller {
     function empresa() {
         $this->load->model("Empresa_model");
         $this->load->model('Tamano_empresa_model');
-        $this->load->model('Numero_empleados_model');
         $this->load->model('Ingreso_model');
         $this->load->model('Actividadeconomica_model');
         $this->data['mensaje'] = "";
@@ -793,7 +792,6 @@ class Administrativo extends My_Controller {
 
         $this->data['ciudad'] = $this->Ingreso_model->ciudades();
         $this->data['tamano'] = $this->Tamano_empresa_model->detail();
-        $this->data['numero'] = $this->Numero_empleados_model->detail();
         $this->data['informacion'] = $this->Empresa_model->detail();
         $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
 //        var_dump($this->data['informacion']);die;
