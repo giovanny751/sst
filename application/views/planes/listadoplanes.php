@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        <a href="<?php echo base_url()."/index.php/planes/nuevoplan" ?>"><div class="circuloIcon" title="Nuevo Plan" ><i class="fa fa-folder-open fa-3x"></i></div></a>
+        <a href="<?php echo base_url() . "/index.php/planes/nuevoplan" ?>"><div class="circuloIcon" title="Nuevo Plan" ><i class="fa fa-folder-open fa-3x"></i></div></a>
     </div>
 </div>
 <div class="row">
@@ -96,42 +96,48 @@
         $.post("<?php echo base_url("index.php/planes/consultaplanes") ?>",
                 $('#f9').serialize()
                 ).done(function (msg) {
-            var body = ""
-            $('#cargaplanes *').remove()
-            $.each(msg, function (key, val) {
-                body += "<tr class='odd gradeX'>";
-                body += "<td>" + val.pla_nombre + "</td>";
-                body += "<td style='text-align:center'>" + val.pla_fechaInicio + "</td>";
-                body += "<td style='text-align:center'>" + val.pla_fechaFin + "</td>";
-                body += "<td></td>";
-                body += "<td>" + val.Emp_Nombre + " " + val.Emp_Apellidos + "</td>";
-                if(val.tar_costopresupuestado != null )var costopresupuesto = val.tar_costopresupuestado;
-                else var costopresupuesto = 0;
-                body += "<td style='text-align:right'>" + num_miles(costopresupuesto) + "</td>";
-                body += "<td>" + val.pla_descripcion + "</td>";
-                body += "<td style='text-align:center'>" + val.num_tareas + "</td>";
-                body += '<td class="transparent" align="center">\n\
+            if (!jQuery.isEmptyObject(msg.message))
+                alerta("amarillo", msg['message'])
+            else {
+                var body = "";
+                $('#cargaplanes *').remove();
+                $.each(msg.Json, function (key, val) {
+                    body += "<tr class='odd gradeX'>";
+                    body += "<td>" + val.pla_nombre + "</td>";
+                    body += "<td style='text-align:center'>" + val.pla_fechaInicio + "</td>";
+                    body += "<td style='text-align:center'>" + val.pla_fechaFin + "</td>";
+                    body += "<td></td>";
+                    body += "<td>" + val.Emp_Nombre + " " + val.Emp_Apellidos + "</td>";
+                    if (val.tar_costopresupuestado != null)
+                        var costopresupuesto = val.tar_costopresupuestado;
+                    else
+                        var costopresupuesto = 0;
+                    body += "<td style='text-align:right'>" + num_miles(costopresupuesto) + "</td>";
+                    body += "<td>" + val.pla_descripcion + "</td>";
+                    body += "<td style='text-align:center'>" + val.num_tareas + "</td>";
+                    body += '<td class="transparent" align="center">\n\
                         <i class="fa fa-pencil-square-o fa-2x modificar" title="Modificar"  pla_id="' + val.pla_id + '"  data-toggle="modal" data-target="#myModal"></i>\n\
                     </td>';
-                body += '<td class="transparent" align="center">\n\
+                    body += '<td class="transparent" align="center">\n\
                         <i class="fa fa-trash-o fa-2x eliminar" title="Eliminar" coun="' + val.count_progreso + '" sum="' + val.sum_progreso + '" pla_id="' + val.pla_id + '"></i>\n\
                     </td>';
-                body += "</tr>";
-            })
-            $('#cargaplanes').append(body)
-            alerta("verde", "Consulta exitosa");
+                    body += "</tr>";
+                })
+                $('#cargaplanes').append(body)
+                alerta("verde", "Consulta exitosa");
+            }
         })
                 .fail(function (msg) {
-                    alerta("rojo", "Error po favor comunicarse con el administrador");
+                    alerta("rojo", "Error por favor comunicarse con el administrador");
                 })
     });
     $('body').delegate('.eliminar', 'click', function () {
-        var sum=$(this).attr('sum');
-        var coun=$(this).attr('coun');
-        if(coun!=0){
-            var result=(100*coun);
-            if(sum<result){
-                alerta('rojo','No se puede eliminar poque hay tareas pendientes');
+        var sum = $(this).attr('sum');
+        var coun = $(this).attr('coun');
+        if (coun != 0) {
+            var result = (100 * coun);
+            if (sum < result) {
+                alerta('rojo', 'No se puede eliminar poque hay tareas pendientes');
                 return false;
             }
         }

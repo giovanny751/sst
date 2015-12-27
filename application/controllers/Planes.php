@@ -18,6 +18,7 @@ class Planes extends My_Controller {
         $this->load->model('Ingreso_model');
         $this->load->model('Roles_model');
         $this->data["usu_id"] = $this->session->userdata('usu_id');
+        $planes = array();
         validate_login($this->data["usu_id"]);
     }
 
@@ -49,23 +50,23 @@ class Planes extends My_Controller {
 
             $post['reg_ruta'] = $targetPath;
             $post['reg_archivo'] = basename($_FILES['archivo']['name']);
-            
+
             $post['userCreator'] = $this->data["usu_id"];
             if (empty($this->input->post('reg_id')))
-                $id=$this->Registro_model->guardar_registro($post);
+                $id = $this->Registro_model->guardar_registro($post);
             else
-                $id=$this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
-            
-            $target_path = $targetPath . '/'.$id.'/';
+                $id = $this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
+
+            $target_path = $targetPath . '/' . $id . '/';
             if (!file_exists($target_path)) {
                 mkdir($target_path, 0777, true);
             }
-            $target_path = $target_path  . basename($_FILES['archivo']['name']);
+            $target_path = $target_path . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
             }
-            
-            
+
+
             $data = $this->Registro_model->registroxcarpeta($post['regCar_id']);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
@@ -101,24 +102,24 @@ class Planes extends My_Controller {
 
             $post['reg_ruta'] = $target_path = $targetPath;
             $post['reg_archivo'] = basename($_FILES['archivo']['name']);
-            
+
             $post['userCreator'] = $this->data["usu_id"];
             if (empty($this->input->post('reg_id')))
-                $id=$this->Registro_model->guardar_registro($post);
-            else{
-                $id=$this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
+                $id = $this->Registro_model->guardar_registro($post);
+            else {
+                $id = $this->Registro_model->actualizar_registro($post, $this->input->post('reg_id'));
             }
-            $targetPath = $targetPath.'/'.$id;
+            $targetPath = $targetPath . '/' . $id;
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
-            
+
             $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
             }
-            
-            
+
+
             $data = $this->Registro_model->registroxcarpeta($post['regCar_id']);
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
@@ -396,21 +397,20 @@ class Planes extends My_Controller {
     }
 
     function consultaplanes() {
-        $this->load->model("Planes_model");
-        $emp_id = $this->session->userdata()['emp_id'];
-        if (!empty($this->input->post('tareapropia')))
-            $tareaspropias = $this->session->userdata()['emp_id'];
-        else
-            $tareaspropias = "";
-        
-        $planes = $this->Planes_model->filtrobusqueda(
-                $this->input->post("nombre"), 
-                $this->input->post("responsable"), 
-                $this->input->post("estado"), 
-                $tareaspropias,
-                $emp_id
-        );
-        $this->output->set_content_type('application/json')->set_output(json_encode($planes));
+        try {
+            $this->load->model("Planes_model");
+            $emp_id = $this->session->userdata()['emp_id'];
+            $tareaspropias = (!empty($this->input->post('tareapropia'))) ? $this->session->userdata()['emp_id'] : $tareaspropias = "";
+            $planes['Json'] = $this->Planes_model->filtrobusqueda(
+                    $this->input->post("nombre"), $this->input->post("responsable"), $this->input->post("estado"), $tareaspropias, $emp_id
+            );
+            if (count($planes['Json']) == 0)
+                throw new Exception("No se encontro información");
+        } catch (exception $e) {
+            $planes['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($planes));
+        }
     }
 
     function eliminarplan() {
@@ -418,6 +418,8 @@ class Planes extends My_Controller {
             $this->load->model("Planes_model");
             $this->Planes_model->delete($this->input->post('id'));
         } catch (exception $e) {
+            
+        } finally {
             
         }
     }

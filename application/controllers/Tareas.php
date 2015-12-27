@@ -499,11 +499,14 @@ class Tareas extends My_Controller {
         try {
             $this->load->model('Tarea_model');
             $tareas = $this->Tarea_model->filtrobusqueda(
-                    $this->input->post("Plan"), $this->input->post("filtrotarea"), $this->input->post("responsable")
+                    $this->input->post("Plan"), 
+                    $this->input->post("filtrotarea"), 
+                    $this->input->post("responsable")
             );
+            if(count($tareas) == 0 )throw new Exception("No se encontro información");
             $data = array();
             foreach ($tareas as $t):
-                $data[$t->pla_id][$t->pla_nombre][$t->tar_id] = array(
+                $data['Json'][$t->pla_id][$t->pla_nombre][$t->tar_id] = array(
                     "detalle" => array(
                         "fechainicio" => $t->tar_fechaInicio,
                         "fechafinalizacion" => $t->tar_fechaFinalizacion,
@@ -516,10 +519,10 @@ class Tareas extends My_Controller {
                     )
                 );
             endforeach;
-
-            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
-            
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 

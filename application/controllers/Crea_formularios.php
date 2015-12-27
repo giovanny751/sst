@@ -21,12 +21,12 @@ class Crea_formularios extends My_Controller {
     }
 
     public function index() {
-        if ($this->consultaacceso($this->data["usu_id"])) :
+//        if ($this->consultaacceso($this->data["usu_id"])) :
             $this->data["tablas"] = $this->Crea_formularios_model->tablas();
             $this->layout->view('Crea_formularios/index', $this->data);
-            else:
-            $this->layout->view("permisos");
-        endif;
+//            else:
+//            $this->layout->view("permisos");
+//        endif;
     }
 
     public function info_table() {

@@ -1,23 +1,18 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
     <head>
-        <title></title> 
+        <title>NYGSOFT-SG-SST</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <meta content="" name="description"/>
         <meta content="" name="author"/>
-
-
         <link href="<?= base_url('assets/global/plugins/font-awesome/css/font-awesome.min.css') ?>" rel="stylesheet" type="text/css"/> 
-
         <!--<link href="<?= base_url('assets/global/plugins/fullcalendar/fullcalendar.min.css') ?>" rel="stylesheet" type="text/css"/>-->
         <link href="<?= base_url('assets/global/plugins/jqvmap/jqvmap/jqvmap.css') ?>" rel="stylesheet" type="text/css"/>
         <!-- END PAGE LEVEL PLUGIN STYLES -->
         <!-- BEGIN PAGE STYLES -->
         <link href="<?= base_url('assets/admin/pages/css/tasks.css') ?>" rel="stylesheet" type="text/css"/>
-
-
         <!-- BEGIN PAGE LEVEL STYLES -->
         <!--<link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/clockface/css/clockface.css') ?>"/>-->
         <link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') ?>"/>
@@ -25,19 +20,14 @@
         <link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/bootstrap-colorpicker/css/colorpicker.css') ?>"/>
         <link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css') ?>"/>
         <link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') ?>"/>
-
         <!-- BEGIN PAGE LEVEL STYLES -->
         <link rel="stylesheet" type="text/css" href="<?= base_url('assets/global/plugins/jquery-notific8/jquery.notific8.min.css') ?>"/>
-
         <!--<script type="text/javascript" src="<?= base_url('assets/global/plugins/clockface/js/clockface.js') ?>"></script>-->
         <!-- END THEME STYLES -->
         <link rel="shortcut icon" href="favicon.ico"/>
-
-
         <!-- Flechas para cambio de usuario, empleados y mÃ¡s cosas -->
         <link rel="stylesheet" href="<?= base_url('css/flechas.css') ?>" />
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('css/estilos.css'); ?>"/>
-
         <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
         <script type="text/javascript" src="<?php echo base_url() ?>/js/jquery_1.11.3.min.js"></script>
         <script type="text/javascript" src="<?php echo base_url() ?>/js/jquery_ui_1.11.4.min.js"></script>
@@ -45,22 +35,15 @@
         <script src="<?= base_url('assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js') ?>" type="text/javascript"></script>
         <script src="<?= base_url('assets/global/plugins/jquery.sparkline.min.js') ?>" type="text/javascript"></script>
         <!-- END PAGE LEVEL PLUGINS -->
-
         <link rel="stylesheet" href="<?php echo base_url() ?>/css/jquery_ui_1.11.4.css" />
-
         <link rel="stylesheet" href="<?php echo base_url() ?>/css/bootstrap_theme_3.3.5.min.css" />
         <link rel="stylesheet" href="<?php echo base_url() ?>/css/sst.css">
         <link rel="stylesheet" href="<?php echo base_url() ?>/css/sstmenu.css">
-
-<!--        <script src="<?= base_url('js/jquery.blockUI.js') ?>" type="text/javascript"></script>
-<script src="<?= base_url('assets/global/plugins/jquery.blockui.min.js') ?>" type="text/javascript"></script>-->
         <script src="<?= base_url('js/jquery.blockUI.js') ?>" type="text/javascript"></script>
     </head>
     <body class="page-header-fixed page-quick-sidebar-over-content page-sidebar-closed-hide-logo page-container-bg-solid">
         <?php
-
         function modulos($datosmodulos, $idusuario, $dato = null) {
-
             $ci = &get_instance();
             $ci->load->model("ingreso_model");
             $user = null;
@@ -73,27 +56,16 @@
                 foreach ($nombrepapa as $nombrepapa => $menuidpadre)
                     foreach ($menuidpadre as $modulos => $menu)
                         foreach ($menu as $submenus):
-                            if ($submenus[1] == "" && $submenus[2] == "") {
-//                                (!empty($submenus[3])) ? $icon = $submenus[3] : $icon = "icon-folder";
+                            if ($submenus[1] == "" && $submenus[2] == "")
                                 echo "<li class='has-sub'><a href='#'>" . strtoupper($nombrepapa) . "</span></a>";
-                            } else {
+                            else
                                 echo "<li class=''><a href='" . base_url("index.php/" . $submenus[1] . "/" . $submenus[2]) . "'>" . strtoupper($nombrepapa) . "</a>";
-                            }
                             if (!empty($submenus[0]))
                                 modulos($submenus[0], $idusuario);
                             echo "</li>";
                         endforeach;
-            if ($datosmodulos == 'prueba') {
-//                echo "<li class='has-sub'>";
-//                echo "<a href='#'>OPCIONES</a>";
-//                echo "<ul>";
-//                echo "<li><a href='" . base_url('index.php/presentacion/recordarcontrasena') . "' >CAMBIAR CONTRASEÑA</a></li>";
-//                echo "<li><a href='" . base_url('index.php/presentacion/rol') . "'>CAMBIAR ROL</a></li>";
-//                echo "</ul>";
-//                echo "</li>";
+            if ($datosmodulos == 'prueba')
                 echo "<li><a href='" . base_url('index.php/login/logout') . "'>CERRAR SESION</a></li>";
-//            echo "<li><a href='#'> strtoupper($nombre) </a></li>";
-            }
             echo "</ul>";
         }
         ?>
@@ -154,39 +126,29 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="col-md-12">
             <div class="col-md-3">
                 <div id="cssmenu">
-                    <?php echo modulos('prueba', $id, null); ?>
+<?php echo modulos('prueba', $id, null); ?>
                 </div>
             </div>
             <div class="col-md-9">
                 <div class="row cuerpoDescripcion">
-                    <?php echo $content_for_layout ?>
-                    <!--                    <div class="cuerpoContenido">
-                                           
-                                        </div>-->
+<?php echo $content_for_layout ?>
                 </div>
             </div>
         </div>
-
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script type="text/javascript" src="<?= base_url('assets/global/plugins/datatables/media/js/jquery.dataTables.min.js') ?>"></script>
         <script type="text/javascript" src="<?= base_url('assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js') ?>"></script>
         <script type="text/javascript" src="<?= base_url('assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') ?>"></script>
-
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
         <script src="<?= base_url('assets/global/plugins/jquery-notific8/jquery.notific8.min.js') ?>"></script>
         <script src="<?= base_url('assets/admin/pages/scripts/ui-notific8.js') ?>"></script>
-
         <link rel="stylesheet" href="<?php echo base_url() ?>/css/bootstrap_3.3.5.min.css" />
         <script type="text/javascript" src="<?php echo base_url() ?>/js/bootstrap_3.3.5.min.js"></script>
-
         <style>
-            //2015-10-29
-            
             .tab-pane{
                 color: black;
             }
@@ -246,6 +208,9 @@
             }
             .header_position a {
                 margin-left: -7%;
+            }
+            .blockOverlay{
+                z-index:10000 !important;
             }
         </style>
         <script>
@@ -349,8 +314,7 @@
                 if (regex.test($('.' + classemail).val().trim())) {
                     $("." + classemail).removeClass('obligado');
                     return true;
-                }
-                else {
+                } else {
                     $("." + classemail).addClass('obligado');
                     alerta("amarillo", "Correo no valido")
                     return false;
@@ -432,8 +396,3 @@
                 $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
             });
         </script>
-<style>
-    .blockOverlay{
-        z-index:10000 !important;
-    }
-</style>
