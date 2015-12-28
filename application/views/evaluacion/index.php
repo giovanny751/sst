@@ -1,5 +1,12 @@
 
 <div class="row">
+    <div class="col-md-6">
+        <div title="Guardar" id="guardarEvaluacion" class="circuloIcon"><i class="fa fa-floppy-o fa-3x"></i></div>
+        <!--<div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div>-->
+        <a href="<?php echo base_url('index.php/Evaluacion/consult_evaluacion') ?>"><div title="Listado Evaluaciones" class="circuloIcon"><i class="fa fa-sticky-note fa-3x"></i></div></a>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="tituloCuerpo">
             <span class="txtTitulo">EVALUACIÓN</span>
@@ -7,7 +14,7 @@
     </div>
 </div>
 <div class='cuerpoContenido'>
-    <form action="<?php echo base_url('index.php/')."/Evaluacion/save_evaluacion"; ?>" method="post" onsubmit="return campos()"  enctype="multipart/form-data">
+    <form action="<?php echo base_url('index.php/')."/Evaluacion/save_evaluacion"; ?>" method="post" onsubmit="return campos()"  enctype="multipart/form-data" id="form1">
         <div class="row">
                                     <?php $id=(isset($datos[0]->eva_id)?$datos[0]->eva_id:'' ) ?>
                                                 <input type="hidden" value="<?php echo (isset($datos[0]->eva_id)?$datos[0]->eva_id:'' ) ?>" class=" form-control   " id="eva_id" name="eva_id">
@@ -30,11 +37,11 @@
         <input type="hidden" name="campo" value="<?php echo $post['campo']?>">
         <?php } ?>
         <div class="row">
-            <span id="boton_guardar">
+<!--            <span id="boton_guardar">
                 <button class="btn btn-dcs" >Guardar</button> 
                 <input class="btn btn-dcs" type="reset" value="Limpiar">
                 <a href="<?php echo base_url('index.php')."/Evaluacion/consult_evaluacion" ?>" class="btn btn-dcs">Listado </a>
-            </span>
+            </span>-->
             <span id="boton_cargar" style="display: none">
                 <h2>Cargando ...</h2>
             </span>
@@ -43,6 +50,9 @@
     </form>
 </div>
 <script>
+    $('#guardarEvaluacion').click(function(){
+        $('#form1').submit();
+    })
     function campos() {
         $('input[type="file"]').each(function(key, val) {
             var img = $(this).val();

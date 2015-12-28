@@ -1,4 +1,9 @@
 <div class="row">
+    <div class="col-md-6">
+        <a href="<?php echo base_url() . "/index.php/Evaluacion/index" ?>"><div title="Nueva Evaluación" class="circuloIcon"><i class="fa fa-folder-open fa-3x"></i></div></a>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="tituloCuerpo">
             <span class="txtTitulo">EVALUACIÓN</span>
@@ -8,13 +13,6 @@
 <div class='cuerpoContenido'>
     <form action="<?php echo base_url('index.php/') . '/Evaluacion/consult_evaluacion'; ?>" method="post" >
         <div class="row">
-
-            <div class="col-md-3">
-
-                <input type="hidden" value="<?php echo (isset($post['eva_id']) ? $post['eva_id'] : '' ) ?>" class="form-control   " id="eva_id" name="eva_id">
-                <br>
-            </div>
-
             <div class="col-md-3">
                 <label for="eva_nombre">
                     Nombre                        </label>
@@ -25,7 +23,7 @@
             </div>
 
         </div>
-        <button class="btn btn-dcs">Consultar</button>
+        <button class="btn btn-sst" >Consultar</button>
     </form>
 
     <div class="row">
@@ -54,9 +52,9 @@
                             $i++;
                         }
                         echo "<td>"
-                        . '<a href="javascript:" class="btn btn-dcs" onclick="preguntas(' . $valor . ')" title="Preguntas"><i class="fa fa-book"></i></a>'
-                        . '<a href="javascript:" class="btn btn-dcs" onclick="editar(' . $valor . ')" title="Modificar"><i class="fa fa-pencil"></i></a>'
-                        . '<a href="javascript:" class="btn btn-danger" onclick="delete_(' . $valor . ')" title="Eliminar"><i class="fa fa-trash-o"></i></a>'
+                        . '<a href="javascript:" class="" onclick="preguntas(' . $valor . ')" title="Preguntas"><i class="fa fa-book fa-2x"></i></a>'
+                        . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:" class="" onclick="editar(' . $valor . ')" title="Modificar"><i class="fa fa-pencil fa-2x"></i></a>'
+                        . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:" class="" onclick="delete_(' . $valor . ')" title="Eliminar"><i class="fa fa-trash-o fa-2x"></i></a>'
                         . "</td>";
                         echo "</tr>";
                     }
@@ -67,11 +65,7 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12" style="float:right">
-        <a href="<?php echo base_url() . "/index.php/Evaluacion/index" ?>" class="btn btn-dcs" >Nuevo</a>
-    </div>
-</div>
+
 <?php if (isset($campo)) { ?>
     <form action="<?php echo base_url('index.php/') . "/Evaluacion/edit_evaluacion"; ?>" method="post" id="editar">
         <input type="hidden" name="<?php echo $campo ?>" id="<?php echo $campo ?>2">
@@ -84,12 +78,11 @@
 <?php } ?>
 <script>
     function editar(num) {
-        
         $('#<?php echo $campo ?>2').val(num);
-        $('#editar').attr('action','<?php echo base_url('index.php/') . "/Preguntas/consult_preguntas"; ?>');
         $('#editar').submit();
     }
     function preguntas(num) {
+        $('#editar').attr('action','<?php echo base_url('index.php/') . "/Preguntas/consult_preguntas"; ?>');
         $('#<?php echo $campo ?>2').val(num);
         $('#editar').submit();
     }
