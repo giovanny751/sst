@@ -681,72 +681,89 @@ endforeach;
 <script>
 
     $('body').delegate("#guardarVacaciones", "click", function () {
-        if($('#vac_id').length == 0) var ruta = "<?php echo base_url("index.php/administrativo/guardarVacaciones") ?>";
-        else var ruta = "<?php echo base_url("index.php/administrativo/updateHolidays") ?>";
-        $.post(ruta , $('#FrmVacaciones').serialize())
+        if ($('#vac_id').length == 0)
+            var ruta = "<?php echo base_url("index.php/administrativo/guardarVacaciones") ?>";
+        else
+            var ruta = "<?php echo base_url("index.php/administrativo/updateHolidays") ?>";
+        $.post(ruta, $('#FrmVacaciones').serialize())
                 .done(function (msg) {
                     if (!jQuery.isEmptyObject(msg.message))
                         alerta("rojo", msg['message'])
-                    else 
-                        cargarTablaVacaciones(msg,"bodyVacation");
-                    
+                    else
+                        cargarTablaVacaciones(msg, "bodyVacation");
+
                 })
                 .fail(function (msg) {
                     alert("rojo", "Error, por favor comunicarse con el administrador");
                 });
     });
     $('body').delegate("#guardarAusentismo", "click", function () {
-        if($('#empAus_id').length == 0) var ruta = "<?php echo base_url("index.php/administrativo/guardarAusentismo") ?>";
-        else var ruta = "<?php echo base_url("index.php/administrativo/actualizarAusentismo") ?>";
-        $.post(ruta , $('#FrmAusentismo').serialize())
+        if ($('#empAus_id').length == 0)
+            var ruta = "<?php echo base_url("index.php/administrativo/guardarAusentismo") ?>";
+        else
+            var ruta = "<?php echo base_url("index.php/administrativo/actualizarAusentismo") ?>";
+        $.post(ruta, $('#FrmAusentismo').serialize())
                 .done(function (msg) {
                     if (!jQuery.isEmptyObject(msg.message))
                         alerta("rojo", msg['message'])
-                    else 
-                        cargarTablaVacaciones(msg,"bodyAusentismo");
-                    
+                    else
+                        cargarTablaVacaciones(msg, "bodyAusentismo");
+
                 })
                 .fail(function (msg) {
                     alert("rojo", "Error, por favor comunicarse con el administrador");
                 });
     });
-    function cargarTablaVacaciones(msg,body) {
-        console.log(body);
-        $('#'+body+' *').remove();
-        if(body == "bodyAusentismo") var clase = "modificarAusentismo";
-        else var clase = "modifyHolidays";
+    function cargarTablaVacaciones(msg, body) {
+        $('#' + body + ' *').remove();
+        if (body == "bodyAusentismo"){
+            var clase = "modificarAusentismo";
+            var modal = "ausentismo";
+        }
+        else{
+            var clase = "modifyHolidays";
+            var modal = "vacaciones";
+        }
         var cuerpo = "";
         $.each(msg.Json, function (key, val) {
             cuerpo += "<tr>";
-            cuerpo += "<td>" + val.vac_fechaInicio + "</td>";
-            cuerpo += "<td>" + val.vac_fechaFin + "</td>";
-            cuerpo += "<td>" + val.diferencia + "</td>";
-            cuerpo += "<td>" + val.vac_observaciones + "</td>";
-            cuerpo += "<td class='transparent'><i class='fa fa-pencil-square-o fa-2x "+clase+"' title='Modificar' vac_id='" + val.vac_id + "' ></i></td>";
+            if (clase == "modifyHolidays") {
+                cuerpo += "<td>" + val.vac_fechaInicio + "</td>";
+                cuerpo += "<td>" + val.vac_fechaFin + "</td>";
+                cuerpo += "<td>" + val.diferencia + "</td>";
+                cuerpo += "<td>" + val.vac_observaciones + "</td>";
+            } else {
+                cuerpo += "<td>" + val.empAus_fechaInicial + "</td>";
+                cuerpo += "<td>" + val.empAus_fechaFinal + "</td>";
+                cuerpo += "<td>" + val.diferencia + "</td>";
+                cuerpo += "<td>" + val.empAus_observaciones + "</td>";
+            }
+            cuerpo += "<td class='transparent'><i class='fa fa-pencil-square-o fa-2x " + clase + "' title='Modificar' vac_id='" + val.vac_id + "' ></i></td>";
             cuerpo += "<td class='transparent'><i class='fa fa-trash-o fa-2x removeHolidays' title='Eliminar' vac_id='" + val.emp_id + "' ></i></td>";
             cuerpo += "</tr>";
         });
-        $('#'+body).append(cuerpo);
-        alerta("verde","Operacion realizada con exito")
+        $('#' + body).append(cuerpo);
+        alerta("verde", "Operacion realizada con exito");
+        $('#'+modal).modal("hide");
     }
 
     $('body').delegate(".modifyHolidays", "click", function () {
         $.post(
                 "<?php echo base_url('index.php/administrativo/dataHolidaysxId') ?>",
-                {vac_id : $(this).attr('vac_id')}
-            )
+                {vac_id: $(this).attr('vac_id')}
+        )
                 .done(function (msg) {
                     if (!jQuery.isEmptyObject(msg.message))
                         alerta("rojo", msg['message'])
-                    else{
+                    else {
                         $("#iniciovacaciones").val(msg.Json[0].vac_fechaInicio);
                         $("#finvacaciones").val(msg.Json[0].vac_fechaFin);
                         $("#observacionvacaciones").val(msg.Json[0].vac_observaciones);
                         $('#vacaciones').modal("show");
-                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='"+msg.Json[0].vac_id+"'>");
+                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='" + msg.Json[0].vac_id + "'>");
                         $("#vac_id").val(msg.Json[0].vac_id);
-                        $('#guardarVacaciones').attr("tipo","2");
-                    } 
+                        $('#guardarVacaciones').attr("tipo", "2");
+                    }
                 })
                 .fail(function (msg) {
                     alert("rojo", "Error, por favor comunicarse con el administrador");
@@ -755,27 +772,27 @@ endforeach;
     $('body').delegate(".modificarAusentismo", "click", function () {
         $.post(
                 "<?php echo base_url('index.php/administrativo/dataHolidaysxId') ?>",
-                {vac_id : $(this).attr('vac_id')}
-            )
+                {vac_id: $(this).attr('vac_id')}
+        )
                 .done(function (msg) {
                     if (!jQuery.isEmptyObject(msg.message))
                         alerta("rojo", msg['message'])
-                    else{
+                    else {
                         $("#iniciovacaciones").val(msg.Json[0].vac_fechaInicio);
                         $("#finvacaciones").val(msg.Json[0].vac_fechaFin);
                         $("#observacionvacaciones").val(msg.Json[0].vac_observaciones);
                         $('#vacaciones').modal("show");
-                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='"+msg.Json[0].vac_id+"'>");
+                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='" + msg.Json[0].vac_id + "'>");
                         $("#empAus_id").val(msg.Json[0].vac_id);
-                        $('#guardarVacaciones').attr("tipo","2");
-                    } 
+                        $('#guardarVacaciones').attr("tipo", "2");
+                    }
                 })
                 .fail(function (msg) {
                     alert("rojo", "Error, por favor comunicarse con el administrador");
                 });
     });
-    
-    
+
+
     $('body').delegate(".removeHolidays", "click", function () {
         var apuntador = $(this);
         var vac_id = $(this).attr('vac_id');
@@ -798,13 +815,13 @@ endforeach;
 
     $('.agregarvacaciones').click(function () {
         $('#iniciovacaciones,#finvacaciones,#observacionvacaciones').val('');
-        $(this).attr("tipo","1");
+        $(this).attr("tipo", "1");
         $('#vac_id').remove();
         $('#vacaciones').modal("show");
     });
     $('.agregarAusentismo').click(function () {
         $('#iniciovacaciones,#finvacaciones,#observacionvacaciones').val('');
-        $(this).attr("tipo","1");
+        $(this).attr("tipo", "1");
         $('#vac_id').remove();
         $('#ausentismo').modal("show");
     });
@@ -1176,8 +1193,7 @@ endforeach;
             success: function (result) {
                 $('#archivocarpeta').val('')
                 $('#collapse_' + $('#empReg_carpeta').val()).find('table tbody *').remove();
-                var filas = ""
-//                console.log(result);
+                var filas = "";
                 var result = jQuery.parseJSON(result);
                 $.each(result, function (key, val) {
                     filas += "<tr>";
