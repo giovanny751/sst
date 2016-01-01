@@ -46,6 +46,10 @@ class Administrativo extends My_Controller {
         if (isset($empleadoId)) {
             $this->load->model('Empleadocarpeta_model');
             $this->load->model('Empleado_model');
+            $this->load->model('Vacaciones_model');
+            $this->load->model('Empleadoausentismo_model');
+            $this->data['vacaciones'] = $this->Vacaciones_model->detailxEmpleado($empleadoId);
+            $this->data['ausentismo'] = $this->Empleadoausentismo_model->detailxEmpleado($empleadoId);
             $this->data['empleado'] = $this->Empleado_model->consultaempleadoxid($empleadoId);
             $this->data["aserguradorasxempleado"] = $this->Empleadotipoaseguradora_model->consult_empleado($empleadoId);
             $this->data["carpeta"] = $this->Empleadocarpeta_model->detail($empleadoId);
@@ -73,7 +77,113 @@ class Administrativo extends My_Controller {
             redirect('index.php/administrativo/empresa', 'location');
         }
     }
-
+    
+    function guardarVacaciones(){
+        try{
+            $this->load->model('Vacaciones_model');
+            $data = array(
+                "vac_fechaInicio"=>$this->input->post("iniciovacaciones"),
+                "vac_fechaFin"=>$this->input->post("finvacaciones"),
+                "vac_observaciones"=>$this->input->post("observacionvacaciones"),
+                "emp_id"=>$this->input->post("emp_id")
+            );
+            if($this->Vacaciones_model->saveVacation($data) == true)
+                $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
+            else
+                throw new Exception("Error por favor comunicarse con el administrador");
+            
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function guardarAusentismo(){
+        try{
+            $this->load->model('Empleadoausentismo_model');
+            $data = array(
+                "empAus_fechaInicial"=>$this->input->post("iniciovacaciones"),
+                "empAus_fechaFinal"=>$this->input->post("finvacaciones"),
+                "empAus_observaciones"=>$this->input->post("observacionvacaciones"),
+                "emp_id"=>$this->input->post("emp_id")
+            );
+            if($this->Empleadoausentismo_model->saveVacation($data) == true)
+                $data['Json'] = $this->Empleadoausentismo_model->detailxEmpleado($this->input->post("emp_id"));
+            else
+                throw new Exception("Error por favor comunicarse con el administrador");
+            
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function removeHolidays(){
+        try{
+            $this->load->model('Vacaciones_model');
+            $data['Json'] = $this->Vacaciones_model->removeHolidays($this->input->post("vac_id"));
+            if($data['Json'] == false)
+                throw new Exception("Error en la base de datos");
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    
+    function updateHolidays(){
+        try{
+            $this->load->model('Vacaciones_model');
+            $data = array(
+                "vac_fechaInicio"=>$this->input->post("iniciovacaciones"),
+                "vac_fechaFin"=>$this->input->post("finvacaciones"),
+                "vac_observaciones"=>$this->input->post("observacionvacaciones"),
+                "emp_id"=>$this->input->post("emp_id")
+            );
+            if($this->Vacaciones_model->updateHolidays($data,$this->input->post("vac_id")) == true)
+                $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
+            else
+                throw new Exception("Error por favor comunicarse con el administrador");
+            
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function actualizarAusentismo(){
+        try{
+            $this->load->model('Vacaciones_model');
+            $data = array(
+                "vac_fechaInicio"=>$this->input->post("iniciovacaciones"),
+                "vac_fechaFin"=>$this->input->post("finvacaciones"),
+                "vac_observaciones"=>$this->input->post("observacionvacaciones"),
+                "emp_id"=>$this->input->post("emp_id")
+            );
+            if($this->Vacaciones_model->updateHolidays($data,$this->input->post("vac_id")) == true)
+                $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
+            else
+                throw new Exception("Error por favor comunicarse con el administrador");
+            
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    
+    function dataHolidaysxId(){
+        try{
+            $this->load->model('Vacaciones_model');
+            $data['Json'] = $this->Vacaciones_model->dataHolidaysxId($this->input->post("vac_id"));
+            if(count($data['Json']) == 0) throw new Exception("No se encontro información para el Id");
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    
     function cargarempleadocarpeta() {
         $this->load->model('Empleadocarpeta_model');
         $carpeta = $this->Empleadocarpeta_model->cargarcarpeta($this->input->post("carpeta"));
@@ -239,6 +349,7 @@ class Administrativo extends My_Controller {
                 'Dim_IdDos' => $this->input->post('dimension2'),
                 'Est_id' => 1,
                 'Car_id' => $this->input->post('cargo'),
+                'emp_salario' => $this->input->post('salario'),
                 'emp_fondo' => $this->input->post('fondo')
             );
 
@@ -304,6 +415,7 @@ class Administrativo extends My_Controller {
             'Dim_id' => $this->input->post('dimension1'),
             'Dim_IdDos' => $this->input->post('dimension2'),
             'Car_id' => $this->input->post('cargo'),
+            'emp_salario' => $this->input->post('salario'),
             'emp_fondo' => $this->input->post('fondo')
         );
         $this->Empleado_model->update($data, $this->input->post('emp_id'));
@@ -466,11 +578,11 @@ class Administrativo extends My_Controller {
                 'usu_usuario' => $this->input->post('usuario'),
                 'usu_email' => $this->input->post('email'),
                 'sex_id' => $this->input->post('genero'),
-                'car_id' => $this->input->post('cargo'),
-                'emp_id' => $this->input->post('empleado'),
                 'usu_cambiocontrasena' => $this->input->post('cambiocontrasena'),
                 'usu_fechaCreacion' => date('Y-m-d H:i:s'),
-                'rol_id' => $this->input->post('rol')
+                'car_id' => (!empty($this->input->post('cargo'))?$this->input->post('cargo'):NULL),
+                'emp_id' => (!empty($this->input->post('empleado'))?$this->input->post('empleado'):NULL),
+                'rol_id' => (!empty($this->input->post('rol'))?$this->input->post('rol'):NULL)
             );
 
             $id = $this->User_model->create($data);

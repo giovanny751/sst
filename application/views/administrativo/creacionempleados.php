@@ -69,6 +69,12 @@
                 <input type="text" name="fechafincontrato" id="fechafincontrato" class="form-control fecha"  value="<?php echo (!empty($empleado[0]->Emp_FechaFinContrato)) ? $empleado[0]->Emp_FechaFinContrato : ""; ?>"/>
             </div>
         </div>
+        <div class="row">
+            <label for="apellidos" class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span class="campoobligatorio">*</span>Salario</label>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <input type="text" id="salario" name="salario" class="form-control obligatorio miles"  value="<?php echo (!empty($empleado[0]->emp_salario)) ? $empleado[0]->emp_salario : ""; ?>"/>
+            </div>
+        </div>
 
         <div class="row">
             <label for="sexo" class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span class="campoobligatorio">*</span>Genero</label>
@@ -265,7 +271,7 @@
     <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
 </form>
 <?php if (!empty($empleado[0]->Emp_Id)) { ?>
-<!--    <div class="portlet box blue">
+    <div class="portlet box blue">
         <div class="portlet-body">
             <div class="tabbable tabbable-tabdrop">
                 <ul class="nav nav-tabs">
@@ -274,6 +280,12 @@
                     </li>
                     <li>
                         <a data-toggle="tab" href="#tab2">Registrar incapacidad</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#tab4">Vacaciones</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#tab5">Ausentismo</a>
                     </li>
                     <li>
                         <a data-toggle="tab" href="#tab3">Registro</a>
@@ -304,7 +316,7 @@
                                 <div class="col-sm-3">
                                     <select name="responsable" id="responsable" class="form-control obligatorioInc">
                                         <option value="">::Seleccionar::</option>
-                                        <?php foreach($empleadoresponsable as $index => $value): ?>
+                                        <?php foreach ($empleadoresponsable as $index => $value): ?>
                                             <option value="<?php echo $value->empRes_id ?>"><?php echo $value->empRes_descripcion ?></option>
                                         <?php endforeach; ?>
                                     </select>
@@ -338,7 +350,7 @@
                             <input type="hidden" id="empleadoInc" name="empleadoInc" class="obligatorioInc"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
                         </form>
                     </div>    
-                    <div id="tab3" class="tab-pane">-->
+                    <div id="tab3" class="tab-pane">
                         <div class="portlet-title">
                             <div class="caption" style="padding:0;">
                                 <span style="color: #0A7194;font-size: 20px" >Registro</span>
@@ -432,99 +444,233 @@
                                 </div>
                             </div>
                         </div>
-<!--                    </div>
+                    </div>
+                    <div id="tab4" class="tab-pane">
+                        <div class="portlet-title">
+                            <div class="caption" style="padding:0;">
+                                <span style="color: #0A7194;font-size: 20px" >Vacaciones</span>
+                            </div>
+                            <div class="tools">
+                                <div class="circuloIcon">
+                                    <i class="fa fa-folder-open fa-3x agregarvacaciones" title="Registro vacaciones"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="tablesst">
+                                <thead>
+                                <th>Fecha inicio</th>
+                                <th>Fecha fin</th>
+                                <th>Días</th>
+                                <th>Observaciones</th>
+                                <th>Eliminar</th>
+                                <th>Editar</th>
+                                </thead>
+                                <tbody id="bodyVacation">
+                                    <?php foreach ($vacaciones as $v): ?>
+                                        <tr>
+                                            <td><?php echo $v->vac_fechaInicio ?></td>
+                                            <td><?php echo $v->vac_fechaFin ?></td>
+                                            <td><?php echo $v->diferencia ?></td>
+                                            <td><?php echo $v->vac_observaciones ?></td>
+                                            <td class='transparent'><i class='fa fa-pencil-square-o fa-2x modifyHolidays' title='Modificar' vac_id='<?php echo $v->vac_id ?>' ></i></td>
+                                            <td class='transparent'><i class='fa fa-trash-o fa-2x removeHolidays' title='Eliminar' vac_id='" + val.emp_id + "' ></i></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="tab5" class="tab-pane">
+                        <div class="portlet-title">
+                            <div class="caption" style="padding:0;">
+                                <span style="color: #0A7194;font-size: 20px" >Ausentismo</span>
+                            </div>
+                            <div class="tools">
+                                <div class="circuloIcon">
+                                    <i class="fa fa-folder-open fa-3x agregarAusentismo" title="Registro vacaciones"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="tablesst">
+                                <thead>
+                                <th>Fecha inicio</th>
+                                <th>Fecha fin</th>
+                                <th>Días</th>
+                                <th>Observaciones</th>
+                                <th>Eliminar</th>
+                                <th>Editar</th>
+                                </thead>
+                                <tbody id="bodyAusentismo">
+                                    <?php foreach ($ausentismo as $au): ?>
+                                        <tr>
+                                            <td><?php echo $au->empAus_fechaInicial ?></td>
+                                            <td><?php echo $au->empAus_fechaFinal ?></td>
+                                            <td><?php echo $au->diferencia ?></td>
+                                            <td><?php echo $au->empAus_observaciones ?></td>
+                                            <td class='transparent'><i class='fa fa-pencil-square-o fa-2x modificarAusentismo' title='Modificar' empAus_id='<?php echo $au->empAus_id ?>' ></i></td>
+                                            <td class='transparent'><i class='fa fa-trash-o fa-2x removeHolidays' title='Eliminar' empAus_id='<?php echo $au->empAus_id ?>' ></i></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <p>   </p>
+                <p>   </p>
+                <div class="tabbable tabbable-tabdrop">
                 </div>
             </div>
-            <p>   </p>
-            <p>   </p>
-            <div class="tabbable tabbable-tabdrop">
-            </div>-->
-<!--        </div>
-    </div>-->
+        </div>
 
-<?php } ?>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">AGREGAR CARPETA</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="formcarpeta">
-                    <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
-                    <div class="row">
-                        <label for="nombrecarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Nombre:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <input type="nombre" id="nombrecarpeta" name="nombrecarpeta" class="form-control">
+    <?php } ?>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AGREGAR CARPETA</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="formcarpeta">
+                        <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
+                        <div class="row">
+                            <label for="nombrecarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Nombre:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <input type="nombre" id="nombrecarpeta" name="nombrecarpeta" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <label for="descripcioncarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Descripción:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <textarea  id="descripcioncarpeta" name="descripcioncarpeta" class="form-control"></textarea>
+                        <div class="row">
+                            <label for="descripcioncarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Descripción:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <textarea  id="descripcioncarpeta" name="descripcioncarpeta" class="form-control"></textarea>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer" id="opcionescarpeta">
-                <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="guardarcarpeta">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer" id="opcionescarpeta">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarcarpeta">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">AGREGAR REGISTRO</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="formregistro" >
-                    <input type="hidden" name="empReg_id" id="empReg_id" />
-                    <div class="row">
-                        <label for="empReg_carpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Carpeta:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <select id="empReg_carpeta" name="empReg_carpeta" class="form-control">
-                                <option value="">::Seleccionar::</option>
-                                <?php foreach ($carpeta as $car): ?>
-                                    <option value="<?php echo $car->empCar_id ?>"><?php echo $car->empCar_nombre ?> - <?php echo $car->empCar_descripcion ?></option>
-                                <?php endforeach; ?>
-                            </select>
+    <div class="modal fade" id="vacaciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AGREGAR VACACIONES</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="FrmVacaciones">
+                        <input type="hidden" id="vac_id" name="vac_id" />
+                        <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
+                        <div class="row">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="iniciovacaciones">Fecha Inicio</label>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><input type="text" name="iniciovacaciones" id="iniciovacaciones" class="form form-control fecha"/></div>
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="finvacaciones">Fecha Fin</label>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><input type="text" name="finvacaciones" id="finvacaciones" class="form form-control fecha"/></div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <label for="empReg_version" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Versión:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <input type="text" id="empReg_version" name="empReg_version" class="form-control">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label for="observacionvacaciones">Observación</label>
+                                <textarea name="observacionvacaciones" id="observacionvacaciones" class="form-control"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <label for="empReg_descripcion" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Descripción:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <textarea  id="empReg_descripcion" name="empReg_descripcion" class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label for="archivocarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Adjuntar archivo:</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                            <input type="file" id="archivocarpeta" name="archivo" class="form-control">
-                        </div>
-                    </div>
-                    <input type="hidden" value="<?php echo $empleado[0]->Emp_Id ?>" name="Emp_Id" />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="guardarRegistro">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer" id="opcionescarpeta">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarAusentismo">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="modal fade" id="ausentismo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AGREGAR AUSENTISMO</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="FrmAusentismo">
+                        <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
+                        <div class="row">
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="iniciovacaciones">Fecha Inicio</label>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><input type="text" name="iniciovacaciones" id="iniciovacaciones" class="form form-control fecha"/></div>
+                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="finvacaciones">Fecha Fin</label>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><input type="text" name="finvacaciones" id="finvacaciones" class="form form-control fecha"/></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label for="observacionvacaciones">Observación</label>
+                                <textarea name="observacionvacaciones" id="observacionvacaciones" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" id="opcionescarpeta">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarAusentismo">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AGREGAR REGISTRO</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="formregistro" >
+                        <input type="hidden" name="empReg_id" id="empReg_id" />
+                        <div class="row">
+                            <label for="empReg_carpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Carpeta:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <select id="empReg_carpeta" name="empReg_carpeta" class="form-control">
+                                    <option value="">::Seleccionar::</option>
+                                    <?php foreach ($carpeta as $car): ?>
+                                        <option value="<?php echo $car->empCar_id ?>"><?php echo $car->empCar_nombre ?> - <?php echo $car->empCar_descripcion ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="empReg_version" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Versión:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <input type="text" id="empReg_version" name="empReg_version" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="empReg_descripcion" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Descripción:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <textarea  id="empReg_descripcion" name="empReg_descripcion" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="archivocarpeta" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Adjuntar archivo:</label>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <input type="file" id="archivocarpeta" name="archivo" class="form-control">
+                            </div>
+                        </div>
+                        <input type="hidden" value="<?php echo $empleado[0]->Emp_Id ?>" name="Emp_Id" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarRegistro">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <?php
 $option = "";
@@ -533,7 +679,137 @@ foreach ($tipoaseguradora as $ta):
 endforeach;
 ?>
 <script>
-    $(document).ready(<?php echo (!empty($empleado[0]->Emp_Id))? "tabla()":"" ?>);
+
+    $('body').delegate("#guardarVacaciones", "click", function () {
+        if($('#vac_id').length == 0) var ruta = "<?php echo base_url("index.php/administrativo/guardarVacaciones") ?>";
+        else var ruta = "<?php echo base_url("index.php/administrativo/updateHolidays") ?>";
+        $.post(ruta , $('#FrmVacaciones').serialize())
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else 
+                        cargarTablaVacaciones(msg,"bodyVacation");
+                    
+                })
+                .fail(function (msg) {
+                    alert("rojo", "Error, por favor comunicarse con el administrador");
+                });
+    });
+    $('body').delegate("#guardarAusentismo", "click", function () {
+        if($('#empAus_id').length == 0) var ruta = "<?php echo base_url("index.php/administrativo/guardarAusentismo") ?>";
+        else var ruta = "<?php echo base_url("index.php/administrativo/actualizarAusentismo") ?>";
+        $.post(ruta , $('#FrmAusentismo').serialize())
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else 
+                        cargarTablaVacaciones(msg,"bodyAusentismo");
+                    
+                })
+                .fail(function (msg) {
+                    alert("rojo", "Error, por favor comunicarse con el administrador");
+                });
+    });
+    function cargarTablaVacaciones(msg,body) {
+        console.log(body);
+        $('#'+body+' *').remove();
+        if(body == "bodyAusentismo") var clase = "modificarAusentismo";
+        else var clase = "modifyHolidays";
+        var cuerpo = "";
+        $.each(msg.Json, function (key, val) {
+            cuerpo += "<tr>";
+            cuerpo += "<td>" + val.vac_fechaInicio + "</td>";
+            cuerpo += "<td>" + val.vac_fechaFin + "</td>";
+            cuerpo += "<td>" + val.diferencia + "</td>";
+            cuerpo += "<td>" + val.vac_observaciones + "</td>";
+            cuerpo += "<td class='transparent'><i class='fa fa-pencil-square-o fa-2x "+clase+"' title='Modificar' vac_id='" + val.vac_id + "' ></i></td>";
+            cuerpo += "<td class='transparent'><i class='fa fa-trash-o fa-2x removeHolidays' title='Eliminar' vac_id='" + val.emp_id + "' ></i></td>";
+            cuerpo += "</tr>";
+        });
+        $('#'+body).append(cuerpo);
+        alerta("verde","Operacion realizada con exito")
+    }
+
+    $('body').delegate(".modifyHolidays", "click", function () {
+        $.post(
+                "<?php echo base_url('index.php/administrativo/dataHolidaysxId') ?>",
+                {vac_id : $(this).attr('vac_id')}
+            )
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else{
+                        $("#iniciovacaciones").val(msg.Json[0].vac_fechaInicio);
+                        $("#finvacaciones").val(msg.Json[0].vac_fechaFin);
+                        $("#observacionvacaciones").val(msg.Json[0].vac_observaciones);
+                        $('#vacaciones').modal("show");
+                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='"+msg.Json[0].vac_id+"'>");
+                        $("#vac_id").val(msg.Json[0].vac_id);
+                        $('#guardarVacaciones').attr("tipo","2");
+                    } 
+                })
+                .fail(function (msg) {
+                    alert("rojo", "Error, por favor comunicarse con el administrador");
+                });
+    });
+    $('body').delegate(".modificarAusentismo", "click", function () {
+        $.post(
+                "<?php echo base_url('index.php/administrativo/dataHolidaysxId') ?>",
+                {vac_id : $(this).attr('vac_id')}
+            )
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else{
+                        $("#iniciovacaciones").val(msg.Json[0].vac_fechaInicio);
+                        $("#finvacaciones").val(msg.Json[0].vac_fechaFin);
+                        $("#observacionvacaciones").val(msg.Json[0].vac_observaciones);
+                        $('#vacaciones').modal("show");
+                        $('#FrmVacaciones').append("<input type='hidden' name='vac_id' id='vac_id' value='"+msg.Json[0].vac_id+"'>");
+                        $("#empAus_id").val(msg.Json[0].vac_id);
+                        $('#guardarVacaciones').attr("tipo","2");
+                    } 
+                })
+                .fail(function (msg) {
+                    alert("rojo", "Error, por favor comunicarse con el administrador");
+                });
+    });
+    
+    
+    $('body').delegate(".removeHolidays", "click", function () {
+        var apuntador = $(this);
+        var vac_id = $(this).attr('vac_id');
+        $.post(
+                "<?php echo base_url('index.php/administrativo/removeHolidays') ?>",
+                {vac_id: vac_id}
+        )
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message))
+                        alerta("rojo", msg['message'])
+                    else {
+                        apuntador.parent('td').parent('tr').remove();
+                        alerta("verde", "Eliminado correctamente");
+                    }
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
+                });
+    });
+
+    $('.agregarvacaciones').click(function () {
+        $('#iniciovacaciones,#finvacaciones,#observacionvacaciones').val('');
+        $(this).attr("tipo","1");
+        $('#vac_id').remove();
+        $('#vacaciones').modal("show");
+    });
+    $('.agregarAusentismo').click(function () {
+        $('#iniciovacaciones,#finvacaciones,#observacionvacaciones').val('');
+        $(this).attr("tipo","1");
+        $('#vac_id').remove();
+        $('#ausentismo').modal("show");
+    });
+
+    $(document).ready(<?php echo (!empty($empleado[0]->Emp_Id)) ? "tabla()" : "" ?>);
     $('body').delegate(".modificarcarpeta", "click", function () {
 
         $.post("<?php echo base_url("index.php/administrativo/modificarcarpeta") ?>",
@@ -544,7 +820,7 @@ endforeach;
             $('#myModal').modal("toggle");
             alerta("verde", "Se actualizaron los datos correctamente");
         }).fail(function (msg) {
-
+            alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
         });
     });
 
@@ -567,7 +843,7 @@ endforeach;
                 $('a[href="#collapse_' + empCar_id + '"]').parents('.panel-default').remove();
                 alerta("verde", "Datos eliminados los datos correctamente");
             }).fail(function (msg) {
-                alerta("verde", "Error, por favor comunicarse con el administrador del sistema");
+                alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
             });
         }
     });
@@ -948,47 +1224,47 @@ endforeach;
         }
 
     })
-    $("body").on("click","#guardarInc",function(){
+    $("body").on("click", "#guardarInc", function () {
         var url = "<?php echo base_url("index.php/administrativo/guardarincapacidad"); ?>";
         var valores = $("#crearIncapacidad").serialize();
-        if (obligatorio('obligatorioInc') == true){
-            if(difFecha("#fechaInicioInc","#fechaFinalInc") > 0 ){
-                $.post(url,valores)
-                        .done(function(msg){
+        if (obligatorio('obligatorioInc') == true) {
+            if (difFecha("#fechaInicioInc", "#fechaFinalInc") > 0) {
+                $.post(url, valores)
+                        .done(function (msg) {
                             $("#crearIncapacidad").find("input[type='text']").val("");
                             $("#crearIncapacidad").find("select").val("");
                             $("#crearIncapacidad").find("textarea").val("");
                             tabla();
-                            alerta("verde","Incapacidad Guardada")
+                            alerta("verde", "Incapacidad Guardada")
                         })
-                        .fail(function(msg){
-                            alerta("rojo","Error guardar incapacidad")
+                        .fail(function (msg) {
+                            alerta("rojo", "Error guardar incapacidad")
                         })
             }
         }
     });
-    function tabla(){
+    function tabla() {
         var tbody = "";
         var url = "<?php echo base_url("index.php/administrativo/cargartablaincapacidad"); ?>";
         var datos = {empleado: $("#emp_id").val()}
-        $.post(url,datos)
-                .done(function(msg){
-                    $.each(msg,function(indice,valor){
+        $.post(url, datos)
+                .done(function (msg) {
+                    $.each(msg, function (indice, valor) {
                         tbody += "<tr>";
-                        tbody += "<td>"+valor.responsable+"</td>";
-                        tbody += "<td>"+valor.fechaInicio+"</td>";
-                        tbody += "<td>"+valor.fechaFinal+"</td>";
-                        tbody += "<td>"+valor.dias+"</td>";
-                        tbody += "<td>"+valor.motivo+"</td>";
-                        tbody += "<td>"+valor.observacion+"</td>";
-                        tbody += "<td>"+valor.usuario+"</td>";
-                        tbody += "</tr>"; 
+                        tbody += "<td>" + valor.responsable + "</td>";
+                        tbody += "<td>" + valor.fechaInicio + "</td>";
+                        tbody += "<td>" + valor.fechaFinal + "</td>";
+                        tbody += "<td>" + valor.dias + "</td>";
+                        tbody += "<td>" + valor.motivo + "</td>";
+                        tbody += "<td>" + valor.observacion + "</td>";
+                        tbody += "<td>" + valor.usuario + "</td>";
+                        tbody += "</tr>";
                     });
                     $("#tablaIncapacidad *").remove();
                     $("#tablaIncapacidad").html(tbody);
                 })
-                .fail(function(){
-                    alerta("rojo","Error al cargar tabla")
+                .fail(function () {
+                    alerta("rojo", "Error al cargar tabla")
                 })
     }
 </script>    
