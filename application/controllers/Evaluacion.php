@@ -56,8 +56,39 @@ class Evaluacion extends My_Controller {
         $this->data['roles'] = $this->Roles_model->roles();
         $this->data['estado'] = $this->Estados_model->detail();
         $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
-        $this->data["usuarios"] = $this->User_model->consultageneral();
-        $this->layout->view("administrativo/listadousuarios", $this->data);
+        $this->data["usuarios"] = $this->User_model->consultageneral_evaluacion();
+        $this->layout->view("evaluacion/listadousuarios", $this->data);
+    }
+    function consultarusuario() {
+        try {
+            $this->load->model('User_model');
+            $data['Json'] = $this->User_model->filteruser_evaluacion(
+                    $this->input->post('apellido')
+                    , $this->input->post('cedula')
+                    , $this->input->post('estado')
+                    , $this->input->post('nombre')
+            );
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function ver_evaluaciones() {
+        try {
+            $data['Json'] = $this->Evaluacion__model->ver_evaluaciones($this->input->post());
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function arignar_evaluacion() {
+        try {
+            $this->Evaluacion__model->arignar_evaluacion($this->input->post());
+        } catch (exception $e) {
+            $e->getMessage();
+        }
     }
 
 }

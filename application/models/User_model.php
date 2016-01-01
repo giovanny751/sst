@@ -100,8 +100,46 @@ class User_model extends CI_Model {
             
         }
     }
+    function filteruser_evaluacion($apellido = null, $cedula = null, $estado = null, $nombre = null) {
+        try {
+            if (!empty($apellido))
+                $this->db->where('usu_apellido', $apellido);
+            if (!empty($cedula))
+                $this->db->where('usu_cedula', $cedula);
+            if (!empty($estado))
+                $this->db->where('est_id', $estado);
+            if (!empty($nombre))
+                $this->db->where('usu_nombre', $nombre);
+
+            $this->db->select('user.*,GROUP_CONCAT(evaluacion.eva_nombre SEPARATOR ",") conca',false);
+            $this->db->select("ingreso.ing_fechaIngreso",false);
+            $this->db->where("user.est_id != ", 3);
+            $this->db->where("roles.rol_id", 60);
+            $this->db->join("ingreso", "ingreso.usu_id = user.usu_id and ingreso.ing_fechaIngreso = (select max(ing_fechaIngreso) from ingreso )", "LEFT");
+            $this->db->join("user_evaluacion", "user_evaluacion.use_id=user.usu_id and user_evaluacion.useEva_activo='S'",'left',false);
+            $this->db->join("evaluacion", "evaluacion.eva_id=user_evaluacion.eva_id",'left');
+            $this->db->join("roles", "roles.rol_id=user.rol_id");
+            $this->db->group_by("user.usu_id");
+            $user = $this->db->get('user');
+//            echo $this->db->last_query();
+            return $user->result();
+        } catch (exception $e) {
+            
+        }
+    }
 
     function consultageneral() {
+        try {
+            $this->db->select("user.usu_id as id,user.*,ingreso.Ing_fechaIngreso as ingreso");
+            $this->db->where("user.est_id != ", 3);
+            $this->db->join("ingreso", "ingreso.usu_id = user.usu_id and ingreso.ing_fechaIngreso = (select max(ing_fechaIngreso) from ingreso ) ", "LEFT");
+            $user = $this->db->get('user');
+            return $user->result();
+        } catch (exception $e) {
+            
+        }
+    }
+    function consultageneral_evaluacion() {
         try {
             $this->db->select("user.usu_id as id,user.*,ingreso.Ing_fechaIngreso as ingreso");
             $this->db->where("user.est_id != ", 3);

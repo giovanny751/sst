@@ -71,10 +71,10 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
                 <input type="text" id="usuario" name="usuario" class="form-control obligatorio"  value="<?php echo (!empty($usuario[0]->usu_usuario)) ? $usuario[0]->usu_usuario : ""; ?>" />
             </div> 
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                <label for="usuario">Cambio contraseña inicial</label>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
+                <label for="cambiocontrasena">Cambio contraseña inicial</label>
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <input type="checkbox" id="cambiocontrasena" name="cambiocontrasena" class="form-control" <?php echo (!empty($usuario[0]->usu_cambiocontrasena) && $usuario[0]->usu_cambiocontrasena == 1) ? "checked" : ""; ?> />
             </div> 
         </div>
@@ -85,10 +85,10 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
                 <input type="password" id="contrasena" name="contrasena" class="form-control obligatorio" value="<?php echo (!empty($usuario[0]->usu_contrasena)) ? $usuario[0]->usu_contrasena : ""; ?>" />
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3  aspirante">
                 <label for="estado">Estado</label>
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <select id="estado" name="estado" class="form-control">
                     <option value="">::Seleccionar::</option>
                     <?php foreach ($estado as $e) { ?>
@@ -104,10 +104,10 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ">
                 <input type="email" id="email" name="email" class="form-control email" value="<?php echo (!empty($usuario[0]->usu_email)) ? $usuario[0]->usu_email : ""; ?>" />
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <label for="cargo"><span class="campoobligatorio">*</span>Cargo</label>
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <select id="cargo" name="cargo" class="form-control obligatorio">
                     <option value="">::Seleccionar::</option>
                     <?php foreach ($cargo as $c) { ?>
@@ -128,10 +128,10 @@
                     <?php } ?>
                 </select>
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <label for="empleado"><span class="campoobligatorio">*</span>Empleado</label>
             </div>    
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <select id="empleado" name="empleado" class="form-control obligatorio">
                     <option value="">::Seleccionar::</option>
                     <?php foreach($empleado as $mp): ?>
@@ -145,6 +145,13 @@
  
 </div>    
 <script>
+    $('#rol').change(function(){        
+        if($(this).val()==60){
+            $('.aspirante select').attr('class','form-control ');
+        }else{
+            $('.aspirante select').attr('class','form-control obligatorio obligado');
+        }
+    })
     $(".flechaHeader").click(function(){
         var url = "<?php echo base_url("index.php/administrativo/consultausuariosflechas") ?>";
         var idUsuarioCreado = $("#usuid").val();
