@@ -381,8 +381,10 @@
                                                             <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_<?php echo $id; ?>" aria-expanded="false"> 
                                                                 &nbsp;<i class="fa fa-folder-o carpeta"></i>     <?php echo $nom ?>
                                                             </a>
-                                                            <i class="fa fa-edit editarcarpeta" car_id="<?php echo $id ?>"></i>
-                                                            <i class="fa fa-times eliminarcarpeta" car_id="<?php echo $id ?>"></i>
+                                                            <div class="posicionIconoAcordeon">
+                                                                <i class="fa fa-edit editarcarpeta" car_id="<?php echo $id ?>"></i>
+                                                                <i class="fa fa-times eliminarcarpeta" car_id="<?php echo $id ?>"></i>
+                                                            </div>
                                                         </h4>
                                                     </div>
                                                     <div id="collapse_<?php echo $id; ?>" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
@@ -585,7 +587,7 @@
                 </div>
                 <div class="modal-footer" id="opcionescarpeta">
                     <button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="guardarAusentismo">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="guardarVacaciones">Guardar</button>
                 </div>
             </div>
         </div>
@@ -1015,8 +1017,8 @@ endforeach;
                                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_' + msg.empCar_id + '" aria-expanded="false">\n\
                                                         ' + msg.empCar_nombre + " - " + msg.empCar_descripcion + '\n\
                                                     </a>\n\
-                                                        <i class="fa fa-edit editarcarpeta" car_id="' + msg.empCar_id + '"></i>\n\
-                                                        <i class="fa fa-times eliminarcarpeta" car_id="' + msg.empCar_id + '"></i>\n\
+                                                        <div class="posicionIconoAcordeon"><i class="fa fa-edit editarcarpeta" car_id="' + msg.empCar_id + '"></i>\n\
+                                                        <i class="fa fa-times eliminarcarpeta" car_id="' + msg.empCar_id + '"></i></div>\n\
                                                 </h4>\n\
                                             </div>\n\
                                             <div id="collapse_' + msg.empCar_id + '" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">\n\
