@@ -49,8 +49,8 @@ class User_model extends CI_Model {
 
     function reset($mail) {
         try {
-            $datos = rand(1000000, 8155555);
-            $this->db->set('usu_contrasena', $datos);
+            $datos = rand(10000000, 81555555);
+            $this->db->set('usu_contrasena', sha1($datos));
             $this->db->where('usu_email', $mail);
             $this->db->update('user');
             return $datos;

@@ -41,7 +41,7 @@ class Login extends My_Controller {
 
 //        echo $this->input->post('username')."***".$this->input->post('password');die;
 
-        $user = $this->user_model->get_user($this->input->post('username'), $this->input->post('password'));
+        $user = $this->user_model->get_user($this->input->post('username'), sha1($this->input->post('password')));
         if (!empty($user) > 0) {
             $this->data['username'] = $user[0]["usu_email"];
             $this->data['password'] = $user[0]["usu_contrasena"];
@@ -95,7 +95,6 @@ class Login extends My_Controller {
         $password = $this->user_model->reset($mail);
         $actualizar = $this->user_model->actualizar($mail);
         $data = mail($mail, "Actualizacion de Contraseña", 'clave: ' . $password);
-
         redirect('index.php', 'location');
     }
 
