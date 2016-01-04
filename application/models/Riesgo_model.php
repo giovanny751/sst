@@ -73,6 +73,7 @@ class Riesgo_model extends CI_Model {
             $this->db->select("riesgo_clasificacion.rieCla_categoria");
             $this->db->select("riesgo_color.rieCol_colorhtml");
             $this->db->select("riesgo.rie_actividad");
+            $this->db->select("(select count(tar_id) from tarea_riesgos where tarea_riesgos.rie_id = riesgo.rie_id) as cantidadTareas");
             $this->db->join("riesgo_clasificacion", "riesgo_clasificacion.rieCla_id = riesgo.rieCla_id","left");
             $this->db->join("riesgo_clasificacion_tipo", "riesgo_clasificacion_tipo.rieClaTip_id = riesgo.rieClaTip_id", "left");
             $this->db->join("dimension2", "dimension2.dim_id = riesgo.dim2_id","left");
