@@ -19,7 +19,7 @@ class User_model extends CI_Model {
     public function listo_politica($username, $pass) {
         try {
             $this->db->set('usu_politicas', '1');
-            $this->db->where('usu_email', $username);
+            $this->db->where('usu_usuario', $username);
             $this->db->where('usu_contrasena', $pass);
             $this->db->update('user');
         } catch (exception $e) {

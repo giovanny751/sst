@@ -34,16 +34,15 @@ class Login extends CI_Controller {
 
     public function politica() {
         $this->user_model->listo_politica($this->input->post('username'), $this->input->post('password'));
-        $this->verify();
+        $this->verify($this->input->post('password'));
     }
 
-    function verify() {
-
+    function verify($pass=null) {
 //        echo $this->input->post('username')."***".$this->input->post('password');die;
 
-        $user = $this->user_model->get_user($this->input->post('username'), sha1($this->input->post('password')));
+        $user = $this->user_model->get_user($this->input->post('username'), (isset($pass)?$pass:sha1($this->input->post('password'))));
         if (!empty($user) > 0) {
-            $this->data['username'] = $user[0]["usu_email"];
+            $this->data['username'] = $user[0]["usu_usuario"];
             $this->data['password'] = $user[0]["usu_contrasena"];
             if ($user[0]['usu_politicas'] == 0) {
                 $this->data['inicio'] = $this->user_model->admin_inicio();
