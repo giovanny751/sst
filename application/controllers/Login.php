@@ -11,7 +11,7 @@ if (!defined('BASEPATH'))
  * @celular     301 385 9952
  * @email       javierbr12@hotmail.com    
  */
-class Login extends My_Controller {
+class Login extends CI_Controller {
 
     public function __construct() {
         parent::__construct();

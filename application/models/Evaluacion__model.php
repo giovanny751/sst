@@ -64,6 +64,7 @@ class Evaluacion__model extends CI_Model {
 
     function arignar_evaluacion($post) {
         $this->db->set('useEva_activo', 'N');
+        $this->db->where('use_id', $post['usuarioid']);
         $this->db->update('user_evaluacion');
 
         $info = explode('||', $post['info']);
