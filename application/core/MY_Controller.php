@@ -13,9 +13,6 @@ if (!defined('BASEPATH'))
  */
 class MY_Controller extends CI_Controller {
 
-//  public $template_file = 'templates/main2';
-    private $data = array();
-
     public function __construct() {
         // creación dinámica del menú
         parent::__construct();
@@ -29,9 +26,10 @@ class MY_Controller extends CI_Controller {
         $this->data['user'] = $this->session->userdata();
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data['user']['usu_id']);
-//        $this->verificacion();
+        $this->verificacion();
     }
     function verificacion(){
+        try{
         $ci = & get_instance();
         $controller = $ci->router->fetch_class();
         $method = $ci->router->fetch_method();
@@ -43,38 +41,32 @@ class MY_Controller extends CI_Controller {
                 )) {
             $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
             $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
-//            var_dump($permisosPeticion);die;
             if (!empty($view)) {
                 if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
                     echo "No tiene permisos por favor comunicarse con el administrador";
                 }
             } else if (!empty($permisosPeticion)) {
                 if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
-                    $this->data['respuesta'] = array("message" => "No tiene permisos de ejecutar la acción");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                    exit;
+                    throw new Exception("No tiene permisos de ejecutar la acción");
                 }else if($permisosPeticion[0]['accion'] == 4 && empty($permisosPeticion[0]['perRol_crear'])){
-                    $this->data['respuesta'] = array("message" => "No tiene permisos de crear");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                    exit;
+                    throw new Exception("No tiene permisos de crear");
                 }else if($permisosPeticion[0]['accion'] == 1 && empty($permisosPeticion[0]['perRol_eliminar'])){
-                    $this->data['respuesta'] = array("message" => "No tiene permisos de eliminar");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                    exit;
+                    throw new Exception("No tiene permisos de eliminar");
                 }else if($permisosPeticion[0]['accion'] == 2 && empty($permisosPeticion[0]['perRol_modificar'])){
-                    $this->data['respuesta'] = array("message" => "No tiene permisos de modificar");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                    exit;
+                    throw new Exception("No tiene permisos de modificar");
                 }else if($permisosPeticion[0]['accion'] == 3 && empty($permisosPeticion[0]['perRol_id'])){
-                    $this->data['respuesta'] = array("message" => "No tiene permisos de consultar");
-                    $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                    exit;
+                    throw new Exception("No tiene permisos de consultar");
                 }
             } else if (empty($permisosPeticion) || empty($view)) {
-                $this->data['respuesta'] = array("message" => "No tiene permisos por favor comunicarse con el administrador");
-                $this->output->set_content_type('application/json')->set_output(json_encode($this->data['respuesta'],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-                exit;
+                throw new Exception("No tiene permisos por favor comunicarse con el administrador");
             }
+        }
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+            $this->output->set_content_type('application/json')->set_output(json_encode($data,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
+            exit;        
+        }finally{
+            
         }
     }
 

@@ -12,11 +12,10 @@
     </div>
 </div>
 <div class="cuerpoContenido">
-    
     <div class="page-bar" style="background-color: transparent !important;">
         <ul class="page-breadcrumb">
             <?php if (!empty($nombrepadre)) { ?>
-                <?= $nombrepadre ?>
+                <?php echo $nombrepadre ?>
             <?php } else { ?>
                 <li class="devolver">
                     <i class="fa fa-home"></i>
@@ -27,35 +26,36 @@
         </ul>
     </div>
     <div class="row">
-    <button type="button" data-toggle="modal" data-target="#myModal2"  class="btn btn-info opciones">Nuevo Modulo</button>
+        <button type="button" data-toggle="modal" data-target="#myModal2"  class="btn btn-info opciones">Nuevo Modulo</button>
     </div>
     <div class="row">
         <form method="post" id="formulario">
             <table class="tablesst" >
                 <thead>
-                <th>Icono</th>
                 <th>Nombre</th>
                 <th>Opción</th>
                 <th>Seguridad</th>
                 <th>Sub Modulo</th>
+                <th>Eliminar</th>
                 </thead>
                 <tbody id="cuerpomodulo">
-                    <?php if (empty($menu)) { ?><tr><td colspan="3" align="center">No Existen Datos</td></tr><?php } ?>
-                    <?php foreach ($menu as $modulo) { ?>
+                    <?php if (empty($menu)) { ?>
+                        <tr>
+                            <td colspan="3" align="center">No Existen Datos</td>
+                        </tr>
+                        <?php
+                    }
+                    foreach ($menu as $modulo) {
+                        ?>
                         <tr id="<?= $modulo['menu_id'] ?>">
-                            <td>
-                    <center>
-                        <button type="button" data-toggle="modal" data-target="#modalIconos"  class="btn iconos" idgeneral="<?= $modulo['menu_id'] ?>"><span class="<?= $modulo['mod_icons'] ?>"></span></button>
-                    </center>
-                    </td>
-                    <td><?= $modulo['menu_nombrepadre'] ?></td>
-                    <td align="center"><button type="button" data-toggle="modal" data-target="#myModal"  class="btn btn-info opciones"  idgeneral="<?= $modulo['menu_id'] ?>" nombre="<?= $modulo['menu_nombrepadre'] ?>" idpadre="<?= $modulo['menu_id'] ?>" >Opción</button>
-                        <!--<button  >Option</button>-->
-                    </td>
-                    <td style="text-align: center"><button type="button"  class="btn btn-success metodos" idgeneral="<?= $modulo['menu_id'] ?>" idpadre="<?= $modulo['menu_idpadre'] ?>" menu="<?= $modulo['menu_idhijo'] ?>">Metodos</button></td>
-                    <td align="center"><input type="radio" class="submodulo" idgeneral="<?= $modulo['menu_id'] ?>" idpadre="<?= $modulo['menu_idpadre'] ?>" nombrepadre="<?= $modulo['menu_nombrepadre'] ?>" name="submodulo" menu="<?= $modulo['menu_idhijo'] ?>"></td>
-                    </tr>    
-                <?php } ?>
+                            <td><?= $modulo['menu_nombrepadre'] ?></td>
+                            <td align="center"><button type="button" data-toggle="modal" data-target="#myModal"  class="btn btn-info opciones"  idgeneral="<?= $modulo['menu_id'] ?>" nombre="<?= $modulo['menu_nombrepadre'] ?>" idpadre="<?= $modulo['menu_id'] ?>" >Opción</button>
+                            </td>
+                            <td style="text-align: center"><button type="button"  class="btn btn-success metodos" idgeneral="<?php echo $modulo['menu_id'] ?>" idpadre="<?php echo $modulo['menu_idpadre'] ?>" menu="<?php echo $modulo['menu_idhijo'] ?>">Metodos</button></td>
+                            <td align="center"><input type="radio" class="submodulo" idgeneral="<?= $modulo['menu_id'] ?>" idpadre="<?php echo $modulo['menu_idpadre'] ?>" nombrepadre="<?php echo $modulo['menu_nombrepadre'] ?>" name="submodulo" menu="<?php echo $modulo['menu_idhijo'] ?>"></td>
+                            <td style="text-align:center"><button type="button" class="btn btn-danger eliminarSubModulo" generalid='<?php echo $modulo['menu_id'] ?>'>Eliminar</button></td>
+                        </tr>    
+                    <?php } ?>
                 </tbody>    
             </table>
             <input type="hidden" id="menu" name="menu">
@@ -108,12 +108,8 @@
                         <button type="button" class="btn btn-success guardar">Guardar</button>
                     </div>
                     <div class='col-md-2 col-lg-2 col-sm-2 col-sx-2 margenlogo' align='center' >
-                        <button type="button"  class="btn btn-danger eliminar">Eliminar</button>
-                    </div>
-                    <div class='col-md-2 col-lg-2 col-sm-2 col-sx-2 margenlogo' align='center' >
                         <button type="button" data-dismiss="modal" class="btn btn-default">Cerrar</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -180,74 +176,16 @@
 </form>
 <script>
 
-    $('body').delegate("#guardarmetodos","click",  function () {    
-        $.post("<?php echo base_url("index.php/presentacion/guardarMetodos") ?>",$('#FrmMetodos').serialize())
+    $('body').delegate("#guardarmetodos", "click", function () {
+        $.post("<?php echo base_url("index.php/presentacion/guardarMetodos") ?>", $('#FrmMetodos').serialize())
                 .done(function (msg) {
-                    $('#myModal5').modal("toggle");
-                    alerta("verde","Guardado");
+                    $('#myModal5').modal("hide");
+                    alerta("verde", "Guardado");
                 })
                 .fail(function (msg) {
-                    alerta("rojo","Error");
+                    alerta("rojo", "Error");
                 });
     });
-    $('body').delegate(".metodos", "click", function () {
-        var modulo = $(this).attr('idgeneral');
-        var url = "<?php echo base_url("index.php/presentacion/cargarMetodos") ?>";
-        var datos = {modulo:modulo};
-        $('#Hdnmodulo').val(modulo);
-        $.post(url,datos)
-                .done(function(msg){
-                    htmlModal(msg);
-                    $('#myModal5').modal("toggle");
-                })
-                .fail(function(msg){
-                    alerta("rojo","Error Modal");
-                })
-        
-    });
-    
-    function filas(tipo){
-        switch(tipo){
-            case "1": 
-                var clase  = "TxtClaseEliminar[]";
-                var metodo = "TxtMetodoEliminar[]";
-                var agregar = "filaEliminar";
-                break;
-            case "2": 
-                var clase  = "TxtMetodoActualizar[]";
-                var metodo = "TxtClaseActualizar[]";
-                var agregar = "filaActualizar";
-                break;
-            case "3": 
-                var clase  = "TxtClaseConsultar[]";
-                var metodo = "TxtMetodoConsultar[]";
-                var agregar = "filaConsultar";
-                break;
-            case "4": 
-                var clase = "TxtClaseInsertar[]";
-                var metodo  = "TxtMetodoInsertar[]";
-                var agregar = "filaInsertar";
-                break;
-            default:
-                alerta("naranja","Error Tipo Filas");
-        }
-        var html = "";
-        html += "<div class=\"row\">";
-        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
-        html += "<label>Clase</label>";
-        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + clase + "\" id=\"modulo\" class=\"form-control\" >";
-        html += "</div>";
-        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
-        html += "<label>Metodo</label>";
-        html += "<input type=\"text\" placeholder=\"Modulo\" name=\""+metodo+"\" id=\"modulo\" class=\"form-control\" >";
-        html += "</div>";
-        html += "<div class=\"col-md-2 col-lg-2 col-sm-2 col-sx-2\">";
-        html += "<button type=\"button\" class=\"eliminarmetodo btn btn-danger\">-</button>";
-        html += "</div>";
-        html += "</div>";
-        
-        $("#"+agregar).append(html);
-    };
     
     function htmlModal(datos){
         var clases = ["TxtClaseEliminar[]","TxtClaseActualizar[]","TxtClaseConsultar[]","TxtClaseInsertar[]"];
@@ -310,21 +248,79 @@
         $("#modalHtml").html(html);
     }
 
+    
+    $('body').delegate(".metodos", "click", function () {
+        var modulo = $(this).attr('idgeneral');
+        var url = "<?php echo base_url("index.php/presentacion/cargarMetodos") ?>";
+        var datos = {modulo: modulo};
+        $('#Hdnmodulo').val(modulo);
+        $.post(url, datos)
+                .done(function (msg) {
+                    htmlModal(msg);
+                    $('#myModal5').modal("show");
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error Modal");
+                })
+
+    });
+
+    function filas(tipo) {
+        switch (tipo) {
+            case "1":
+                var clase = "TxtClaseEliminar[]";
+                var metodo = "TxtMetodoEliminar[]";
+                var agregar = "filaEliminar";
+                break;
+            case "2":
+                var clase = "TxtMetodoActualizar[]";
+                var metodo = "TxtClaseActualizar[]";
+                var agregar = "filaActualizar";
+                break;
+            case "3":
+                var clase = "TxtClaseConsultar[]";
+                var metodo = "TxtMetodoConsultar[]";
+                var agregar = "filaConsultar";
+                break;
+            case "4":
+                var clase = "TxtClaseInsertar[]";
+                var metodo = "TxtMetodoInsertar[]";
+                var agregar = "filaInsertar";
+                break;
+            default:
+                alerta("naranja", "Error Tipo Filas");
+        }
+        var html = "";
+        html += "<div class=\"row\">";
+        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+        html += "<label>Clase</label>";
+        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + clase + "\" id=\"modulo\" class=\"form-control\" >";
+        html += "</div>";
+        html += "<div class=\"col-md-5 col-lg-5 col-sm-5 col-sx-5\">";
+        html += "<label>Metodo</label>";
+        html += "<input type=\"text\" placeholder=\"Modulo\" name=\"" + metodo + "\" id=\"modulo\" class=\"form-control\" >";
+        html += "</div>";
+        html += "<div class=\"col-md-2 col-lg-2 col-sm-2 col-sx-2\">";
+        html += "<button type=\"button\" class=\"eliminarmetodo btn btn-danger\">-</button>";
+        html += "</div>";
+        html += "</div>";
+
+        $("#" + agregar).append(html);
+    }
     $('body').delegate(".eliminarmetodo", "click", function () {
         $(this).parent().parent().remove();
     });
 
     $('body').delegate(".agregarmetodo", "click", function () {
-        var tipo = $(this).attr('tipo'); 
+        var tipo = $(this).attr('tipo');
         filas(tipo);
     });
 
     $('#desicion').hide();
     $('body').delegate(".opciones", "click", function () {
         var idgeneral = $(this).attr('idgeneral');
-        $('.eliminar').attr('generalid', idgeneral);
         $('.guardar').attr('generalid', idgeneral);
-        $.post("<?= base_url('index.php/presentacion/consultadatosmenu') ?>",
+        $.post("<?php echo base_url('index.php/presentacion/consultadatosmenu') ?>",
                 {idgeneral: idgeneral}, function (data) {
 //            $('.modal-backdrop').css('z-index', '-1');
             $('#nombre').val(data['menu_nombrepadre']);
@@ -335,21 +331,27 @@
         });
     });
 
-    $('body').delegate('.eliminar', 'click', function () {
-        $.post("<?= base_url('index.php/presentacion/eliminarmodulo') ?>",
-                {idgeneral: $(this).attr('generalid')})
-                .done(function (msg) {
-                    $('#myModal').modal('hide');
-                }).fail(function (msg) {
-
-        });
+    $('body').delegate('.eliminarSubModulo', 'click', function () {
+        var apuntador = $(this);
+        if (confirm("Esta seguro de eliminar el modulo") == true) {
+            $.post("<?php echo base_url('index.php/presentacion/eliminarmodulo') ?>",
+                    {idgeneral: $(this).attr('generalid')})
+                    .done(function (msg) {
+                        if (!jQuery.isEmptyObject(msg.message))
+                            alerta("rojo", msg['message'])
+                        else {
+                            apuntador.parent('td').parent('tr').remove();
+                            alerta("verde", "Eliminado correctamente")
+                        }
+                    }).fail(function (msg) {
+                alerta("Error, por favor comunicarse con el administrador");
+            });
+        }
     });
     $('.page-breadcrumb a').click(function () {
         var papa = $(this).attr('padre');
         $('a').each(function (key, val) {
-            if ($(this).attr('padre') > papa) {
-                $(this).remove();
-            }
+            if ($(this).attr('padre') > papa) $(this).remove();
         });
         $('#idgeneral2').val(papa);
         $('#nombrepadre2').val($('.page-breadcrumb').html());
@@ -357,11 +359,18 @@
         $('#redireccion').submit();
     });
     $('#guardar').click(function () {
-        $.post("<?= base_url('index.php/presentacion/guardarmodulo') ?>", {modulo: $('#modulo').val(), padre: $(this).attr('padre'), general: $(this).attr('general')}, function (data) {
+        $.post("<?php echo base_url('index.php/presentacion/guardarmodulo') ?>", {modulo: $('#modulo').val(), padre: $(this).attr('padre'), general: $(this).attr('general')}, function (data) {
             $('#cuerpomodulo *').remove();
             var tabla = "";
             $.each(data.Json, function (key, val) {
-                tabla += "<tr><td>" + val.menu_nombrepadre + "</td><td align='center'><button class='btn btn-info opciones' data-target='#myModal' data-toggle='modal' idpadre='" + val.menu_idpadre + "' nombre='" + val.menu_nombrepadre + "' idgeneral='" + val.menu_id + "' type='button'>Opcion</button><td></td><td></td></td><td align='center'><input menu='" + val.menu_idhijo + "' nombrepadre='" + val.menu_nombrepadre + "' idgeneral='" + val.menu_id + "' type='radio' name='submodulo' class='submodulo'></td></tr>";
+                tabla += "<tr>\n\
+                        <td>" + val.menu_nombrepadre + "</td>\n\
+                        <td align='center'>\n\
+                        <button class='btn btn-info opciones' data-target='#myModal' data-toggle='modal' idpadre='" + val.menu_idpadre + "' nombre='" + val.menu_nombrepadre + "' idgeneral='" + val.menu_id + "' type='button'>Opcion</button>\n\
+                        <td></td>\n\
+                        <td align='center'><input menu='" + val.menu_idhijo + "' nombrepadre='" + val.menu_nombrepadre + "' idgeneral='" + val.menu_id + "' type='radio' name='submodulo' class='submodulo'></td>\n\
+                        <td style='text-align:center'><button type='button' generalid='' class='btn btn-danger eliminarSubModulo'>Eliminar</button></td>    \n\
+                        </tr>";
             });
             $('#cuerpomodulo').append(tabla);
             $('#modulo').val('');
@@ -376,7 +385,7 @@
     });
     $('body').delegate('.guardar', 'click', function () {
 
-        $.post("<?= base_url('index.php/presentacion/guardaratributosmenu') ?>"
+        $.post("<?php echo base_url('index.php/presentacion/guardaratributosmenu') ?>"
                 , {id: $(this).attr('generalid')
                     , nombre: $('#nombre').val()
                     , controlador: $('#controlador').val()
@@ -390,8 +399,7 @@
         $('#menu').val($(this).attr('menu'));
         $('#idgeneral').val($(this).attr('idgeneral'));
         $("#nombrepadre").val($(".page-breadcrumb").html() + "<li><a padre='" + $(this).attr('menu') + "'>" + $(this).attr('nombrepadre') + "</a><i class='fa fa-angle-right'></i></li>")
-        //$('#nombrepadre').val($('.devolver b').html() + "<i class='glyphicon glyphicon-chevron-right'></i><a padre='" + $(this).attr('menu') + "'>" + $(this).attr('nombrepadre') + "</a>");
-        $('#formulario').attr('href', "<?= base_url('index.php/presentacion/menu') ?>");
+        $('#formulario').attr('href', "<?php echo base_url('index.php/presentacion/menu') ?>");
         $('#formulario').submit();
     });
     /*---------------- ICONOS ---------------*/
@@ -399,19 +407,5 @@
     $("body").on("click", ".iconos", function () {
         botonIcono = $(this);
     });
-    $("body").on("click", ".item", function () {
-        var nombreIcono = $(this).children("span").attr('class');
-        if (confirm("Deseas cambiar Icono ?")) {
-            var url = "<?= base_url('index.php/presentacion/actualizarIcono') ?>";
-            var idgeneral = botonIcono.attr("idgeneral");
-            $.post(url, {nuevoIcono: nombreIcono, idgeneral: idgeneral})
-                    .done(function (msg) {
-                        botonIcono.children("span").attr("class", nombreIcono)
-                        $('#modalIconos').modal('toggle');
-                    })
-                    .fail(function (msg) {
-                        alert("Error en el momento de cambiar el icono");
-                    })
-        }
-    });
+
 </script>    

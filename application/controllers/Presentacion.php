@@ -25,15 +25,25 @@ class Presentacion extends My_Controller {
     }
 
     function principal() {
-        $this->load->model(array('Tipo_model', 'Planes_model'));
-        $this->data['tipo'] = $this->Tipo_model->avanceciclophva();
+        $id = $this->data['user']['emp_id'];
+        $this->load->model('Planes_model');
+        $this->load->model('Tarea_model');
+        $this->load->model('Dimension_model');
+        $this->load->model('Dimension2_model');
+        $this->load->model('Empresa_model');
         $this->data['inicio'] = $this->Ingreso_model->admin_inicio();
-        $id_plan = $this->input->post('pla_id');
-        if (!isset($id_plan))
-            $id_plan = $this->Planes_model->min_plan();
-        $this->data['tareas'] = $this->Planes_model->tareaxplan($id_plan);
-        $this->data['id_plan'] = $id_plan;
-        $this->data['plan_grant'] = $this->Planes_model->plan_grant($id_plan);
+        $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
+        $this->data['planes'] = $this->Planes_model->detail();
+        $this->data['dimension'] = $this->Dimension_model->detail();
+        $this->data['dimension2'] = $this->Dimension2_model->detail();
+        //$this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto($_POST['plan'],$_POST['dimensionuno'],$_POST['dimensiondos']);
+        $this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto();
+        $this->data['mesesplan'] = $this->Planes_model->mesesPlan();
+        $this->data['listameses'] = $this->Planes_model->listaMesesPlan();
+//        $this->data['tareasplangrafica'] = $this->Planes_model->tareasPlanGrafica();
+        $this->data['empresa']=$this->Empresa_model->detail();
+        $this->data['tareasphva'] = $this->Planes_model->tareasPHVA();
+        $this->data['tareasphvaavance'] = $this->Planes_model->tareasPHVAAvance();
         $this->layout->view('presentacion/principal', $this->data);
     }
 
@@ -52,7 +62,7 @@ class Presentacion extends My_Controller {
         else
             $html .="<ul class='dropdown-menu'>";
         foreach ($i as $padre => $nombrepapa)
-            foreach ($i as $nombrepapa => $menuidpadre)
+            foreach ($nombrepapa as $nombrepapa => $menuidpadre)
                 foreach ($menuidpadre as $modulos => $menu)
                     foreach ($menu as $submenus):
                         $html .= "<li><a href='" . base_url("index.php/" . $submenus[1] . "/" . $submenus[2]) . "' >" . strtoupper($nombrepapa) . "</a>";
@@ -135,7 +145,6 @@ class Presentacion extends My_Controller {
             for ($i = 0; $i < count($idrol); $i++) {
                 $data[$i] = array("" => $idrol, "" => $idusuario);
             }
-
             $permisos = $this->permisorolporusuario('prueba', $idrol, $idusuario);
             echo $permisos;
         } catch (exception $e) {
@@ -147,14 +156,12 @@ class Presentacion extends My_Controller {
 
     function eliminarmodulo() {
         try {
-            $idgeneral = $this->input->post('idgeneral');
-            if (!empty($idgeneral))
-                $eliminar = $this->Ingreso_model->eliminar($idgeneral);
+            if($this->Ingreso_model->eliminar($this->input->post('idgeneral')) == false) 
+                throw new Exception("Error al eliminar en la base de datos");
         } catch (exception $e) {
-            
-        } finally {
-            
-        }
+            $data['message'] = $e->getMessage();
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } 
     }
 
     function permisosmenu($iduser, $datosmodulos = 'prueba', $dato = null) {

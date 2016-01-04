@@ -8,7 +8,7 @@ class Ingreso_model extends CI_Model {
 
     function menu($padre = null, $idusuario, $tipo) {
         try {
-            $idpadre = ($padre != "prueba")?$padre:0;
+            $idpadre = ($padre != "prueba") ? $padre : 0;
             $this->db->where('menu_idpadre', $idpadre);
             $this->db->where('menu_estado', 1);
             $this->db->where('user.usu_id', $idusuario);
@@ -24,12 +24,12 @@ class Ingreso_model extends CI_Model {
             
         }
     }
-    
-    function sectorEconomico(){
+
+    function sectorEconomico() {
         $data = $this->db->get("sector_economico");
         return $data->result();
     }
-    
+
     function guardarPermisosMetodo($data) {
 
         $this->db->insert_batch("permisos_metodo", $data);
@@ -164,10 +164,21 @@ class Ingreso_model extends CI_Model {
 
     function eliminar($eliminar) {
         try {
+            $this->db->trans_begin();
             $this->db->where('menu_id', $eliminar);
             $this->db->delete('modulo');
-        } catch (exception $e) {
             
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                throw new Exception("Error al eliminar en la base de datos");
+            }
+            else{
+                $this->db->trans_commit();
+            }
+        } catch (exception $e) {
+            return $e->getMessage();
+        } finally {
+            return $this->db->trans_status();
         }
     }
 
