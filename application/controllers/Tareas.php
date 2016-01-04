@@ -15,33 +15,35 @@ class Tareas extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->model('Ingreso_model');
-        $this->load->model('Roles_model');
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     function nuevatarea() {
-        $this->load->model('Estados_model');
-        $this->load->model('Tarea_model');
-        $this->load->model('Cargo_model');
-        $this->load->model('Planes_model');
-        $this->load->model('Avancetarea_model');
-        $this->load->model('Actividad_model');
-        $this->load->model('Dimension2_model');
-        $this->load->model('Dimension_model');
-        $this->load->model('Tipo_model');
-        $this->load->model('Notificacion_model');
-        $this->load->model("Riesgoclasificacion_model");
+
+        $this->load->model(
+                array(
+                    'Estados_model',
+                    'Tarea_model',
+                    'Cargo_model',
+                    'Planes_model',
+                    'Avancetarea_model',
+                    'Actividad_model',
+                    'Dimension2_model',
+                    'Dimension_model',
+                    'Tipo_model',
+                    'Notificacion_model',
+                    "Riesgoclasificacion_model",
+                    "Registrocarpeta_model",
+                    'Empresa_model',
+                    'Norma_model',
+                    'Planes_model',
+                    'Normaarticulo_model'
+                )
+        );
         $this->data['tareas'] = $this->Tarea_model->detail();
-        $this->load->model("Registrocarpeta_model");
-        $this->load->model('Empresa_model');
-        $this->load->model('Norma_model');
-        $this->load->model('Planes_model');
-        $this->load->model('Normaarticulo_model');
         $this->data['empresa'] = $this->Empresa_model->detail();
         $this->data['norma'] = $this->Norma_model->detail();
-        if(!empty($this->input->post('rie_id')))$this->data['rie_id'] = $this->input->post('rie_id');
+        if (!empty($this->input->post('rie_id')))
+            $this->data['rie_id'] = $this->input->post('rie_id');
         if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
             if (!empty($this->input->post("tar_id"))):
 
@@ -123,57 +125,91 @@ class Tareas extends My_Controller {
     }
 
     function consultacarpeta() {
-
-        $this->load->model("Registrocarpeta_model");
-        $data = $this->Registrocarpeta_model->detailxid($this->input->post("carpeta"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        try {
+            $this->load->model("Registrocarpeta_model");
+            $data = $this->Registrocarpeta_model->detailxid($this->input->post("carpeta"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultaTipoActividad() {
-        $this->load->model("Actividad_model");
-        if (!empty($this->input->post('actividad'))):
-            $data = $this->Actividad_model->consultaXid($this->input->post('actividad'));
-            echo $data[0]->tip_id;
-        endif;
+        try {
+            $this->load->model("Actividad_model");
+            if (!empty($this->input->post('actividad'))):
+                $data = $this->Actividad_model->consultaXid($this->input->post('actividad'));
+                echo $data[0]->tip_id;
+            endif;
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultaarticulo() {
-        $this->load->model("Norma_model");
-        $norma = $this->Norma_model->normaarticulo($this->input->post("norma"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($norma));
+        try {
+            $this->load->model("Norma_model");
+            $norma = $this->Norma_model->normaarticulo($this->input->post("norma"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($norma));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function actualizarcarpeta() {
-
-        $this->load->model("Registrocarpeta_model");
-        $this->Registrocarpeta_model->modificarpeta(
-                $this->input->post("nombrecarpeta")
-                , $this->input->post("descripcioncarpeta")
-                , $this->input->post("tarCar_id"));
-        $data = $this->Registrocarpeta_model->detailxid($this->input->post("tarCar_id"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        try {
+            $this->load->model("Registrocarpeta_model");
+            $this->Registrocarpeta_model->modificarpeta(
+                    $this->input->post("nombrecarpeta")
+                    , $this->input->post("descripcioncarpeta")
+                    , $this->input->post("tarCar_id"));
+            $data = $this->Registrocarpeta_model->detailxid($this->input->post("tarCar_id"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function eliminarregistrocarpeta() {
-
-        $this->load->model("Registrocarpeta_model");
-        $this->Registrocarpeta_model->eliminarcarpeta($this->input->post("carpeta"));
+        try {
+            $this->load->model("Registrocarpeta_model");
+            $this->Registrocarpeta_model->eliminarcarpeta($this->input->post("carpeta"));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function modificarregistro() {
-        $this->load->model('Registro_model');
-        $datos = $this->Registro_model->modificarregistro($this->input->post("registro"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($datos));
+        try {
+            $this->load->model('Registro_model');
+            $datos = $this->Registro_model->modificarregistro($this->input->post("registro"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($datos));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function eliminartarea() {
-        try{
-        $this->load->model("Tarea_model");
-        $data['Json'] = $this->Tarea_model->eliminartarea($this->input->post("tarea"));
-        if($data['Json'] == false ) throw new Exception("Error en la base de datos");
-        }catch(Exception $e){
+        try {
+            $this->load->model("Tarea_model");
+            $data['Json'] = $this->Tarea_model->eliminartarea($this->input->post("tarea"));
+            if ($data['Json'] == false)
+                throw new Exception("Error en la base de datos");
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
-        }  finally {
+        } finally {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
@@ -214,6 +250,8 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
             
+        } finally {
+            
         }
     }
 
@@ -252,6 +290,8 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
             
+        } finally {
+            
         }
     }
 
@@ -288,83 +328,108 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         } catch (exception $e) {
             
+        } finally {
+            
         }
     }
 
     function listadoavance() {
-
-        $this->load->model('Avancetarea_model');
-        $cantidad = $this->input->post("length");
-        $orden = $this->input->post("order[0][column]");
-        $inicia = intval($_REQUEST['start']);
-        $tabla = $this->Avancetarea_model->detailxid(1, $cantidad, $orden, $inicia);
-        $alldatacount = $this->Avancetarea_model->detailxidcount(1, $cantidad, $orden, $inicia);
-        $data = array();
-        $data['data'] = arregloconsulta($tabla);
-        $data["draw"] = intval($_REQUEST['draw']);
-        $data['recordsTotal'] = $alldatacount;
-        $data['recordsFiltered'] = $alldatacount;
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Avancetarea_model');
+            $cantidad = $this->input->post("length");
+            $orden = $this->input->post("order[0][column]");
+            $inicia = intval($_REQUEST['start']);
+            $tabla = $this->Avancetarea_model->detailxid(1, $cantidad, $orden, $inicia);
+            $alldatacount = $this->Avancetarea_model->detailxidcount(1, $cantidad, $orden, $inicia);
+            $data = array();
+            $data['data'] = arregloconsulta($tabla);
+            $data["draw"] = intval($_REQUEST['draw']);
+            $data['recordsTotal'] = $alldatacount;
+            $data['recordsFiltered'] = $alldatacount;
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function listadoavance2() {
-        try{
-        $this->load->model('Avancetarea_model');
-        $datos['Json'] = $this->Avancetarea_model->listado_avance($this->input->post('tar_id'));
-        if(count($datos['Json']) == 0) $datos["message"] = "No hay avances";
-        $this->output->set_content_type('application/json')->set_output(json_encode($datos));
-        }catch(exception $e){
+        try {
+            $this->load->model('Avancetarea_model');
+            $datos['Json'] = $this->Avancetarea_model->listado_avance($this->input->post('tar_id'));
+            if (count($datos['Json']) == 0)
+                $datos["message"] = "No hay avances";
+            $this->output->set_content_type('application/json')->set_output(json_encode($datos));
+        } catch (exception $e) {
+            
+        } finally {
             
         }
     }
 
     function listadotareasxplanfiltro() {
-
-        $this->load->model('Planes_model');
-        $cantidad = $this->input->post("length");
-        $orden = $this->input->post("order[0][column]");
-        $inicia = intval($_REQUEST['start']);
-        $tabla = $this->Planes_model->tareaxplan(7, $cantidad, $orden, $inicia);
-        $alldatacount = $this->Planes_model->tareaxplancount(7, $cantidad, $orden, $inicia);
-        $data = array();
-        $data['data'] = arregloconsulta($tabla);
-        $data["draw"] = intval($_REQUEST['draw']);
-        $data['recordsTotal'] = $alldatacount;
-        $data['recordsFiltered'] = $alldatacount;
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Planes_model');
+            $cantidad = $this->input->post("length");
+            $orden = $this->input->post("order[0][column]");
+            $inicia = intval($_REQUEST['start']);
+            $tabla = $this->Planes_model->tareaxplan(7, $cantidad, $orden, $inicia);
+            $alldatacount = $this->Planes_model->tareaxplancount(7, $cantidad, $orden, $inicia);
+            $data = array();
+            $data['data'] = arregloconsulta($tabla);
+            $data["draw"] = intval($_REQUEST['draw']);
+            $data['recordsTotal'] = $alldatacount;
+            $data['recordsFiltered'] = $alldatacount;
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function listadotareasxactividadhijo() {
-
-        $this->load->model('Planes_model');
-        $cantidad = $this->input->post("length");
-        $orden = $this->input->post("order[0][column]");
-        $inicia = intval($_REQUEST['start']);
+        try {
+            $this->load->model('Planes_model');
+            $cantidad = $this->input->post("length");
+            $orden = $this->input->post("order[0][column]");
+            $inicia = intval($_REQUEST['start']);
 //        $this->data['tareaxplan'] = $this->Planes_model->tareaxplan(1,$cantidad,$orden,$inicia);
-        $tabla = $this->Planes_model->actividadhijoxplan(7, $cantidad, $orden, $inicia);
-        $alldatacount = $this->Planes_model->actividadhijoxplancount(7, $cantidad, $orden, $inicia);
-        $data = array();
-        $data['data'] = arregloconsulta($tabla);
-        $data["draw"] = intval($_REQUEST['draw']);
-        $data['recordsTotal'] = $alldatacount;
-        $data['recordsFiltered'] = $alldatacount;
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+            $tabla = $this->Planes_model->actividadhijoxplan(7, $cantidad, $orden, $inicia);
+            $alldatacount = $this->Planes_model->actividadhijoxplancount(7, $cantidad, $orden, $inicia);
+            $data = array();
+            $data['data'] = arregloconsulta($tabla);
+            $data["draw"] = intval($_REQUEST['draw']);
+            $data['recordsTotal'] = $alldatacount;
+            $data['recordsFiltered'] = $alldatacount;
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function listadotareasinactivasxplanfiltro() {
-
-        $this->load->model('Planes_model');
-        $cantidad = $this->input->post("length");
-        $orden = $this->input->post("order[0][column]");
-        $inicia = intval($_REQUEST['start']);
-        $tabla = $this->Planes_model->tareaxplaninactivas(6, $cantidad, $orden, $inicia);
-        $alldatacount = $this->Planes_model->tareaxplaninactivascount(6, $cantidad, $orden, $inicia);
-        $data = array();
-        $data['data'] = arregloconsulta($tabla);
-        $data["draw"] = intval($_REQUEST['draw']);
-        $data['recordsTotal'] = $alldatacount;
-        $data['recordsFiltered'] = $alldatacount;
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Planes_model');
+            $cantidad = $this->input->post("length");
+            $orden = $this->input->post("order[0][column]");
+            $inicia = intval($_REQUEST['start']);
+            $tabla = $this->Planes_model->tareaxplaninactivas(6, $cantidad, $orden, $inicia);
+            $alldatacount = $this->Planes_model->tareaxplaninactivascount(6, $cantidad, $orden, $inicia);
+            $data = array();
+            $data['data'] = arregloconsulta($tabla);
+            $data["draw"] = intval($_REQUEST['draw']);
+            $data['recordsTotal'] = $alldatacount;
+            $data['recordsFiltered'] = $alldatacount;
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function guardaravance() {
@@ -396,19 +461,33 @@ class Tareas extends My_Controller {
             endif;
         } catch (exception $e) {
             
+        } finally {
+            
         }
     }
 
     function consulta() {
-        $this->load->model('Avancetarea_model');
-        $result = $this->Avancetarea_model->consulta($this->input->post('idtarea'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        try {
+            $this->load->model('Avancetarea_model');
+            $result = $this->Avancetarea_model->consulta($this->input->post('idtarea'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($result));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consulta2() {
-        $this->load->model('Avancetarea_model');
-        $result = $this->Avancetarea_model->consulta2($this->input->post('avaTar_id'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($result[0]));
+        try {
+            $this->load->model('Avancetarea_model');
+            $result = $this->Avancetarea_model->consulta2($this->input->post('avaTar_id'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($result[0]));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function guardartarea() {
@@ -481,23 +560,36 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($consultaxid[0]));
         } catch (Exception $e) {
             
+        } finally {
+            
         }
     }
 
     function consultaactividad() {
-
-        $this->load->model('Registro_model');
-        $data = $this->Registro_model->consultaxcarpeta($this->input->post("carpeta"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Registro_model');
+            $data = $this->Registro_model->consultaxcarpeta($this->input->post("carpeta"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function listadotareas() {
-        $this->load->model('Planes_model');
-        $this->load->model('Tarea_model');
-        $this->data["planes"] = $this->Planes_model->detail();
-        $this->data["tareas"] = $this->Tarea_model->detail();
-        $this->data["responsables"] = $this->Tarea_model->responsables();
-        $this->layout->view("tareas/listadotareas", $this->data);
+        try {
+            $this->load->model('Planes_model');
+            $this->load->model('Tarea_model');
+            $this->data["planes"] = $this->Planes_model->detail();
+            $this->data["tareas"] = $this->Tarea_model->detail();
+            $this->data["responsables"] = $this->Tarea_model->responsables();
+            $this->layout->view("tareas/listadotareas", $this->data);
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultatareas() {
@@ -505,11 +597,10 @@ class Tareas extends My_Controller {
         try {
             $this->load->model('Tarea_model');
             $tareas = $this->Tarea_model->filtrobusqueda(
-                    $this->input->post("Plan"), 
-                    $this->input->post("filtrotarea"), 
-                    $this->input->post("responsable")
+                    $this->input->post("Plan"), $this->input->post("filtrotarea"), $this->input->post("responsable")
             );
-            if(count($tareas) == 0 )throw new Exception("No se encontro información");
+            if (count($tareas) == 0)
+                throw new Exception("No se encontro información");
             $data = array();
             foreach ($tareas as $t):
                 $data['Json'][$t->pla_id][$t->pla_nombre][$t->tar_id] = array(
@@ -528,30 +619,48 @@ class Tareas extends My_Controller {
             endforeach;
         } catch (exception $e) {
             $data['message'] = $e->getMessage();
-        }finally{
+        } finally {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function listadoactividades() {
-        $this->load->model('Estados_model');
-        $this->layout->view("tareas/listadoactividades");
+        try {
+            $this->load->model('Estados_model');
+            $this->layout->view("tareas/listadoactividades");
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function registro() {
-        $this->load->model('Registrocarpeta_model');
-        $this->load->model('Planes_model');
-        $this->data['carpeta'] = $this->Registrocarpeta_model->detail();
-        $this->data['plan'] = $this->Planes_model->detail();
-        $this->load->model("Registrocarpeta_model");
-        $this->data['carpetas'] = $this->Registrocarpeta_model->allfolders($this->input->post('pla_id'));
-        $this->layout->view("tareas/registro", $this->data);
+        try {
+            $this->load->model('Registrocarpeta_model');
+            $this->load->model('Planes_model');
+            $this->data['carpeta'] = $this->Registrocarpeta_model->detail();
+            $this->data['plan'] = $this->Planes_model->detail();
+            $this->load->model("Registrocarpeta_model");
+            $this->data['carpetas'] = $this->Registrocarpeta_model->allfolders($this->input->post('pla_id'));
+            $this->layout->view("tareas/registro", $this->data);
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function busqueda_carpeta() {
-        $this->load->model('Registrocarpeta_model');
-        $this->data['carpetas'] = $this->Registrocarpeta_model->allfolders2($this->input->post('tar_id'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data['carpetas']));
+        try {
+            $this->load->model('Registrocarpeta_model');
+            $this->data['carpetas'] = $this->Registrocarpeta_model->allfolders2($this->input->post('tar_id'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($this->data['carpetas']));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function tareaxidplan() {
@@ -562,6 +671,8 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($this->data['tarea']));
         } catch (exception $e) {
             
+        }finally{
+            
         }
     }
 
@@ -570,24 +681,42 @@ class Tareas extends My_Controller {
     }
 
     function eliminar_actividad_hijo() {
-        $this->load->model('Registro_model');
-        $id = $this->Registro_model->eliminar_actividad_hijo($this->input->post());
+        try {
+            $this->load->model('Registro_model');
+            $id = $this->Registro_model->eliminar_actividad_hijo($this->input->post());
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function editar_actividad_hijo() {
-        $this->load->model('Registro_model');
-        $this->load->model('Tarea_model');
-        $data = $this->Registro_model->editar_actividad_hijo($this->input->post());
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Registro_model');
+            $this->load->model('Tarea_model');
+            $data = $this->Registro_model->editar_actividad_hijo($this->input->post());
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function guardarcarpetatarea() {
-        $this->load->model("Registrocarpeta_model");
-        $id = $this->Registrocarpeta_model->createtarea(
-                $this->input->post("nombrecarpeta"), $this->input->post("descripcioncarpeta"), $this->input->post("tar_id"), $this->data["usu_id"]
-        );
-        $data = $this->Registrocarpeta_model->detailxtarea($this->input->post("tar_id"), $id);
-        $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        try {
+            $this->load->model("Registrocarpeta_model");
+            $id = $this->Registrocarpeta_model->createtarea(
+                    $this->input->post("nombrecarpeta"), $this->input->post("descripcioncarpeta"), $this->input->post("tar_id"), $this->data["usu_id"]
+            );
+            $data = $this->Registrocarpeta_model->detailxtarea($this->input->post("tar_id"), $id);
+            $this->output->set_content_type('application/json')->set_output(json_encode($data[0]));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function actualizarplan() {
@@ -611,20 +740,33 @@ class Tareas extends My_Controller {
             $this->Planes_model->actualizar($data, $this->input->post('pla_id'));
         } catch (Exception $e) {
             
+        } finally {
+            
         }
     }
 
     function consultar_actividad_padre() {
-        $this->load->model("Actividadpadre_model");
-        $planes = $this->Actividadpadre_model->consultar_actividad_padre($this->input->post("actPad_id"));
-        $this->output->set_content_type('application/json')->set_output(json_encode($planes[0]));
+        try {
+            $this->load->model("Actividadpadre_model");
+            $planes = $this->Actividadpadre_model->consultar_actividad_padre($this->input->post("actPad_id"));
+            $this->output->set_content_type('application/json')->set_output(json_encode($planes[0]));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultaractividadpadre() {
-
-        $this->load->model("Actividadpadre_model");
-        $data = $this->Actividadpadre_model->detailxid($this->input->post('plan'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model("Actividadpadre_model");
+            $data = $this->Actividadpadre_model->detailxid($this->input->post('plan'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function listadoregistros() {
@@ -632,11 +774,16 @@ class Tareas extends My_Controller {
     }
 
     function guardarcarpeta() {
-
-        $this->load->model("Registrocarpeta_model");
-        $this->Registrocarpeta_model->create(
-                $this->input->post("nombrecarpeta"), $this->input->post("descripcioncarpeta")
-        );
+        try {
+            $this->load->model("Registrocarpeta_model");
+            $this->Registrocarpeta_model->create(
+                    $this->input->post("nombrecarpeta"), $this->input->post("descripcioncarpeta")
+            );
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function guardarregistro() {
@@ -649,7 +796,7 @@ class Tareas extends My_Controller {
                 if (!empty($_FILES['archivo']['name']))
                     $post['empReg_archivo'] = basename($_FILES['archivo']['name']);
 
-            $targetPath = "./uploads/tareas/".$this->input->post("plan").'/';
+            $targetPath = "./uploads/tareas/" . $this->input->post("plan") . '/';
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
@@ -669,11 +816,11 @@ class Tareas extends My_Controller {
 
             $id = $this->Registro_model->create($data);
 
-            $targetPath = $targetPath.$id.'/';
+            $targetPath = $targetPath . $id . '/';
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
-            
+
             $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
@@ -681,23 +828,30 @@ class Tareas extends My_Controller {
             redirect('index.php/tareas/registro', 'location');
         } catch (exception $e) {
             
+        } finally {
+            
         }
     }
 
     function listadoregistrotable() {
-
-        $this->load->model('Registro_model');
-        $cantidad = $this->input->post("length");
-        $orden = $this->input->post("order[0][column]");
-        $inicia = intval($_REQUEST['start']);
-        $tabla = $this->Registro_model->detailxid(1, $cantidad, $orden, $inicia);
-        $alldatacount = $this->Registro_model->detailxidcount(1, $cantidad, $orden, $inicia);
-        $data = array();
-        $data['data'] = arregloconsulta($tabla);
-        $data["draw"] = intval($_REQUEST['draw']);
-        $data['recordsTotal'] = $alldatacount;
-        $data['recordsFiltered'] = $alldatacount;
-        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        try {
+            $this->load->model('Registro_model');
+            $cantidad = $this->input->post("length");
+            $orden = $this->input->post("order[0][column]");
+            $inicia = intval($_REQUEST['start']);
+            $tabla = $this->Registro_model->detailxid(1, $cantidad, $orden, $inicia);
+            $alldatacount = $this->Registro_model->detailxidcount(1, $cantidad, $orden, $inicia);
+            $data = array();
+            $data['data'] = arregloconsulta($tabla);
+            $data["draw"] = intval($_REQUEST['draw']);
+            $data['recordsTotal'] = $alldatacount;
+            $data['recordsFiltered'] = $alldatacount;
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function configuracionsistema() {
@@ -725,8 +879,14 @@ class Tareas extends My_Controller {
     }
 
     function autocompletarresponsable() {
-        $info = auto("planes", "pla_id", "pla_nombre", $this->input->get('term'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($info));
+        try {
+            $info = auto("planes", "pla_id", "pla_nombre", $this->input->get('term'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($info));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultaTareasFlechas() {
@@ -740,48 +900,72 @@ class Tareas extends My_Controller {
             }
         } catch (Exception $e) {
             
+        } finally {
+            
         }
     }
 
     function eliminaravance() {
-
-        $this->load->model("Avancetarea_model");
-        $this->Avancetarea_model->eliminaravance($this->input->post("avaTar_id"));
+        try {
+            $this->load->model("Avancetarea_model");
+            $this->Avancetarea_model->eliminaravance($this->input->post("avaTar_id"));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function consultaregistro() {
-        $this->load->model("Registro_model");
-        $campos["Json"] = $this->Registro_model->consultaregistro(
-                $this->input->post("plan"), $this->input->post("actividad"), $this->input->post("tarea")
-        );
-        $this->output->set_content_type('application/json')->set_output(json_encode($campos));
+        try {
+            $this->load->model("Registro_model");
+            $campos["Json"] = $this->Registro_model->consultaregistro(
+                    $this->input->post("plan"), $this->input->post("actividad"), $this->input->post("tarea")
+            );
+            $this->output->set_content_type('application/json')->set_output(json_encode($campos));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function eliminarregistro() {
-
-        $this->load->model("Registro_model");
-        $this->Registro_model->eliminarregistro($this->input->post("registro"));
+        try {
+            $this->load->model("Registro_model");
+            $this->Registro_model->eliminarregistro($this->input->post("registro"));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
     function obtener_riesgos() {
-        try{
-        $this->load->model("Tarea_model");
-        $datos = $this->Tarea_model->lista_riesgos_guardados2($this->input->post('tar_id'));
-        if (count($datos) > 0)
-            $data['Json'] = $datos;
-        else
-            throw new Exception("No se encontraron riesgos para esta tarea");
-        }catch(exception $e){
+        try {
+            $this->load->model("Tarea_model");
+            $datos = $this->Tarea_model->lista_riesgos_guardados2($this->input->post('tar_id'));
+            if (count($datos) > 0)
+                $data['Json'] = $datos;
+            else
+                throw new Exception("No se encontraron riesgos para esta tarea");
+        } catch (exception $e) {
             $data['message'] = $e->getMessage();
-        }finally{
+        } finally {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
     function traer_riesgos() {
-        $this->load->model("Tarea_model");
-        $this->data['riesgos'] = $this->Tarea_model->lista_riesgos($this->input->post('clasificacionriesgo'), $this->input->post('tiposriesgos'));
-        $this->output->set_content_type('application/json')->set_output(json_encode($this->data['riesgos']));
+        try {
+            $this->load->model("Tarea_model");
+            $this->data['riesgos'] = $this->Tarea_model->lista_riesgos($this->input->post('clasificacionriesgo'), $this->input->post('tiposriesgos'));
+            $this->output->set_content_type('application/json')->set_output(json_encode($this->data['riesgos']));
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
     }
 
 }

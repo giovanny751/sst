@@ -418,7 +418,7 @@ class Administrativo extends My_Controller {
             } else {
                 echo 2;
             }
-            } catch{
+        } catch (exception $e) {
             
         } finally {
             
@@ -800,51 +800,51 @@ class Administrativo extends My_Controller {
     }
 
     function consultausuariosflechas() {
-        try{
-        $this->load->model("User_model");
-        $idUsuarioCreado = $this->input->post("idUsuarioCreado");
-        $metodo = $this->input->post("metodo");
-        $campos = $this->User_model->consultausuariosflechas($idUsuarioCreado, $metodo);
+        try {
+            $this->load->model("User_model");
+            $idUsuarioCreado = $this->input->post("idUsuarioCreado");
+            $metodo = $this->input->post("metodo");
+            $campos = $this->User_model->consultausuariosflechas($idUsuarioCreado, $metodo);
 
-        if (!empty($campos)) {
-            $this->output->set_content_type('application/json')->set_output(json_encode($campos[0]));
-        }
-        }catch(exception $e){
+            if (!empty($campos)) {
+                $this->output->set_content_type('application/json')->set_output(json_encode($campos[0]));
+            }
+        } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }
 
     function consultaempleadoflechas() {
-        try{
-        $this->load->model("Empleado_model");
-        $idEmpleadoCreado = $this->input->post("idEmpleadoCreado");
-        $metodo = $this->input->post("metodo");
-        $campos = $this->Empleado_model->consultaempleadoflechas($idEmpleadoCreado, $metodo);
-        if (!empty($campos)) {
-            $this->output->set_content_type('application/json')->set_output(json_encode($campos[0]));
-        }
-        }catch(exception $e){
+        try {
+            $this->load->model("Empleado_model");
+            $idEmpleadoCreado = $this->input->post("idEmpleadoCreado");
+            $metodo = $this->input->post("metodo");
+            $campos = $this->Empleado_model->consultaempleadoflechas($idEmpleadoCreado, $metodo);
+            if (!empty($campos)) {
+                $this->output->set_content_type('application/json')->set_output(json_encode($campos[0]));
+            }
+        } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }
 
     function consultaempleadoflechasaseguradora() {
-        try{
-        $this->load->model("Empleadotipoaseguradora_model");
-        $idEmpleadoCreado = $this->input->post("idEmpleadoCreado");
-        $campos = $this->Empleadotipoaseguradora_model->consult_empleado($idEmpleadoCreado);
-        if (!empty($campos)) {
-            $this->output->set_content_type('application/json')->set_output(json_encode($campos));
-        } else {
-            die("null");
-        }
-        }catch(exception $e){
+        try {
+            $this->load->model("Empleadotipoaseguradora_model");
+            $idEmpleadoCreado = $this->input->post("idEmpleadoCreado");
+            $campos = $this->Empleadotipoaseguradora_model->consult_empleado($idEmpleadoCreado);
+            if (!empty($campos)) {
+                $this->output->set_content_type('application/json')->set_output(json_encode($campos));
+            } else {
+                die("null");
+            }
+        } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }

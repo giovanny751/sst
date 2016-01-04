@@ -19,16 +19,17 @@ class Indicador extends My_Controller {
     }
 
     function nuevoindicador() {
-        $this->load->model('Estados_model');
-        $this->load->model('Cargo_model');
-        $this->load->model('Empleado_model');
-        $this->load->model('Dimension2_model');
-        $this->load->model('Dimension_model');
-        $this->load->model('Tipo_model');
-        $this->load->model('Empresa_model');
-        $this->load->model('Indicador_model');
-        $this->load->model("Indicadortipo_model");
-        $this->load->model("Planes_model");
+        $this->load->model(array('Estados_model'
+            ,'Cargo_model'
+            ,'Empleado_model'
+            ,'Dimension2_model'
+            ,'Dimension_model'
+            ,'Tipo_model'
+            ,'Empresa_model'
+            ,'Indicador_model'
+            ,"Indicadortipo_model"
+            ,"Planes_model"
+            ));
         $this->data['indicadortipo'] = $this->Indicadortipo_model->detail();
         $this->data['empresa'] = $this->Empresa_model->detail();
         if (!empty($this->data['empresa'][0]->Dim_id) && !empty($this->data['empresa'][0]->Dimdos_id)) {
@@ -89,10 +90,7 @@ class Indicador extends My_Controller {
 //        
 //    }
     function verindicadores() {
-        $this->load->model('Indicadortipo_model');
-        $this->load->model('Dimension2_model');
-        $this->load->model('Dimension_model');
-        $this->load->model('Empresa_model');
+        $this->load->model(array('Indicadortipo_model','Dimension2_model','Dimension_model','Empresa_model'));
         $this->data['empresa'] = $this->Empresa_model->detail();
         if (!empty($this->data['empresa'][0]->Dim_id) && !empty($this->data['empresa'][0]->Dimdos_id)) {
             $this->data['dimension'] = $this->Dimension_model->detail();
@@ -156,8 +154,7 @@ class Indicador extends My_Controller {
 
     function consultaIndicadorFlechas() {
         try {
-            $this->load->model("Indicador_model");
-            $this->load->model('Empleado_model');
+            $this->load->model(array("Indicador_model",'Empleado_model'));
             $idIndicador = $this->input->post("idIndicador");
             $metodo = $this->input->post("metodo");
             $campos["campos"] = $this->Indicador_model->consultaIndicadorFlechas($idIndicador, $metodo)[0];
