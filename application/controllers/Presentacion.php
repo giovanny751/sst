@@ -59,7 +59,7 @@ class Presentacion extends My_Controller {
         else
             $html .="<ul class='dropdown-menu'>";
         foreach ($i as $padre => $nombrepapa)
-            foreach ($nombrepapa as $nombrepapa => $menuidpadre)
+            foreach ($i as $nombrepapa => $menuidpadre)
                 foreach ($menuidpadre as $modulos => $menu)
                     foreach ($menu as $submenus):
                         $html .= "<li><a href='" . base_url("index.php/" . $submenus[1] . "/" . $submenus[2]) . "' >" . strtoupper($nombrepapa) . "</a>";

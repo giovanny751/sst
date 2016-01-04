@@ -8,10 +8,8 @@ class Ingreso_model extends CI_Model {
 
     function menu($padre = null, $idusuario, $tipo) {
         try {
-            if ($padre != "prueba")
-                $this->db->where('menu_idpadre', $padre);
-            else
-                $this->db->where('menu_idpadre', 0);
+            $idpadre = ($padre != "prueba")?$padre:0;
+            $this->db->where('menu_idpadre', $idpadre);
             $this->db->where('menu_estado', 1);
             $this->db->where('user.usu_id', $idusuario);
             $this->db->select('modulo.menu_id,modulo.menu_idpadre,modulo.menu_nombrepadre,modulo.menu_idhijo,'

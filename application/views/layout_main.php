@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
     <head>
-        <title>NYGSOFT-SG-SST</title>
+        <title>SG-SST</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -50,10 +50,10 @@
             $menu = $ci->ingreso_model->menu($datosmodulos, $idusuario, 2);
             $i = array();
             foreach ($menu as $modulo)
-                $i[$modulo['menu_id']][$modulo['menu_nombrepadre']][$modulo['menu_idpadre']] [] = array($modulo['menu_idhijo'], $modulo['menu_controlador'], $modulo['menu_accion'], $modulo['mod_icons']);
+                $i[$modulo['menu_nombrepadre']][$modulo['menu_idpadre']] [] = array($modulo['menu_idhijo'], $modulo['menu_controlador'], $modulo['menu_accion'], $modulo['mod_icons']);
             echo"<ul class=''>";
-            foreach ($i as $padre => $nombrepapa)
-                foreach ($nombrepapa as $nombrepapa => $menuidpadre)
+//            foreach ( as $padre => $nombrepapa)
+                foreach ($i as $nombrepapa => $menuidpadre)
                     foreach ($menuidpadre as $modulos => $menu)
                         foreach ($menu as $submenus):
                             if ($submenus[1] == "" && $submenus[2] == "")
