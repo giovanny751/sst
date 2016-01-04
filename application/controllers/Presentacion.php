@@ -75,10 +75,6 @@ class Presentacion extends My_Controller {
         return $menu = $this->load->view('presentacion/modulos');
     }
 
-    function administracionmenu() {
-        $this->load->view('presentacion/menu', $this->data);
-    }
-
     function consultadatosmenu() {
         $idgeneral = $this->input->post('idgeneral');
         if (!empty($idgeneral)) {

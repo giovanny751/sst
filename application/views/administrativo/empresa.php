@@ -1,8 +1,5 @@
 <div class="row">
     <div class="circuloIcon" id="guardar"><i class="fa fa-floppy-o fa-3x"></i></div>
-<!--    <div class="circuloIcon" ><i class="fa fa-trash-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-pencil-square-o fa-3x"></i></div>
-    <div class="circuloIcon" ><i class="fa fa-folder-open fa-3x"></i></div>-->
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -70,6 +67,30 @@
                     </div>
                 </div>
                 <div class="row">
+                    <label for="arl" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        ARL
+                    </label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <input type="text" id="arl" name="arl" class="form-control"  value="<?php echo $informacion[0]->emp_arl ?>" >
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="sector" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        Sector economico
+                    </label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <select name="sector" id="sector" class="form-control">
+                            <option value="">::Seleccionar::</option>
+                            <?php
+                            foreach ($sector as $s):
+                                $selected = ($informacion[0]->secEco_id == $s->secEco_id) ? "selected" : "";
+                                ?>
+                                <option  value="<?php echo $s->secEco_id ?>" <?php echo $selected ?>><?php echo $s->secEco_tipo ?></option>
+<?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
                     <label for="empleados" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <span class="campoobligatorio">*</span>Numero de empleados
                     </label>
@@ -86,14 +107,10 @@
                             <option value="">::Seleccionar::</option>
                             <?php
                             foreach ($actividadeconomica as $ae) {
-                                $selected = "";
-                                if ($informacion[0]->actEco_id == $ae->actEco_id) {
-                                    $selected = "selected";
-                                }
+                                $selected = ($informacion[0]->actEco_id == $ae->actEco_id) ? "selected" : "";
                                 ?>
-
                                 <option value="<?php echo $ae->actEco_id ?>" <?php echo $selected ?> ><?php echo $ae->actEco_Detalle ?></option>
-                            <?php } ?>
+<?php } ?>
                         </select>
                     </div>
                 </div>
@@ -105,7 +122,7 @@
                         if (!empty($informacion[0]->emp_logo)) {
                             ?>
                             <center><img  style="width: 350;height: 155px;border-radius: 15px" src="<?php echo base_url('uploads') . '/empresa/' . $informacion[0]->emp_id . "/" . $informacion[0]->emp_logo; ?>"></center>
-                        <?php } ?>
+    <?php } ?>
                 </div> 
                 <div class="row">
                     <label for="dimension1" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -132,7 +149,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label for="representante" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <label for="userfile" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         Logo
                     </label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">    
@@ -150,11 +167,13 @@
             <ul class="dropdown-menu pull-right" role="menu">
                 <li>
                     <a href="<?php echo base_url("index.php/administrativo/cargos") ?>">
-                        Ver Cargos </a>
+                        Ver Cargos 
+                    </a>
                 </li>
                 <li>
                     <a href="<?php echo base_url("index.php/administrativo/organigrama") ?>">
-                        Ver Organigrama </a>
+                        Ver Organigrama 
+                    </a>
                 </li>
             </ul>
         </div>
@@ -165,11 +184,13 @@
             <ul class="dropdown-menu pull-right" role="menu">
                 <li>
                     <a href="<?php echo base_url("index.php/administrativo/listadoempleados") ?>">
-                        Ver Empleados </a>
+                        Ver Empleados 
+                    </a>
                 </li>
                 <li>
                     <a href="<?php echo base_url("index.php/administrativo/importar_empleados") ?>">
-                        Importar Empleados </a>
+                        Importar Empleados 
+                    </a>
                 </li>
             </ul>
         </div>

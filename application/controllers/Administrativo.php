@@ -983,6 +983,7 @@ class Administrativo extends My_Controller {
         }
 
         $this->data['ciudad'] = $this->Ingreso_model->ciudades();
+        $this->data['sector'] = $this->Ingreso_model->sectorEconomico();
         $this->data['tamano'] = $this->Tamano_empresa_model->detail();
         $this->data['informacion'] = $this->Empresa_model->detail();
         $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
@@ -1009,6 +1010,8 @@ class Administrativo extends My_Controller {
                 "Dim_id" => $this->input->post("dimension1"),
                 "Dimdos_id" => $this->input->post("dimension2"),
                 "emp_representante" => $this->input->post("representante"),
+                "emp_arl" => $this->input->post("arl"),
+                "secEco_id" => $this->input->post("sector")
                     //            "emp_logo"=>$this->input->post("")
             );
             $datos = $this->Empresa_model->detail();

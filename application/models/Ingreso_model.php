@@ -26,7 +26,12 @@ class Ingreso_model extends CI_Model {
             
         }
     }
-
+    
+    function sectorEconomico(){
+        $data = $this->db->get("sector_economico");
+        return $data->result();
+    }
+    
     function guardarPermisosMetodo($data) {
 
         $this->db->insert_batch("permisos_metodo", $data);
