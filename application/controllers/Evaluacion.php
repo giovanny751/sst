@@ -135,6 +135,13 @@ class Evaluacion extends My_Controller {
             $e->getMessage();
         }
     }
+    function obtener_respuestas($id) {
+        try {
+            return $respuestas=$this->Evaluacion__model->obtener_respuestas($id);
+        } catch (exception $e) {
+            $e->getMessage();
+        }
+    }
 
 }
 

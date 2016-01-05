@@ -30,6 +30,12 @@ class Evaluacion__model extends CI_Model {
         $datos = $this->db->get('evaluacion', $post);
         return $datos = $datos->result();
     }
+    function obtener_respuestas($id) {
+        $this->db->where('pre_id',$id);
+        $this->db->where('activo','S');
+        $datos = $this->db->get('respuestas');
+        return $datos = $datos->result();
+    }
 
     function consult_evaluacion($post) {
         if (isset($post['eva_id']))
