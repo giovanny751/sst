@@ -25,17 +25,20 @@
         <hr />
         <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <label for="empresa">Empleado:</label>  
+                <label for="empresa"><span class="campoobligatorio">*</span>Empleado:</label>  
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                 <select name="empleado" id="empleado" class="form-control">
                     <option value="">::Seleccionar::</option>
+                    <?php foreach($empleados as $empleado): ?>
+                        <option value="<?php echo $empleado->Emp_Id ?>"><?php echo $empleado->Emp_Nombre." ".$empleado->Emp_Apellidos ?></option>
+                    <?php endforeach;?>
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <label for="lugar">Lugar:</label>  
+                <label for="lugar"><span class="campoobligatorio">*</span>Lugar</label>  
             </div>
             <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                 <input type="text" name="lugar" id="lugar" class="form-control">
@@ -43,30 +46,68 @@
         </div>
         <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <label for="area">Area:</label>
+                <label for="dimension1"><span class="campoobligatorio">*</span><?php echo $empresa->Dim_id ?></label>
             </div>
             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                <input type="text" name="area" id="area" class="form-control">
+                <select name="dimension1" id="dimension1" class="form-control">
+                    <option value="">::Seleccionar::</option>
+                    <?php foreach($dimension as $d): ?>
+                        <option value="<?php echo $d->dim_id; ?>"><?php echo $d->dim_descripcion ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <label for="zona">Zona:</label>
+                <label for="dimension2"><?php echo $empresa->Dimdos_id ?></label>
             </div>
             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                <input type="text" name="zona" id="zona" class="form-control">
+                <select name="dimension2" id="dimension2" class="form-control">
+                    <option value="">::Seleccionar::</option>
+                    <?php foreach($dimension2 as $d2): ?>
+                        <option value="<?php echo $d2->dim_id; ?>"><?php echo $d2->dim_descripcion ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <label for="jefe">Jefe Inmediato:</label>
-            </div>
-            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                <input type="text" name="jefe" id="jefe" class="form-control">
+            <div class="form-group">
+                <label for="zona" class="col-sm-1 control-label"><span class="campoobligatorio">*</span>Zona</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="zona" name="zona" />
+                </div>
+                <label for="jefe" class="col-sm-1 control-label">Jefe Inmediato</label>
+                <div class="col-sm-5">
+                    <input type="text" name="jefe" id="jefe" class="form-control">
+                </div>
             </div>
         </div>
         <hr />
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <label>1. Tipo de Evento:</label>
+                <center>
+                    <label><b>INCAPACIDAD</b></label>
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label for="fechaInicioIncapacidad" class="col-sm-1 control-label">Fecha Inicio</label>
+                <div class="col-sm-2">
+                    <input type="date" class="fecha form-control" id="fechaInicioIncapacidad" name="fechaInicioIncapacidad" />
+                </div>
+                <label for="fechaFinIncapacidad" class="col-sm-1 control-label">Fecha Final</label>
+                <div class="col-sm-2">
+                    <input type="date" class="fecha form-control" id="fechaFinIncapacidad" name="fechaFinIncapacidad" />
+                </div>
+                <label for="diasIncapacidad" class="col-sm-1 control-label">Dias Incapacidad</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="diasIncapacidad" disabled="" align="center" />
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label><span class="campoobligatorio">*</span>1. Tipo de Evento:</label>
             </div>
         </div>
         <?php 
@@ -143,7 +184,7 @@
         <hr />
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                <label for="sitio">7. Sitio o Lugar del Accidente: </label>
+                <label for="sitio"><span class="campoobligatorio">*</span>7. Sitio o Lugar del Accidente: </label>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                 <input type="text" name="sitio" id="sitio" class="form-control">
@@ -151,24 +192,22 @@
         </div>
         <div class="row">
             <div class="form-group">
-                <label class="col-sm-3 control-label">8. Hora y Fecha del Accidente</label>
+                <label class="col-sm-3 control-label"><span class="campoobligatorio">*</span>8. Hora y Fecha del Accidente</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control fecha" name="accidenteFecha" placeholder="Fecha">
+                </div>
                 <div class="col-sm-1">
                     <input type="text" class="form-control" name="accidenteHora" placeholder="HH:MM" >
                 </div>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control fecha" name="accidenteFecha" placeholder="Fecha" readonly="">
-                </div>
-                <label class="col-sm-2 control-label" for="accidenteReportado">10. Accidente reportado por(nombre):</label>
+                <label class="col-sm-2 control-label" for="accidenteReportado"><span class="campoobligatorio">*</span>10. Accidente reportado por(nombre):</label>
                 <div class="col-sm-4">
-                    <select name="accidenteReportado" class="form-control" id="accidenteReportado">
-                        <option value="">::Seleccionar::(empleado)</option>
-                    </select>
+                    <input type="text" name="accidenteReportado" id="accidenteReportado" class="form-control" />
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <label for="descripcion">11. Descripción de lo ocurrido:<i>(posición,personas,partes,documentos)</i></label>
+                <label for="descripcion"><span class="campoobligatorio">*</span>11. Descripción de lo ocurrido:<i>(posición,personas,partes,documentos)</i></label>
             </div>
         </div>
         <div class="row">
@@ -221,14 +260,6 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="form-group">
-                <label for="fecharep" class="col-sm-2 control-label">13. Fecha del Reporte</label>
-                <div class="col-sm-9">
-                    <input type="date" name="fecharep" class="fecha form-control" placeholder="Fecha" readonly="readonly">
-                </div>
-            </div>
-        </div>
     </form>
 </div>
 <br>
@@ -236,15 +267,15 @@
 <br>
 <script type="text/javascript">
     $("#guardarAccidente").click(function(){
-        var url = "";
+        var url = "<?php echo base_url("index.php/Administrativo/guardarAccidente"); ?>";
         var datos = $("#formAccidente").serialize();
         
         $.post(url,datos)
                 .done(function(msg){
                     alerta("verde","Guardado");
-                    if(confirm("Desea generar otro accidente?")){
-                        //window.location.href = "<?php echo base_url("index.php/Administrativo/accidente") ?>";
-                    }
+//                    if(confirm("Desea generar otro accidente?")){
+//                        //window.location.href = "<?php echo base_url("index.php/Administrativo/accidente") ?>";
+//                    }
                 })
                 .fail(function(msg){
                     alerta("rojo","Error");

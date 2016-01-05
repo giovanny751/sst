@@ -1289,12 +1289,20 @@ class Administrativo extends My_Controller {
         $this->load->model(array('Tipoevento_model'
                                 ,'Claseevento_model'
                                 ,'Partescuerpo_model'
-                                ,'Riesgoclasificacion_model'));
+                                ,'Riesgoclasificacion_model'
+                                , 'Empleado_model'
+                                ,'Dimension2_model'
+                                ,'Dimension_model'
+                                , "Empresa_model"));
         
         $this->data["tipo_eventos"] = $this->Tipoevento_model->detail();
         $this->data["clases_eventos"] = $this->Claseevento_model->detail();
         $this->data["partes_del_cuerpo"] = $this->Partescuerpo_model->detail();
         $this->data["tipo_riesgos"] = $this->Riesgoclasificacion_model->detail();
+        $this->data["empleados"] = $this->Empleado_model->detail_order();
+        $this->data['dimension'] = $this->Dimension_model->detail();
+        $this->data['dimension2'] = $this->Dimension2_model->detail();
+        $this->data['empresa'] = $this->Empresa_model->detail()[0];
         
         $this->layout->view("administrativo/accidente", $this->data);
     }
@@ -1302,6 +1310,27 @@ class Administrativo extends My_Controller {
     function guardarAccidente(){
         try {
             
+            $data = array(
+                "emp_id" => $this->input->post("empleado")
+                ,"acc_lugar" => $this->input->post("lugar")
+                ,"dim1_id" => $this->input->post("dimension1")
+                ,"dim2_id" => $this->input->post("dimension2")
+                ,"acc_zona" => $this->input->post("zona")
+                ,"acc_jefeInmediato" => $this->input->post("jefe")
+                ,"tipEve_id" => $this->input->post("tipo")
+                ,"acc_lugarAccidente" => $this->input->post("sitio")
+                ,"acc_fechaAccidente" => $this->input->post("accidenteFecha")." ".$this->input->post("accidenteHora")
+                ,"acc_descripcion" => $this->input->post("descripcion")
+                ,"creatorUser" => $this->data["usu_id"]
+                ,"creationDate" => date("Y-m-d H:i:s")
+            );
+            
+            $claseEventos = $this->input->post("claseEventos");
+            $parteCuerpo = $this->input->post("parteCuerpo");
+            $tipoRiesgo = $this->input->post("tipoRiesgo");
+            
+            
+            /*
             
             $data = array(
                 "vac_fechaInicio" => $this->input->post("iniciovacaciones"),
@@ -1313,10 +1342,12 @@ class Administrativo extends My_Controller {
                 $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
             else
                 throw new Exception("Error por favor comunicarse con el administrador");
+             
+             */
         } catch (exception $e) {
             $data['message'] = $e->getMessage();
         } finally {
-            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+            //$this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
