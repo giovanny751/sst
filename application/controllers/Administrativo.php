@@ -25,18 +25,19 @@ class Administrativo extends My_Controller {
     function creacionempleados() {
         try {
             $this->data['empleado'] = "";
-            $this->load->model('Tipocontrato_model');
-            $this->load->model('Sexo_model');
-            $this->load->model('Estadocivil_model');
-            $this->load->model('Tipoaseguradora_model');
-            $this->load->model('Dimension2_model');
-            $this->load->model('Dimension_model');
-            $this->load->model('Cargo_model');
-            $this->load->model('Tipo_aseguradora__model');
-            $this->load->model('Empleadotipoaseguradora_model');
-            $this->load->model('Empresa_model');
-            $this->load->model('Empleadoregistro_model');
-            $this->load->model('Empleadoresponsable_model');
+            $this->load->model(array(
+                'Tipocontrato_model',
+                'Sexo_model','Estadocivil_model',
+                'Tipoaseguradora_model',
+                'Dimension2_model',
+                'Dimension_model',
+                'Cargo_model',
+                'Tipo_aseguradora__model',
+                'Empleadotipoaseguradora_model',
+                'Empresa_model',
+                'Empleadoregistro_model',
+                'Empleadoresponsable_model'
+                ));
             $empleadoId = null;
             if (!empty($this->input->post('emp_id')))
                 $empleadoId = $this->input->post('emp_id');
@@ -44,10 +45,7 @@ class Administrativo extends My_Controller {
                 $empleadoId = $this->session->guardadoExitoIdEmpleado;
 
             if (isset($empleadoId)) {
-                $this->load->model('Empleadocarpeta_model');
-                $this->load->model('Empleado_model');
-                $this->load->model('Vacaciones_model');
-                $this->load->model('Empleadoausentismo_model');
+                $this->load->model(array('Empleadocarpeta_model','Empleado_model','Vacaciones_model','Empleadoausentismo_model'));
                 $this->data['vacaciones'] = $this->Vacaciones_model->detailxEmpleado($empleadoId);
                 $this->data['ausentismo'] = $this->Empleadoausentismo_model->detailxEmpleado($empleadoId);
                 $this->data['empleado'] = $this->Empleado_model->consultaempleadoxid($empleadoId);
@@ -303,8 +301,7 @@ class Administrativo extends My_Controller {
     function guardarregistroempleado() {
         try {
             $post = $this->input->post();
-            $this->load->model('Empleado_model');
-            $this->load->model('Empleadoregistro_model');
+            $this->load->model(array('Empleado_model','Empleadoregistro_model'));
             $tamano = round($_FILES["archivo"]["size"] / 1024, 1) . " KB";
             $post["empReg_tamano"] = $tamano;
             $fecha = new DateTime();
@@ -333,13 +330,10 @@ class Administrativo extends My_Controller {
             if (!file_exists($targetPath)) {
                 mkdir($targetPath, 0777, true);
             }
-
             $target_path = $targetPath . '/' . basename($_FILES['archivo']['name']);
             if (move_uploaded_file($_FILES['archivo']['tmp_name'], $target_path)) {
                 
             }
-
-
             $detallecarpeta = $this->Empleadoregistro_model->detallexcarpeta($post['empReg_carpeta']);
             $this->output->set_content_type('application/json')->set_output(json_encode($detallecarpeta));
         } catch (exception $e) {
@@ -351,7 +345,7 @@ class Administrativo extends My_Controller {
 
     function guardarempleado() {
         try {
-            $this->load->model('Empleado_model');
+            $this->load->model(array('Empleado_model','Empleadotipoaseguradora_model'));
 
             $data = array(
                 'Emp_codigo' => $this->input->post('codigo'),
@@ -383,12 +377,9 @@ class Administrativo extends My_Controller {
             );
 
             $id = $this->Empleado_model->create($data);
-
-            $this->load->model('Empleadotipoaseguradora_model');
             $tipoaseguradora = $this->input->post("tipoaseguradora");
             $data = array();
             if (!empty($tipoaseguradora[0])):
-
                 $nombreaseguradora = $this->input->post("nombreaseguradora");
                 for ($i = 0; $i < count($tipoaseguradora); $i++) {
                     if ($nombreaseguradora[$i] != ""):
@@ -576,12 +567,7 @@ class Administrativo extends My_Controller {
 
     function creacionusuarios() {
         try {
-            $this->load->model('Sexo_model');
-            $this->load->model('Cargo_model');
-            $this->load->model('Empleado_model');
-            $this->load->model('Estados_model');
-            $this->load->model('User_model');
-            $this->load->model('Roles_model');
+            $this->load->model(array('Sexo_model','Cargo_model','Empleado_model','Estados_model','User_model','Roles_model'));
             $this->data['roles'] = $this->Roles_model->roles();
             $this->data['empleado'] = $this->Empleado_model->detail();
             $this->data['estado'] = $this->Estados_model->detail();
@@ -603,10 +589,7 @@ class Administrativo extends My_Controller {
 
     function listadousuarios() {
         try {
-            $this->load->model('Tipo_documento_model');
-            $this->load->model('Estados_model');
-            $this->load->model('User_model');
-            $this->load->model('Roles_model');
+            $this->load->model(array('Tipo_documento_model','Estados_model','User_model','Roles_model'));
             $this->data['roles'] = $this->Roles_model->roles();
             $this->data['estado'] = $this->Estados_model->detail();
             $this->data["tipodocumento"] = $this->Tipo_documento_model->detail();
@@ -637,8 +620,7 @@ class Administrativo extends My_Controller {
 
     function guardarusuario() {
         try {
-            $this->load->model('User_model');
-            $this->load->model('Roles_model');
+            $this->load->model(array('User_model','Roles_model'));
             $consultaexistencia = $this->User_model->consultausuarioxcedula($this->input->post('cedula'));
             if (empty($consultaexistencia)) {
                 $data[] = array(
@@ -742,8 +724,7 @@ class Administrativo extends My_Controller {
 
     function cargos() {
         try {
-            $this->load->model("Empresa_model");
-            $this->load->model('Cargo_model');
+            $this->load->model(array("Empresa_model",'Cargo_model'));
             $this->data["cargo"] = $this->Cargo_model->detail();
             $this->data['informacion'] = $this->Empresa_model->detail();
             $this->layout->view("administrativo/cargos", $this->data);
@@ -888,8 +869,7 @@ class Administrativo extends My_Controller {
 
     function eliminarcargo() {
         try {
-            $this->load->model('Cargo_model');
-            $this->load->model('Empleado_model');
+            $this->load->model(array('Cargo_model','Empleado_model'));
             if (empty($this->Empleado_model->validarExistencia($this->input->post('id')))) {
                 $consulta = $this->Cargo_model->consultahijos($this->input->post('id'));
                 if ($consulta > 0)
@@ -944,8 +924,7 @@ class Administrativo extends My_Controller {
     }
 
     function dimension2() {
-        $this->load->model('Dimension2_model');
-        $this->load->model('Empresa_model');
+        $this->load->model(array('Dimension2_model','Empresa_model'));
         $this->data['empresa'] = $this->Empresa_model->detail();
         if (!empty($this->data['empresa'][0]->Dimdos_id)) {
             $this->data['dimension'] = $this->Dimension2_model->detail();
@@ -1024,8 +1003,7 @@ class Administrativo extends My_Controller {
     }
 
     function dimension() {
-        $this->load->model('Dimension_model');
-        $this->load->model('Empresa_model');
+        $this->load->model(array('Dimension_model','Empresa_model'));
         $this->data['empresa'] = $this->Empresa_model->detail();
         if (!empty($this->data['empresa'][0]->Dim_id)) {
             $this->data['dimension'] = $this->Dimension_model->detail();
@@ -1097,23 +1075,17 @@ class Administrativo extends My_Controller {
     }
 
     function empresa() {
-        $this->load->model("Empresa_model");
-        $this->load->model('Tamano_empresa_model');
-        $this->load->model('Ingreso_model');
-        $this->load->model('Actividadeconomica_model');
+        $this->load->model(array("Empresa_model",'Tamano_empresa_model','Ingreso_model','Actividadeconomica_model'));
         $this->data['mensaje'] = "";
         if ($this->session->guardadoexito == "guardado con exito") {
-//                echo "esta aca";die;
             $this->data['mensaje'] = "guardado con exito";
             $this->session->guardadoexito = "xyz";
         }
-
         $this->data['ciudad'] = $this->Ingreso_model->ciudades();
         $this->data['sector'] = $this->Ingreso_model->sectorEconomico();
         $this->data['tamano'] = $this->Tamano_empresa_model->detail();
         $this->data['informacion'] = $this->Empresa_model->detail();
         $this->data['actividadeconomica'] = $this->Actividadeconomica_model->detail();
-//        var_dump($this->data['informacion']);die;
         $this->layout->view("administrativo/empresa", $this->data);
     }
 
