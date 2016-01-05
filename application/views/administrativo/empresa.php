@@ -92,10 +92,10 @@
                 </div>
                 <div class="row">
                     <label for="empleados" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                        <span class="campoobligatorio">*</span>Numero de empleados
+                        Numero de empleados
                     </label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                        <input type="text" id="empleados" name="empleados" class="form-control obligatorio"  value="<?php echo $informacion[0]->numEmp_id ?>" >
+                        <input type="text" id="empleados" name="empleados" class="form-control"  value="<?php echo $informacion[0]->numEmpleados ?>" disabled="disabled" />
                     </div>
                 </div>
                 <div class="row">
