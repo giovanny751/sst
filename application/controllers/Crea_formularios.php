@@ -15,9 +15,6 @@ class Crea_formularios extends My_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Crea_formularios_model');
-        $this->load->library('tcpdf/tcpdf.php');
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     public function index() {

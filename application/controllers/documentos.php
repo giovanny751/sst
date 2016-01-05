@@ -17,8 +17,6 @@ class documentos extends My_Controller {
         parent::__construct();
 
         $this->load->model('Documentos__model');
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     function listado() {

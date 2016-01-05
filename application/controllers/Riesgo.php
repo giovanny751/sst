@@ -15,7 +15,6 @@ class Riesgo extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        validate_login($this->session->userdata('usu_id'));
     }
 
     function nuevoriesgo() {

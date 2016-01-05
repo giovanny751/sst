@@ -16,8 +16,6 @@ class Presentacion extends My_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model("Roles_model");
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     function menu() {

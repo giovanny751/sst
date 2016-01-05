@@ -14,8 +14,6 @@ class Indicador extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     function nuevoindicador() {

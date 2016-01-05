@@ -7,9 +7,7 @@ class Evaluacion extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('Evaluacion__model');
-        validate_login($this->session->userdata('usu_id'));
     }
 
     function index() {

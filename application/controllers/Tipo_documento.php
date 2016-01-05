@@ -15,8 +15,6 @@ class Tipo_documento extends My_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Tipo_documento__model');
-        $this->data["usu_id"] = $this->session->userdata('usu_id');
-        validate_login($this->data["usu_id"]);
     }
 
     function index() {
