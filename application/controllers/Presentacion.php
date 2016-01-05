@@ -23,26 +23,33 @@ class Presentacion extends My_Controller {
     }
 
     function principal() {
-        $id = $this->data['user']['emp_id'];
-        $this->load->model('Planes_model');
-        $this->load->model('Tarea_model');
-        $this->load->model('Dimension_model');
-        $this->load->model('Dimension2_model');
-        $this->load->model('Empresa_model');
-        $this->data['inicio'] = $this->Ingreso_model->admin_inicio();
-        $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
-        $this->data['planes'] = $this->Planes_model->detail();
-        $this->data['dimension'] = $this->Dimension_model->detail();
-        $this->data['dimension2'] = $this->Dimension2_model->detail();
-        //$this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto($_POST['plan'],$_POST['dimensionuno'],$_POST['dimensiondos']);
-        $this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto();
-        $this->data['mesesplan'] = $this->Planes_model->mesesPlan();
-        $this->data['listameses'] = $this->Planes_model->listaMesesPlan();
+        
+        if ($this->data['user']['rol_id'] != 60) {
+            $id = $this->data['user']['emp_id'];
+            $this->load->model('Planes_model');
+            $this->load->model('Tarea_model');
+            $this->load->model('Dimension_model');
+            $this->load->model('Dimension2_model');
+            $this->load->model('Empresa_model');
+            $this->data['inicio'] = $this->Ingreso_model->admin_inicio();
+            $this->data['content'] = $this->modulos('prueba', null, $this->data['user']['usu_id']);
+            $this->data['planes'] = $this->Planes_model->detail();
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->data['dimension2'] = $this->Dimension2_model->detail();
+            //$this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto($_POST['plan'],$_POST['dimensionuno'],$_POST['dimensiondos']);
+            $this->data['presupuesto'] = $this->Tarea_model->datosTareaPresupuesto();
+            $this->data['mesesplan'] = $this->Planes_model->mesesPlan();
+            $this->data['listameses'] = $this->Planes_model->listaMesesPlan();
 //        $this->data['tareasplangrafica'] = $this->Planes_model->tareasPlanGrafica();
-        $this->data['empresa']=$this->Empresa_model->detail();
-        $this->data['tareasphva'] = $this->Planes_model->tareasPHVA();
-        $this->data['tareasphvaavance'] = $this->Planes_model->tareasPHVAAvance();
-        $this->layout->view('presentacion/principal', $this->data);
+            $this->data['empresa'] = $this->Empresa_model->detail();
+            $this->data['tareasphva'] = $this->Planes_model->tareasPHVA();
+            $this->data['tareasphvaavance'] = $this->Planes_model->tareasPHVAAvance();
+            $this->layout->view('presentacion/principal', $this->data);
+        } else {
+            $this->load->model("User_model");
+            $this->data['evaluacion']=$this->User_model->evaluacion_usuario($this->data['user']['usu_id']);
+            $this->layout->view('evaluacion/quiz', $this->data);
+        }
     }
 
     function NoTienePermisos() {
@@ -154,12 +161,12 @@ class Presentacion extends My_Controller {
 
     function eliminarmodulo() {
         try {
-            if($this->Ingreso_model->eliminar($this->input->post('idgeneral')) == false) 
+            if ($this->Ingreso_model->eliminar($this->input->post('idgeneral')) == false)
                 throw new Exception("Error al eliminar en la base de datos");
         } catch (exception $e) {
             $data['message'] = $e->getMessage();
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
-        } 
+        }
     }
 
     function permisosmenu($iduser, $datosmodulos = 'prueba', $dato = null) {
@@ -565,7 +572,7 @@ class Presentacion extends My_Controller {
             $this->Ingreso_model->guardarPermisosMetodo($data);
         } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }
@@ -581,7 +588,7 @@ class Presentacion extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($array));
         } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }

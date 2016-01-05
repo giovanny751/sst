@@ -45,6 +45,35 @@ class Evaluacion__model extends CI_Model {
         $datos = $datos->result();
         return $datos;
     }
+    function nombre_evaluacion($post) {
+        if (isset($post['eva_id']))
+            if ($post['eva_id'] != "")
+                $this->db->where('eva_id', $post['eva_id']);
+        if (isset($post['eva_nombre']))
+            if ($post['eva_nombre'] != "")
+                $this->db->like('eva_nombre', $post['eva_nombre']);
+        $this->db->select('eva_id');
+        $this->db->select('eva_nombre');
+        $this->db->where('ACTIVO', 'S');
+        $datos = $this->db->get('evaluacion');
+        $datos = $datos->result();
+        return $datos;
+    }
+    function preguntas_evaluacion($post) {
+        
+        $this->db->select('preguntas.pre_id,preguntas.pre_contexto, preguntas.pre_nombre,'
+                . 'area.are_nombre, tema.tem_nombre, tipo_pregunta.tipPre_nombre');
+        $this->db->where('preguntas.activo', 'S');
+        $this->db->where('pre_visible', 'S');
+        $this->db->where('eva_id', $post['eva_id']);
+        $this->db->join('tema','tema.tem_id=preguntas.tem_id');
+        $this->db->join('area','area.are_id=preguntas.are_id');
+        $this->db->join('tipo_pregunta','tipo_pregunta.tipPre_id=preguntas.tipPre_id');
+        $this->db->order_by('preguntas.eva_id,preguntas.are_id,preguntas.tem_id,preguntas.tipPre_id');
+        $datos = $this->db->get('preguntas');
+        $datos = $datos->result();
+        return $datos;
+    }
 
     function ver_evaluaciones($post) {
 //        if (isset($post['eva_id']))

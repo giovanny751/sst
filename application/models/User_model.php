@@ -150,6 +150,18 @@ class User_model extends CI_Model {
             
         }
     }
+    function evaluacion_usuario($id) {
+        try {
+            $this->db->select("evaluacion.*");
+            $this->db->where("ue.use_id", $id);
+            $this->db->where("ue.useEva_activo", 'S');
+            $this->db->join("user_evaluacion ue ", "ue.eva_id=evaluacion.eva_id", "inner",false);
+            $user = $this->db->get('evaluacion');
+            return $user->result();
+        } catch (exception $e) {
+            
+        }
+    }
 
     function consultausuarioxid($id) {
         try {

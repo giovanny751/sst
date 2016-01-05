@@ -20,6 +20,18 @@ class Evaluacion extends My_Controller {
             
         }
     }
+    function prueba() {
+        try {
+            $post = $this->input->post();
+            $this->data['nombre_evaluacion'] = $this->Evaluacion__model->nombre_evaluacion($post);
+            $this->data['preguntas_evaluacion'] = $this->Evaluacion__model->preguntas_evaluacion($post);
+            $this->layout->view('evaluacion/prueba', $this->data);
+        } catch (exception $e) {
+            
+        } finally {
+            
+        }
+    }
 
     function consult_evaluacion() {
         try {
