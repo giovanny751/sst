@@ -1286,8 +1286,38 @@ class Administrativo extends My_Controller {
     }
 
     function accidente() {
-
+        $this->load->model(array('Tipoevento_model'
+                                ,'Claseevento_model'
+                                ,'Partescuerpo_model'
+                                ,'Riesgoclasificacion_model'));
+        
+        $this->data["tipo_eventos"] = $this->Tipoevento_model->detail();
+        $this->data["clases_eventos"] = $this->Claseevento_model->detail();
+        $this->data["partes_del_cuerpo"] = $this->Partescuerpo_model->detail();
+        $this->data["tipo_riesgos"] = $this->Riesgoclasificacion_model->detail();
+        
         $this->layout->view("administrativo/accidente", $this->data);
+    }
+    
+    function guardarAccidente(){
+        try {
+            
+            
+            $data = array(
+                "vac_fechaInicio" => $this->input->post("iniciovacaciones"),
+                "vac_fechaFin" => $this->input->post("finvacaciones"),
+                "vac_observaciones" => $this->input->post("observacionvacaciones"),
+                "emp_id" => $this->input->post("emp_id")
+            );
+            if ($this->Vacaciones_model->saveVacation($data) == true)
+                $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
+            else
+                throw new Exception("Error por favor comunicarse con el administrador");
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
 
 }

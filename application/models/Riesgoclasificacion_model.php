@@ -8,6 +8,7 @@ class Riesgoclasificacion_model extends CI_Model {
 
     function detail() {
         try {
+            $this->db->order_by("rieCla_categoria","asc");
             $datos = $this->db->get("riesgo_clasificacion");
             return $datos->result();
         } catch (exception $e) {

@@ -1,4 +1,9 @@
 <div class="row">
+    <div class="col-md-6">
+        <div class="circuloIcon" id="guardarAccidente" title="Guardar"><i class="fa fa-floppy-o fa-3x"></i></div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="tituloCuerpo">
             <span class="txtTitulo">
@@ -8,371 +13,261 @@
         </div>
     </div>
 </div>
-<div class='cuerpoContenido container'>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label><b>A. INFORMACIÓN GENERAL</b></label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Empresa:</label>  
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <input type="text" name="empresa" id="empresa" class="form-control">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Pais:</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <input type="text" name="pais" id="pais" class="form-control">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Reporte No.</label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <input type="text" name="reporte" id="reporte" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Lugar:</label>  
-        </div>
-        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-            <input type="text" name="lugar" id="lugar" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Area:</label>
-        </div>
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <input type="text" name="area" id="area" class="form-control">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Zona:</label>
-        </div>
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <input type="text" name="zona" id="zona" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Jefe Inmediato:</label>
-        </div>
-        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-            <input type="text" name="jefe" id="jefe" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <label>1. Tipo de Evento: </label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Accidente</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="evento" id="accidento">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Incidente</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="evento" id="incidente">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <label>2. Clase de Eventos: </label>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Lesión Personal</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="claseEven" id="lesion">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Daño a la Propiedad</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-           <input type="checkbox" name="claseEven" id="daño"> 
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Agente de Riesgo Cod.</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="claseEven" id="agente">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-offset-3 col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Impacto Ambiental</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="claseEven" id="impacto">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Seguridad Víal</label> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="claseEven" id="seguridad">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Incendio</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <input type="checkbox" name="claseEven" id="incendio">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label><b>B. DESCRIPCIÓN DEL ACCIDENTE</b></label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>3. Lesionado:</label>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <input type="text" name="lesionado" id="lesionado" class="form-control">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>4. Cédula No.</label>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <input type="text" name="cedula" id="cedula" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>5. Ocupación</label> 
-        </div>
-        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-            <input type="text" name="ocupacion" id="ocupacion" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>6. Parte del Cuerpo Afectada:</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="cuerpo" id="cabeza">  
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-           <label>Cabeza</label> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="cuerpo" id="torax">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Torax</label> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-           <input type="checkbox" name="cuerpo" id="abdomen"> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Abdomen</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-           <input type="checkbox" name="cuerpo" id="brazo"> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Brazo</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="cuerpo" id="mano">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Mano</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="cuerpo" id="ojos">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Ojos</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="cuello" id="cuello">  
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Cuello</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="espalda" id="espalda">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Espalda</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="pierna" id="pierna">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Pierna</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="pie" id="pie">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Pie</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="partesmul" id="partesmul">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Partes Multiples</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <label>7. Sitio o Lugar del Accidente: </label>
-        </div>
-        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-            <input type="text" name="sitio" id="sitio" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <label>8. Hora y Fecha del Accidente</label>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <label>9. Accidente reportado por(nombre):</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <label>10. Cargo de quien reporto</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="center">
-            <label>Hr</label>
-            <input type="text" name="hora" id="hora" class="form-control">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="center">
-            <label>Min</label>
-            <input type="text" name="minutos" id="minutos" class="form-control">
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" align="center">
-            <label>Fecha</label>
-            <input type="date" name="fecha" id="fecha" class="fecha form-control">
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <input type="text" name="accidenterepo" id="accidenterepo" class="form-control">
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <input type="text" name="cargorepo" id="cargorepo" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>11. Descripción de lo ocurrido:<i>(posición,personas,partes,documentos)</i></label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <textarea id="descripcion" class="form-control"></textarea>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>12. Tipo de Riesgo:</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="fisico" id="fisico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Fisico</label>  
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="explocion" id="explocion">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Incendio y Exploción</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-           <input type="checkbox" name="biologico" id="biologico"> 
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Biologico</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="locativo" id="locativo">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Locativos</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="mecanico" id="mecanico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Mecanico</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="quimico" id="quimico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Quimico</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="psicosociales" id="psicosociales">
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <label>Psicosociales</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="ergonomico" id="ergonomico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Ergonomico</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="electrico" id="electrico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Electrico</label>
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="right">
-            <input type="checkbox" name="trafico" id="trafico">
-        </div>
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <label>Trafico</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label><b>C. INFORMACIÓN DEL REPORTE</b></label>
-        </div> 
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-            <label>13. Fecha del Reporte</label>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <label>14. Reporte Elaborado por(nombre):</label>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <label>15. Cargo de quien elaboro el reporte</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" align="center">
-            <label>Fecha</label>
-            <input type="date" name="fecharep" id="fecharep" class="fecha form-control">
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <input type="text" name="reporteelabor" id="reporteelabor" class="form-control">
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <input type="text" name="cargoeleb" id="cargoeleb" class="form-control">
-        </div>
-    </div>
+<div class='cuerpoContenido'>
+    <form id="formAccidente" method="post">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <center>
+                    <label><b>A. INFORMACIÓN GENERAL</b></label>
+                </center>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <label for="empresa">Empleado:</label>  
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <select name="empleado" id="empleado" class="form-control">
+                    <option value="">::Seleccionar::</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <label for="lugar">Lugar:</label>  
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                <input type="text" name="lugar" id="lugar" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <label for="area">Area:</label>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                <input type="text" name="area" id="area" class="form-control">
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <label for="zona">Zona:</label>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                <input type="text" name="zona" id="zona" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <label for="jefe">Jefe Inmediato:</label>
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                <input type="text" name="jefe" id="jefe" class="form-control">
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label>1. Tipo de Evento:</label>
+            </div>
+        </div>
+        <?php 
+        $i = 0; 
+        $j = 0;
+        foreach($tipo_eventos as $tipo_evento): 
+            echo ($i == 0) ? "<div class='row'><div class='col-sm-offset-1 form-group'>":""; ?>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label>
+                        <input type="radio" name="tipo" value="<?php echo $tipo_evento->tipEve_id; ?>"> <b><?php echo $tipo_evento->tipEve_descripcion;  ?></b>
+                    </label>
+                </div>
+            </div>
+            <?php 
+            $i = (($i == 3) ? 0 : $i+1);
+            $j++;
+            echo ($i == 0 || count($tipo_eventos) == $j) ? "</div></div>":""; 
+        endforeach; ?>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label>2. Clase de Eventos:</label>
+            </div>
+        </div>
+        <?php 
+        $i = 0; 
+        $j = 0;
+        foreach($clases_eventos as $clase_evento): 
+            echo ($i == 0) ? "<div class='row'><div class='col-sm-offset-1 form-group'>":""; ?>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="claseEventos[]" value="<?php echo $clase_evento->claEve_id; ?>"> <b><?php echo $clase_evento->claEve_descripcion;  ?></b>
+                    </label>
+                </div>
+            </div>
+            <?php 
+            $i = (($i == 3) ? 0 : $i+1);
+            $j++;
+            echo ($i == 0 || count($clases_eventos) == $j) ? "</div></div>":""; 
+        endforeach; ?>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <center>
+                    <label><b>B. DESCRIPCIÓN DEL ACCIDENTE</b></label>
+                </center>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label>6. Parte del Cuerpo Afectada:</label>
+            </div>
+        </div>
+        <?php 
+        $i = 0; 
+        $j = 0;
+        foreach($partes_del_cuerpo as $parte_del_cuerpo): 
+            echo ($i == 0) ? "<div class='row'><div class='col-sm-offset-1 form-group'>":""; ?>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="parteCuerpo[]" value="<?php echo $parte_del_cuerpo->parCue_id; ?>"> <b><?php echo $parte_del_cuerpo->parCue_descripcion;  ?></b>
+                    </label>
+                </div>
+            </div>
+            <?php 
+            $i = (($i == 3) ? 0 : $i+1);
+            $j++;
+            echo ($i == 0 || count($partes_del_cuerpo) == $j) ? "</div></div>":""; 
+        endforeach; ?>
+        <hr />
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <label for="sitio">7. Sitio o Lugar del Accidente: </label>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                <input type="text" name="sitio" id="sitio" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">8. Hora y Fecha del Accidente</label>
+                <div class="col-sm-1">
+                    <input type="text" class="form-control" name="accidenteHora" placeholder="HH:MM" >
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control fecha" name="accidenteFecha" placeholder="Fecha" readonly="">
+                </div>
+                <label class="col-sm-2 control-label" for="accidenteReportado">10. Accidente reportado por(nombre):</label>
+                <div class="col-sm-4">
+                    <select name="accidenteReportado" class="form-control" id="accidenteReportado">
+                        <option value="">::Seleccionar::(empleado)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label for="descripcion">11. Descripción de lo ocurrido:<i>(posición,personas,partes,documentos)</i></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <textarea id="descripcion" name="descripcion" class="form-control"></textarea>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label>12. Tipo de Riesgo:</label>
+            </div>
+        </div>
+        <?php 
+        $i = 0; 
+        $j = 0;
+        foreach($tipo_riesgos as $tipo_riesgo): 
+            echo ($i == 0) ? "<div class='row'><div class='col-sm-offset-1 form-group'>":""; ?>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="tipoRiesgo[]" value="<?php echo $tipo_riesgo->rieCla_id; ?>"> <b><?php echo $tipo_riesgo->rieCla_categoria;  ?></b>
+                    </label>
+                </div>
+            </div>
+            <?php 
+            $i = (($i == 3) ? 0 : $i+1);
+            $j++;
+            echo ($i == 0 || count($tipo_riesgos) == $j) ? "</div></div>":""; 
+        endforeach; ?>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <center>
+                    <label><b>C. INFORMACIÓN DEL REPORTE</b></label>
+                </center>
+            </div> 
+        </div>
+        <hr />
+        <div id="correoAdicional">
+            <div class="row">
+                <div class="form-group">
+                    <label for="correo" class="col-sm-2 control-label">Correo</label>
+                    <div class="col-sm-9">
+                        <input type="email" class="form-control" name="correo[]" id="correo" placeholder="Correo">
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="button" class="btn btn-success agregarCorreo"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label for="fecharep" class="col-sm-2 control-label">13. Fecha del Reporte</label>
+                <div class="col-sm-9">
+                    <input type="date" name="fecharep" class="fecha form-control" placeholder="Fecha" readonly="readonly">
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <br>
 <br>
 <br>
+<script type="text/javascript">
+    $("#guardarAccidente").click(function(){
+        var url = "";
+        var datos = $("#formAccidente").serialize();
+        
+        $.post(url,datos)
+                .done(function(msg){
+                    alerta("verde","Guardado");
+                    if(confirm("Desea generar otro accidente?")){
+                        //window.location.href = "<?php echo base_url("index.php/Administrativo/accidente") ?>";
+                    }
+                })
+                .fail(function(msg){
+                    alerta("rojo","Error");
+                })
+        
+    });
+    $("body").on("click",".agregarCorreo",function(){
+        var html = "";
+        html += "<div class='row'>";
+        html += "<div class='form-group'>";
+        html += "<label for='correo' class='col-sm-2 control-label'>Correo</label>";
+        html += "<div class='col-sm-9'>";
+        html += "<input type='email' class='form-control' name='correo[]' id='correo' placeholder='Correo'>";
+        html += "</div>";
+        html += "<div class='col-sm-1'>";
+        html += "<button type='button' class='btn btn-danger eliminarCorreo'><i class='fa fa-times'></i></button>";
+        html += "</div>";
+        html += "</div>";
+        html += "</div>";
+        $("#correoAdicional").append(html);
+    });
+    $("body").on("click",".eliminarCorreo",function(){
+        $(this).parents("div.row")[0].remove();
+    });
+    
+</script>
