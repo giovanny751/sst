@@ -8,17 +8,19 @@ class Accidentesriesgoclasificacion_model extends CI_Model {
 
     function insert($data){
         try{
+            $id = false;
             $this->db->trans_begin();
-            $this->db->insert_batch("accidentes_riesgo_clasificacion",$data);
+            $this->db->insert("accidentes_riesgo_clasificacion",$data);
             if($this->db->trans_status() === FALSE){
                 $this->db->trans_rollback();
             }else{
+                $id = $this->db->insert_id();
                 $this->db->trans_commit();
             }
         }  catch (Exception $e){
-            
+            $id = false;
         } finally {
-            return $this->db->trans_status();
+            return $id;
         }
     }
 

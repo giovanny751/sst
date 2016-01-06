@@ -361,7 +361,7 @@
                                 html += "<div class='col-sm-3'>";
                                 html += "<div class='checkbox'>";
                                 html += "<label>"
-                                html += "<input type='checkbox' name='dato"+valor.clasificacion+"[]' value='" + valor.clasificacion_id +"'> <b>"+ valor.tipo +"</b>";
+                                html += "<input type='checkbox' name='dato/"+valor.clasificacion+"[]' value='" + valor.clasificacion_id +"'> <b>"+ valor.tipo +"</b>";
                                 html += "</label>";
                                 html += "</div>";
                                 html += "</div>";

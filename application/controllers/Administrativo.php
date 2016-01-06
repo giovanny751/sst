@@ -1316,6 +1316,7 @@ class Administrativo extends My_Controller {
                                     ,"Accidentesclaseevento_model"
                                     ,"Accidentespartescuerpo_model"
                                     ,"Accidentesriesgoclasificacion_model"
+                                    ,"Accidentesriesgoclasificaciontipo_model"
                                     ,"Accidentescorreo_model"));
             
             $accdente = array(
@@ -1341,26 +1342,12 @@ class Administrativo extends My_Controller {
                 $agregarCorreo = array();
                 $verificacion = array();
                 $data['message'] = array();
-                
+               /*
                 $claseEventos = $this->input->post("claseEventos");
                 if(isset($claseEventos)){
                     foreach($claseEventos as $claseEvento)
                         array_push($agregarEvento, array("acc_id"=>$id,"claEve_id"=>$claseEvento));
                     $verificacion[] = $this->Accidentesclaseevento_model->insert($agregarEvento);
-                }
-                
-                $parteCuerpo = $this->input->post("parteCuerpo");
-                if(isset($parteCuerpo)){
-                    foreach($parteCuerpo as $pc)
-                        array_push($agregarParte, array("acc_id"=>$id,"parCue_id"=>$pc));
-                    $verificacion[] = $this->Accidentespartescuerpo_model->insert($agregarParte);
-                }
-                
-                $tipoRiesgo = $this->input->post("tipoRiesgo");   
-                if(isset($tipoRiesgo)){
-                    foreach($tipoRiesgo as $tr)
-                        array_push($agregarTipo, array("acc_id"=>$id,"rieCla_id"=>$tr));
-                    $verificacion[] = $this->Accidentesriesgoclasificacion_model->insert($agregarTipo);
                 }
                 
                 $correo = $this->input->post("correo");   
@@ -1369,8 +1356,44 @@ class Administrativo extends My_Controller {
                         array_push($agregarCorreo, array("acc_id"=>$id,"accCor_correo"=>$c));
                     $verificacion[] = $this->Accidentescorreo_model->insert($agregarCorreo);
                 }
+                */
+                $parteCuerpo = $this->input->post("parteCuerpo");
+                if(isset($parteCuerpo)){
+                    foreach($parteCuerpo as $pc)
+                        array_push($agregarParte, array("acc_id"=>$id,"parCue_id"=>$pc));
+                    $verificacion[] = $this->Accidentespartescuerpo_model->insert($agregarParte);
+                }
+                /*
+                $tipoRiesgo = $this->input->post("tipoRiesgo");   
+                if(isset($tipoRiesgo)){
+                    foreach($tipoRiesgo as $tr){
+                        $idriesgo = $this->Accidentesriesgoclasificacion_model->insert(array("acc_id"=>$id,"rieCla_id"=>$tr));
+
+                        if($idriesgo != FALSE){
+                            $dato = $this->input->post();
+                            foreach($dato as $name => $val){
+                                $valores = array();
+                                $variable = explode("/",$name);
+                                if($variable[0] == "dato"){
+                                    if($variable[1] == $tr){
+                                        foreach($val as $index => $tipo_id )
+                                            $valores[]= array("accRieCla_id" => $idriesgo, "rieClaTip_id" => $tipo_id);
+                                        $resultadoTipo = $this->Accidentesriesgoclasificaciontipo_model->insert($valores);
+                                        if($resultadoTipo == False){
+                                            $data["Error"] = "Error Insertando tipo Riesgo";
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            $verificacion[] = FALSE;
+                        }
+                    }
+                }
+                */
                 $i=0;
                 $indiceError = ["Eventos","Cuerpo","Riesgo","Correo"];
+                    print_r($verificacion);die;
                 foreach ($verificacion as $veri){
                     if($veri === false){
                         array_push($data['message'], "Error en -> ".$indiceError[$i].""); 
