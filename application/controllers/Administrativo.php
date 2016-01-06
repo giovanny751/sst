@@ -623,7 +623,7 @@ class Administrativo extends My_Controller {
             $this->load->model(array('User_model','Roles_model'));
             $consultaexistencia = $this->User_model->consultausuarioxcedula($this->input->post('cedula'));
             if (empty($consultaexistencia)) {
-                $data[] = array(
+                $data = array(
                     'usu_contrasena' => sha1($this->input->post('contrasena')),
                     'est_id' => $this->input->post('estado'),
                     'usu_politicas' => '0',
@@ -639,7 +639,9 @@ class Administrativo extends My_Controller {
                     'emp_id' => (!empty($this->input->post('empleado')) ? $this->input->post('empleado') : NULL),
                     'rol_id' => (!empty($this->input->post('rol')) ? $this->input->post('rol') : NULL)
                 );
-
+                
+//                var_dump($data);die;
+                
                 $id = $this->User_model->create($data);
                 if (!empty($id))
                     $this->Roles_model->permisosusuario($id, $this->input->post('rol'));
