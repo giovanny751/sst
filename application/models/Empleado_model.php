@@ -43,6 +43,15 @@ class Empleado_model extends CI_Model {
         }
     }
 
+    function detail_order() {
+        try {
+            $this->db->order_by("Emp_Nombre","asc");
+            $empleado = $this->db->get("empleado");
+            return $empleado->result();
+        } catch (exception $e) {
+            
+        }
+    }
     function delete($id) {
         try {
             $this->db->where("emp_id", $id);

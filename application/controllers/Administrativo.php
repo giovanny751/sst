@@ -1293,7 +1293,8 @@ class Administrativo extends My_Controller {
                                 , 'Empleado_model'
                                 ,'Dimension2_model'
                                 ,'Dimension_model'
-                                , "Empresa_model"));
+                                , "Empresa_model"
+                                ,"Empleadoresponsable_model"));
         
         $this->data["tipo_eventos"] = $this->Tipoevento_model->detail();
         $this->data["clases_eventos"] = $this->Claseevento_model->detail();
@@ -1303,6 +1304,7 @@ class Administrativo extends My_Controller {
         $this->data['dimension'] = $this->Dimension_model->detail();
         $this->data['dimension2'] = $this->Dimension2_model->detail();
         $this->data['empresa'] = $this->Empresa_model->detail()[0];
+        $this->data['responsables'] = $this->Empleadoresponsable_model->detail();
         
         $this->layout->view("administrativo/accidente", $this->data);
     }
@@ -1310,7 +1312,13 @@ class Administrativo extends My_Controller {
     function guardarAccidente(){
         try {
             
-            $data = array(
+            $this->load->model(array("Accidentes_model"
+                                    ,"Accidentesclaseevento_model"
+                                    ,"Accidentespartescuerpo_model"
+                                    ,"Accidentesriesgoclasificacion_model"
+                                    ,"Accidentescorreo_model"));
+            
+            $accdente = array(
                 "emp_id" => $this->input->post("empleado")
                 ,"acc_lugar" => $this->input->post("lugar")
                 ,"dim1_id" => $this->input->post("dimension1")
@@ -1321,33 +1329,74 @@ class Administrativo extends My_Controller {
                 ,"acc_lugarAccidente" => $this->input->post("sitio")
                 ,"acc_fechaAccidente" => $this->input->post("accidenteFecha")." ".$this->input->post("accidenteHora")
                 ,"acc_descripcion" => $this->input->post("descripcion")
+                ,"acc_reportado" => $this->input->post("accidenteReportado")
                 ,"creatorUser" => $this->data["usu_id"]
                 ,"creationDate" => date("Y-m-d H:i:s")
             );
-            
-            $claseEventos = $this->input->post("claseEventos");
-            $parteCuerpo = $this->input->post("parteCuerpo");
-            $tipoRiesgo = $this->input->post("tipoRiesgo");
-            
-            
-            /*
-            
-            $data = array(
-                "vac_fechaInicio" => $this->input->post("iniciovacaciones"),
-                "vac_fechaFin" => $this->input->post("finvacaciones"),
-                "vac_observaciones" => $this->input->post("observacionvacaciones"),
-                "emp_id" => $this->input->post("emp_id")
-            );
-            if ($this->Vacaciones_model->saveVacation($data) == true)
-                $data['Json'] = $this->Vacaciones_model->detailxEmpleado($this->input->post("emp_id"));
-            else
+            $id = $this->Accidentes_model->insert($accdente);
+            if($id != FALSE){
+                $agregarEvento = array();
+                $agregarParte = array();
+                $agregarTipo = array();
+                $agregarCorreo = array();
+                $verificacion = array();
+                $data['message'] = array();
+                
+                $claseEventos = $this->input->post("claseEventos");
+                if(isset($claseEventos)){
+                    foreach($claseEventos as $claseEvento)
+                        array_push($agregarEvento, array("acc_id"=>$id,"claEve_id"=>$claseEvento));
+                    $verificacion[] = $this->Accidentesclaseevento_model->insert($agregarEvento);
+                }
+                
+                $parteCuerpo = $this->input->post("parteCuerpo");
+                if(isset($parteCuerpo)){
+                    foreach($parteCuerpo as $pc)
+                        array_push($agregarParte, array("acc_id"=>$id,"parCue_id"=>$pc));
+                    $verificacion[] = $this->Accidentespartescuerpo_model->insert($agregarParte);
+                }
+                
+                $tipoRiesgo = $this->input->post("tipoRiesgo");   
+                if(isset($tipoRiesgo)){
+                    foreach($tipoRiesgo as $tr)
+                        array_push($agregarTipo, array("acc_id"=>$id,"rieCla_id"=>$tr));
+                    $verificacion[] = $this->Accidentesriesgoclasificacion_model->insert($agregarTipo);
+                }
+                
+                $correo = $this->input->post("correo");   
+                if(isset($correo)){
+                    foreach($correo as $c)
+                        array_push($agregarCorreo, array("acc_id"=>$id,"accCor_correo"=>$c));
+                    $verificacion[] = $this->Accidentescorreo_model->insert($agregarCorreo);
+                }
+                $i=0;
+                $indiceError = ["Eventos","Cuerpo","Riesgo","Correo"];
+                foreach ($verificacion as $veri){
+                    if($veri === false){
+                        array_push($data['message'], "Error en -> ".$indiceError[$i].""); 
+                    }
+                    $i++;
+                }
+                if(count($data['message']) == 0){
+                    array_push($data['message'],"SUCCESS");
+                }
+            }else{
                 throw new Exception("Error por favor comunicarse con el administrador");
-             
-             */
+            }
         } catch (exception $e) {
             $data['message'] = $e->getMessage();
         } finally {
-            //$this->output->set_content_type('application/json')->set_output(json_encode($data));
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function consultaClasificacion(){
+        try{
+            $this->load->model(array("Riesgoclasificacion_model"));
+            $data = $this->Riesgoclasificacion_model->detailandtipo_categoria($this->input->post("riesgo"));
+        }catch(Exception $e){
+            $data['message'] = $e->getMessage();
+        }  finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 

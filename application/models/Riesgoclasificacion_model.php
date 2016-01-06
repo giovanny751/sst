@@ -30,6 +30,22 @@ class Riesgoclasificacion_model extends CI_Model {
             
         }
     }
+    
+    function detailandtipo_categoria($categoria_id) {
+        try {
+            $this->db->select("riesgo_clasificacion_tipo.rieClaTip_id as clasificacion_id");
+            $this->db->select("riesgo_clasificacion_tipo.rieClaTip_tipo as tipo");
+            $this->db->select("riesgo_clasificacion.rieCla_categoria as categoria");
+            $this->db->select("riesgo_clasificacion.rieCla_id as clasificacion");
+            $this->db->join("riesgo_clasificacion_tipo", "riesgo_clasificacion_tipo.rieCla_id = riesgo_clasificacion.rieCla_id", "LEFT");
+            $this->db->where("riesgo_clasificacion.rieCla_id",$categoria_id);
+            $datos = $this->db->get("riesgo_clasificacion");
+//            echo $this->db->last_query();die;
+            return $datos->result();
+        } catch (exception $e) {
+            
+        }
+    }
 
     function detailxcategoria($categoria) {
         try {
@@ -73,6 +89,20 @@ class Riesgoclasificacion_model extends CI_Model {
         } catch (exception $e) {
             
         }
+    }
+    
+    function elementosXFactores(){
+        $this->db->select("riesgo_clasificacion.rieCla_id");
+        $this->db->select("riesgo_clasificacion.rieCla_categoria");
+        $this->db->select("riesgo_clasificacion_tipo.rieClaTip_tipo");
+        $this->db->select("riesgo_clasificacion_tipo.rieClaTip_id");
+        $this->db->select("riesgo_clasificacion_elemento.rieClaEle_id");
+        $this->db->select("riesgo_clasificacion_elemento.rieClaEle_elemento");
+        $this->db->join("riesgo_clasificacion_tipo","riesgo_clasificacion_tipo.rieCla_id = riesgo_clasificacion.rieCla_id");
+        $this->db->join("riesgo_clasificacion_elemento","riesgo_clasificacion_elemento.rieClaTip_id = riesgo_clasificacion_tipo.rieClaTip_id");
+        $factores = $this->db->get("riesgo_clasificacion");
+//        echo $this->db->last_query();die;
+        return $factores->result();
     }
 
 }
