@@ -9,7 +9,7 @@ class Accidentespartescuerpo_model extends CI_Model {
     function insert($data){
         try{
             $this->db->trans_begin();
-            $this->db->insert_batch("accidentes_partes_cuerpo_tipo",$data);
+            $this->db->insert_batch("accidentes_partes_cuerpo",$data);
             if($this->db->trans_status() === FALSE){
                 $this->db->trans_rollback();
             }else{

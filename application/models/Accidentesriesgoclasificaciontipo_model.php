@@ -9,7 +9,7 @@ class Accidentesriesgoclasificaciontipo_model extends CI_Model {
     function insert($data){
         try{
             $this->db->trans_begin();
-            $this->db->insert_batch("accidentes_riesgo_clasificacion",$data);
+            $this->db->insert_batch("accidentes_riesgo_clasificacion_tipo",$data);
             if($this->db->trans_status() === FALSE){
                 $this->db->trans_rollback();
             }else{

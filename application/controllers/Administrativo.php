@@ -624,7 +624,7 @@ class Administrativo extends My_Controller {
             $consultaexistencia = $this->User_model->consultausuarioxcedula($this->input->post('cedula'));
             if (empty($consultaexistencia)) {
                 $data[] = array(
-                    'usu_contrasena' => $this->input->post('contrasena'),
+                    'usu_contrasena' => sha1($this->input->post('contrasena')),
                     'est_id' => $this->input->post('estado'),
                     'usu_politicas' => '0',
                     'usu_cedula' => $this->input->post('cedula'),
