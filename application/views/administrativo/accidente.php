@@ -101,7 +101,7 @@
             <div class="form-group">
                 <label for="responsable" class="col-sm-1 control-label">Responsable</label>
                 <div class="col-sm-2">
-                    <select name="responsable" id="responsable" class="form-control">
+                    <select name="responsable" id="responsable" class="form-control campoIncapacidad">
                         <option value="">::Seleccionar::</option>
                         <?php foreach ($responsables as $responsable): ?>
                             <option value="<?php echo $responsable->empRes_id ?>"><?php echo $responsable->empRes_descripcion ?></option>
@@ -110,11 +110,11 @@
                 </div>
                 <label for="fechaInicioIncapacidad" class="col-sm-1 control-label">Fecha Inicio</label>
                 <div class="col-sm-2">
-                    <input type="date" class="fecha form-control" id="fechaInicioIncapacidad" name="fechaInicioIncapacidad" />
+                    <input type="date" class="fecha form-control campoIncapacidad" id="fechaInicioIncapacidad" name="fechaInicioIncapacidad" />
                 </div>
                 <label for="fechaFinIncapacidad" class="col-sm-1 control-label">Fecha Final</label>
                 <div class="col-sm-2">
-                    <input type="date" class="fecha form-control" id="fechaFinIncapacidad" name="fechaFinIncapacidad" />
+                    <input type="date" class="fecha form-control campoIncapacidad" id="fechaFinIncapacidad" name="fechaFinIncapacidad" />
                 </div>
                 <label for="diasIncapacidad" class="col-sm-1 control-label">Dias Incapacidad</label>
                 <div class="col-sm-2">
@@ -294,7 +294,9 @@
             }
         });
         
-        if(obligatorio("obligatorio") && radio ){
+        var incapacidad = metodoIncapacidad();
+        
+        if(obligatorio("obligatorio") && radio && incapacidad ){
             var url = "<?php echo base_url("index.php/Administrativo/guardarAccidente"); ?>";
             var datos = $("#formAccidente").serialize();
             $(".radioObligatorio").parent().removeClass("obligado");
@@ -384,6 +386,39 @@
             $(".hijoCategoria[fila='"+posicion+"']").remove();
         }
     });
+    
+    function metodoIncapacidad(){
+        var vacio = true;
+        $(".campoIncapacidad").each(function(indice,campo){
+            if($(this).val() != ""){
+                vacio = false;
+            }
+        });
+        if(vacio === true){
+            return true
+        }else{
+            var cantidadDias = difFechaIncapacidad("#fechaInicioIncapacidad","#fechaFinIncapacidad");
+            if(cantidadDias != false){
+                $("#diasIncapacidad").val(cantidadDias);
+                var i = 0;
+                var campos = false;
+                $(".campoIncapacidad").each(function(indice,campo){
+                    if($(this).val() != ""){
+                        i++
+                        $(this).removeClass("obligado")
+                    }else{
+                        $(this).addClass("obligado")
+                    }
+                    if(i == $(".campoIncapacidad").length){
+                        campos = true;
+                    }
+                });
+                return campos;
+            }else{
+                return false;
+            }
+        }
+    }
     
     
 </script>

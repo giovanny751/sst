@@ -1287,7 +1287,7 @@ class Administrativo extends My_Controller {
         }
     }
 
-    function accidente() {
+function accidente() {
         $this->load->model(array('Tipoevento_model'
                                 ,'Claseevento_model'
                                 ,'Partescuerpo_model'
@@ -1319,10 +1319,13 @@ class Administrativo extends My_Controller {
                                     ,"Accidentespartescuerpo_model"
                                     ,"Accidentesriesgoclasificacion_model"
                                     ,"Accidentesriesgoclasificaciontipo_model"
+                                    ,"Empleadoincapacidad_model"
                                     ,"Accidentescorreo_model"));
             
+            $empleado = $this->input->post("empleado");
+            
             $accdente = array(
-                "emp_id" => $this->input->post("empleado")
+                "emp_id" => $empleado
                 ,"acc_lugar" => $this->input->post("lugar")
                 ,"dim1_id" => $this->input->post("dimension1")
                 ,"dim2_id" => $this->input->post("dimension2")
@@ -1392,7 +1395,24 @@ class Administrativo extends My_Controller {
                         }
                     }
                 }
+                
+                $responsable = $this->input->post("responsable");
+                $fInicio = $this->input->post("fechaInicioIncapacidad");
+                $fFin = $this->input->post("fechaFinIncapacidad");
                
+                if(isset($responsable) && isset($fInicio) && isset($fFin)){
+                    $incapacidad = array(
+                        "empRes_id" => $responsable
+                        ,"empInc_fechaInicio" => $fInicio
+                        ,"empInc_fechaFinal" => $fFin
+                        ,"empInc_motivo" => "Incapacidad"
+                        ,"usu_id" => $this->data["usu_id"]
+                        ,"emp_id" => $empleado
+                        ,"empInc_fechaIngreso" => date("Y-m-d H:i:s")
+                    );
+                    $this->Empleadoincapacidad_model->create($incapacidad);
+                }
+                
                 $i=0;
                 $indiceError = ["Eventos","Cuerpo","Riesgo","Correo"];
                     print_r($verificacion);die;

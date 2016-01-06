@@ -351,8 +351,29 @@
                 var fecha2 = new Date(arrayFecha2[0], arrayFecha2[1] - 1, arrayFecha2[2]);
                 var resta = (fecha2 - fecha1) / 1000 / 3600 / 24;
                 if (resta >= 0) {
+                    $(idFecha1,idFecha2).removeClass("obligado");
                     return resta;
                 } else {
+                    $(idFecha1,idFecha2).addClass("obligado");
+                    alerta("amarillo", "Fecha no es valida");
+                    return false;
+                }
+            }
+            function difFechaIncapacidad(idFecha1, idFecha2) {
+                var valFecha1 = $(idFecha1).val();
+                var valFecha2 = $(idFecha2).val();
+                var arrayFecha1 = valFecha1.split("-");
+                var arrayFecha2 = valFecha2.split("-");
+                var fecha1 = new Date(arrayFecha1[0], arrayFecha1[1] - 1, arrayFecha1[2]);
+                var fecha2 = new Date(arrayFecha2[0], arrayFecha2[1] - 1, arrayFecha2[2]);
+                var resta = (fecha2 - fecha1) / 1000 / 3600 / 24;
+                if (resta >= 0) {
+                    $(idFecha1).removeClass("obligado");
+                    $(idFecha2).removeClass("obligado");
+                    return resta+1;
+                } else {
+                    $(idFecha1).addClass("obligado");
+                    $(idFecha2).addClass("obligado");
                     alerta("amarillo", "Fecha no es valida");
                     return false;
                 }

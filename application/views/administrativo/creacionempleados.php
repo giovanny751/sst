@@ -1246,7 +1246,7 @@ endforeach;
         var url = "<?php echo base_url("index.php/administrativo/guardarincapacidad"); ?>";
         var valores = $("#crearIncapacidad").serialize();
         if (obligatorio('obligatorioInc') == true) {
-            if (difFecha("#fechaInicioInc", "#fechaFinalInc") > 0) {
+            if (difFechaIncapacidad("#fechaInicioInc", "#fechaFinalInc") > 0) {
                 $.post(url, valores)
                         .done(function (msg) {
                             $("#crearIncapacidad").find("input[type='text']").val("");
