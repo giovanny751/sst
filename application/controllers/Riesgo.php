@@ -235,6 +235,39 @@ class Riesgo extends My_Controller {
         }
     }
 
+    function elementos() {
+        try {
+            $this->load->model('Riesgoclasificacionelemento_model');
+            $elemento = array(
+                "rieClaTip_id" => $this->input->post("tipo"),
+                "rieClaEle_elemento" => $this->input->post("elemento"),
+                "creatorUser" => $this->data["usu_id"],
+                "creationDate" => date("Y-m-d H:i:s"),
+            );
+            if ($this->Riesgoclasificacionelemento_model->save($elemento) == FALSE)
+                throw new Exception("Error en la base de datos");
+
+            $data["Json"] = $this->Riesgoclasificacionelemento_model->detailxIdTipo($this->input->post("tipo"));
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+
+    function elementosXIdTipo() {
+        try {
+            $this->load->model('Riesgoclasificacionelemento_model');
+            $data["Json"] = $this->Riesgoclasificacionelemento_model->detailxIdTipo($this->input->post("tipo"));
+            if (count($data["Json"]) == 0)
+                throw new Exception("No se encontraron elementos asociados");
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+
     function listadoriesgo() {
         try {
             $this->load->model(array('Dimension2_model', 'Dimension_model', 'Empresa_model', 'Cargo_model', "Riesgoclasificacion_model"));
