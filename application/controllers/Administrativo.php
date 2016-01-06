@@ -1342,7 +1342,7 @@ class Administrativo extends My_Controller {
                 $agregarCorreo = array();
                 $verificacion = array();
                 $data['message'] = array();
-               /*
+               
                 $claseEventos = $this->input->post("claseEventos");
                 if(isset($claseEventos)){
                     foreach($claseEventos as $claseEvento)
@@ -1356,14 +1356,14 @@ class Administrativo extends My_Controller {
                         array_push($agregarCorreo, array("acc_id"=>$id,"accCor_correo"=>$c));
                     $verificacion[] = $this->Accidentescorreo_model->insert($agregarCorreo);
                 }
-                */
+                
                 $parteCuerpo = $this->input->post("parteCuerpo");
                 if(isset($parteCuerpo)){
                     foreach($parteCuerpo as $pc)
                         array_push($agregarParte, array("acc_id"=>$id,"parCue_id"=>$pc));
                     $verificacion[] = $this->Accidentespartescuerpo_model->insert($agregarParte);
                 }
-                /*
+                
                 $tipoRiesgo = $this->input->post("tipoRiesgo");   
                 if(isset($tipoRiesgo)){
                     foreach($tipoRiesgo as $tr){
@@ -1390,7 +1390,7 @@ class Administrativo extends My_Controller {
                         }
                     }
                 }
-                */
+               
                 $i=0;
                 $indiceError = ["Eventos","Cuerpo","Riesgo","Correo"];
                     print_r($verificacion);die;
