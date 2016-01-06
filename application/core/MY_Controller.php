@@ -35,15 +35,11 @@ class MY_Controller extends CI_Controller {
             $controller = $ci->router->fetch_class();
             $method = $ci->router->fetch_method();
             
-            
             if (
-                    (strtoupper($controller) != strtoupper('presentacion') && strtoupper($method) != strtoupper('principal')) &&
                     ((strtoupper($controller) != strtoupper('login')) &&
                     (strtoupper($method) != strtoupper('index') || strtoupper($method) != strtoupper('verify'))
                     )
             ) {
-                            echo $controller."****".$method;die;
-
                 $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
                 $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
                 if (!empty($view)) {
