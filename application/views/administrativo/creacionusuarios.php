@@ -90,7 +90,6 @@
             </div>    
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 aspirante">
                 <select id="estado" name="estado" class="form-control">
-                    <option value="">::Seleccionar::</option>
                     <?php foreach ($estado as $e) { ?>
                         <option <?php echo (!empty($usuario[0]->est_id) && $usuario[0]->est_id == $e->est_id) ? "selected" : ""; ?> value="<?php echo $e->est_id ?>"><?php echo $e->est_nombre ?></option>
                     <?php } ?>

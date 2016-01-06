@@ -72,7 +72,7 @@ class User_model extends CI_Model {
 
     function create($data) {
         try {
-            $this->db->insert_batch('user', $data);
+            $this->db->insert('user', $data);
             return $this->db->insert_id();
         } catch (exception $e) {
             
