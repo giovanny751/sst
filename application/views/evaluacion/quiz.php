@@ -12,10 +12,16 @@
             <th><b>Evaluación</b></th>
             </thead>
             <tbody>
-                <?php foreach ($evaluacion as $value) { ?>
+                <?php 
+                if(count($evaluacion)){
+                foreach ($evaluacion as $value) { ?>
                     <tr>
                         <td><center><input type="radio" name="nan" value="<?php echo $value->eva_id ?>"></center></td>
                         <td><?php echo $value->eva_nombre ?></td>
+                    </tr>
+                <?php }}else{ ?>
+                    <tr>
+                        <td colspan="2">No tiene puebas pendientes</td>
                     </tr>
                 <?php } ?>
             </tbody>

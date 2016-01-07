@@ -56,10 +56,10 @@
             <div class="row">
                 <div class="col-md-3">
                     <label for="pre_nombre">
-                        *                             Contexto                        </label>
+                        Contexto                        </label>
                 </div>
                 <div class="col-md-9">
-                    <textarea style="width: 100%" class=" form-control obligatorio  " id="pre_contexto" name="pre_contexto"><?php echo (isset($datos[0]->pre_contexto) ? $datos[0]->pre_contexto : '' ) ?></textarea>
+                    <textarea style="width: 100%" class=" form-control   " id="pre_contexto" name="pre_contexto"><?php echo (isset($datos[0]->pre_contexto) ? $datos[0]->pre_contexto : '' ) ?></textarea>
                     <br>
                 </div>
             </div>

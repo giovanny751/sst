@@ -152,9 +152,17 @@ class User_model extends CI_Model {
     }
     function evaluacion_usuario($id) {
         try {
+            
+            $datos=$this->db->query('select eva_id from respuesta_evaluacion where usu_id='.$id.' group by eva_id');
+            $datos=$datos->result();
+            foreach ($datos as $value) {
+                $d[]=$value->eva_id;
+            }
+            
             $this->db->select("evaluacion.*");
             $this->db->where("ue.use_id", $id);
             $this->db->where("ue.useEva_activo", 'S');
+            $this->db->where_not_in("evaluacion.eva_id", $d);
             $this->db->join("user_evaluacion ue ", "ue.eva_id=evaluacion.eva_id", "inner",false);
             $user = $this->db->get('evaluacion');
             return $user->result();

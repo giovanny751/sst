@@ -58,6 +58,7 @@
             <th>Último Ingreso</th>
             <th>Evaluacione</th>
             <th>Asignar Evaluación</th>
+            <th>Evaluaciones Realizadas</th>
             </thead>
             <tbody id="bodyuser">
                 <tr>
@@ -146,6 +147,7 @@
                 })
     })
     $('body').delegate(".evaluaciones", "click", function () {
+        $('.asignar').show();
         var usuarioid=$(this).attr('usuarioid')
         $('#usuarioid').val(usuarioid);
         $.post("<?php echo base_url('index.php/Evaluacion/ver_evaluaciones') ?>",{usuarioid:usuarioid})
@@ -157,6 +159,29 @@
                         $('#resultados').html('');
                         $.each(msg.Json, function (key, val) {
                             $('#resultados').append('<tr><td><center><input type="checkbox" value="' + val.eva_id + '" '+( (val.use_id)?'checked': '' )+' ></center></td><td>' + val.eva_nombre + '</td></tr>')
+                        })
+                    }
+                })
+                .fail(function (msg) {
+                    alerta("rojo", "Error, por favor comunicarse con el administrador del sistema");
+                    $('#myModal3').modal('hide');
+                })
+    })
+    $('body').delegate(".evaluaciones_resueltas", "click", function () {
+    $('.asignar').hide();
+        var usuarioid=$(this).attr('usuarioid')
+        $('#usuarioid').val(usuarioid);
+        $.post("<?php echo base_url('index.php/Evaluacion/ver_evaluaciones_resueltas') ?>",{usuarioid:usuarioid})
+                .done(function (msg) {
+                    if (!jQuery.isEmptyObject(msg.message)) {
+                        alerta("rojo", msg['message'])
+                        $('#myModal3').modal('hide');
+                    } else {
+                        $('#resultados').html('');
+                        $.each(msg.Json, function (key, val) {
+                            var x=Math.floor((Math.random() * 1000) + 2000);
+                            var y=Math.floor((Math.random() * 1000) + 2000);
+                            $('#resultados').append('<tr><td colspan="2"><a href="<?php echo base_url('index.php/Evaluacion/evaluando') ?>/'+x+val.eva_id+y+'/'+x+val.use_id+y+'" target="_black">' + val.eva_nombre + '</a></td></tr>')
                         })
                     }
                 })
@@ -239,6 +264,7 @@
                     body += "<td>" + (val.ing_fechaIngreso ? val.ing_fechaIngreso : '') + "</td>";
                     body += "<td>" + (val.conca ? val.conca : '') + "</td>";
                     body += '<td><button type="button" data-toggle="modal" data-target="#myModal3"  class="btn btn-info evaluaciones" usuarioid="' + val.usu_id + '">Asignar</button></td>';
+                    body += '<td><button type="button" data-toggle="modal" data-target="#myModal3"  class="btn btn-info evaluaciones_resueltas" usuarioid="' + val.usu_id + '">Ver</button></td>';
                     body += "</tr>";
                 });
                 $('#bodyuser').append(body);
