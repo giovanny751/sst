@@ -54,9 +54,14 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                 <input type="text" id="nombre" name="nombre" class="form-control obligatorio"  value="<?php echo (!empty($empleado[0]->Emp_Nombre)) ? $empleado[0]->Emp_Nombre : ""; ?>" />
             </div>
-            <label for="fechainiciocontrato" class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span class="campoobligatorio">*</span>Fecha Inicio Contrato</label>
+            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="horario">Jornada</label>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                <input type="text" name="fechainiciocontrato" id="fechainiciocontrato" class="form-control fecha obligatorio"  value="<?php echo (!empty($empleado[0]->Emp_FechaInicioContrato)) ? $empleado[0]->Emp_FechaInicioContrato : ""; ?>"/>
+                <select name="horario" id="horario" class="form-control">
+                    <option>::Seleccionar::</option>
+                    <?php foreach($horario as $h): ?>
+                    <option <?php echo (!empty($empleado[0]->hor_id) && $empleado[0]->hor_id == $h->hor_id) ? "selected" : ""; ?> value="<?php echo $h->hor_id ?>"><?php echo $h->hor_horario." (".$h->hor_cantidadHoras.")" ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
         <div class="row">
@@ -64,9 +69,9 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                 <input type="text" id="apellidos" name="apellidos" class="form-control obligatorio"  value="<?php echo (!empty($empleado[0]->Emp_Apellidos)) ? $empleado[0]->Emp_Apellidos : ""; ?>"/>
             </div>
-            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="fechafincontrato">Fecha Fin Contrato</label>
+            <label for="fechainiciocontrato" class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span class="campoobligatorio">*</span>Fecha Inicio Contrato</label>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                <input type="text" name="fechafincontrato" id="fechafincontrato" class="form-control fecha"  value="<?php echo (!empty($empleado[0]->Emp_FechaFinContrato)) ? $empleado[0]->Emp_FechaFinContrato : ""; ?>"/>
+                <input type="text" name="fechainiciocontrato" id="fechainiciocontrato" class="form-control fecha obligatorio"  value="<?php echo (!empty($empleado[0]->Emp_FechaInicioContrato)) ? $empleado[0]->Emp_FechaInicioContrato : ""; ?>"/>
             </div>
         </div>
         <div class="row">
@@ -74,8 +79,11 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                 <input type="text" id="salario" name="salario" class="form-control obligatorio miles"  value="<?php echo (!empty($empleado[0]->emp_salario)) ? $empleado[0]->emp_salario : ""; ?>"/>
             </div>
+            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3" for="fechafincontrato">Fecha Fin Contrato</label>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                <input type="text" name="fechafincontrato" id="fechafincontrato" class="form-control fecha"  value="<?php echo (!empty($empleado[0]->Emp_FechaFinContrato)) ? $empleado[0]->Emp_FechaFinContrato : ""; ?>"/>
+            </div>
         </div>
-
         <div class="row">
             <label for="sexo" class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span class="campoobligatorio">*</span>Genero</label>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">

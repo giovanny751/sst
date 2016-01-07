@@ -36,6 +36,7 @@ class Empleado_model extends CI_Model {
 
     function detail() {
         try {
+            $this->db->where("est_id",1);
             $empleado = $this->db->get("empleado");
             return $empleado->result();
         } catch (exception $e) {

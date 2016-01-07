@@ -36,7 +36,8 @@ class Administrativo extends My_Controller {
                 'Empleadotipoaseguradora_model',
                 'Empresa_model',
                 'Empleadoregistro_model',
-                'Empleadoresponsable_model'
+                'Empleadoresponsable_model',
+                "Horario_model"
                 ));
             $empleadoId = null;
             if (!empty($this->input->post('emp_id')))
@@ -63,6 +64,7 @@ class Administrativo extends My_Controller {
             $this->data['empresa'] = $this->Empresa_model->detail();
             if ((!empty($this->data['empresa'][0]->Dim_id)) && (!empty($this->data['empresa'][0]->Dimdos_id))) {
                 $this->data['cargo'] = $this->Cargo_model->detail();
+                $this->data['horario'] = $this->Horario_model->tipos();
                 $this->data['tipocontrato'] = $this->Tipocontrato_model->detail();
                 $this->data['sexo'] = $this->Sexo_model->detail();
                 $this->data['estadocivil'] = $this->Estadocivil_model->detail();
@@ -353,6 +355,7 @@ class Administrativo extends My_Controller {
                 'TipDoc_id' => $this->input->post('tipodocumento'),
                 'Emp_Nombre' => $this->input->post('nombre'),
                 'Emp_Apellidos' => $this->input->post('apellidos'),
+                'hor_id' => $this->input->post('horario'),
                 'sex_Id' => $this->input->post('sexo'),
                 'Emp_FechaNacimiento' => $this->input->post('fechadenacimiento'),
                 'Emp_Estatura' => $this->input->post('estatura'),
@@ -1434,6 +1437,14 @@ function accidente() {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
+    
+    function horasextras(){
+        $this->load->model(array('Empleado_model','Horaextratipo_model'));
+        $this->data['empleados'] = $this->Empleado_model->detail();
+        $this->layout->view("administrativo/horasextras",$this->data);
+        
+    }
+    
     function consultaClasificacion(){
         try{
             $this->load->model(array("Riesgoclasificacion_model"));

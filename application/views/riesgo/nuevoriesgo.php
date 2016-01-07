@@ -109,6 +109,29 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
+                        <label for="rutinario">Rutinario</label>
+                    </div>    
+                    <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
+                        <select name="rutinario" id="rutinario" class="form-control" >
+                            <option value="">::Seleccionar::</option>
+                            <option value="1" <?php echo ((!empty($riesgo->rie_rutinario)) && (1 == $riesgo->rie_rutinario) ? "selected" : "") ?> >Si</option>
+                            <option value="0" <?php echo ((!empty($riesgo->rie_rutinario)) && (0 == $riesgo->rie_rutinario) ? "selected" : "") ?> >No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
+                        <label for="rutinario">Nivel de exposicion</label>
+                    </div>    
+                    <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
+                        <select name="rutinario" id="rutinario" class="form-control" >
+                            <option value="">::Seleccionar::</option>
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
                         <label for="observaciones">Observaciones</label>
                     </div>    
                     <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">

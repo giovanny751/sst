@@ -89,6 +89,7 @@ class Riesgo extends My_Controller {
                 "dim1_id" => $this->input->post("dimensionuno"),
                 "dim2_id" => $this->input->post("dimensiondos"),
                 "rie_zona" => $this->input->post("zona"),
+                "rie_rutinario" => $this->input->post("rutinario"),
                 "rie_requisito" => $this->input->post("requisito"),
                 "rie_observaciones" => $this->input->post("observaciones"),
                 "estAce_id" => $this->input->post("estado"),
@@ -645,6 +646,18 @@ class Riesgo extends My_Controller {
         } finally {
             
         }
+    }
+    function matrizRiesgo(){
+        $this->load->model("Riesgo_model");
+        $matriz = $this->Riesgo_model->matrizRiesgo();
+        $i = array();
+        foreach($matriz as $m){
+            $i[$m->pla_nombre][$m->actPad_nombre][$m->actHij_nombre][$m->tar_descripcion][$m->rie_descripcion][$m->rieCla_categoria][] = $m->rieClaTip_tipo;
+        }
+        $this->data['matriz'] = $i;
+        $this->layout->view("riesgo/matrizriesgo",$this->data);
+        
+        
     }
 
 }
