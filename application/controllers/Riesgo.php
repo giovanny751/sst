@@ -659,6 +659,55 @@ class Riesgo extends My_Controller {
         
         
     }
+    
+    function solicitudriesgo(){
+        try{
+            $this->load->model(array("Empleado_model"
+                                    ,"Empresa_model"
+                                    ,'Dimension2_model'
+                                    ,'Dimension_model'));
+            
+            $this->data["empleados"] = $this->Empleado_model->detail_order();
+            $this->data['dimension'] = $this->Dimension_model->detail();
+            $this->data['dimension2'] = $this->Dimension2_model->detail();
+            $this->data['empresa'] = $this->Empresa_model->detail()[0];
+            $this->layout->view("riesgo/solicitudriesgo",$this->data);            
+        }catch(Exception $e){
+            
+        }finally{
+            
+        }
+    }
+    
+    function filtroSolicitud(){
+        try {
+            $this->load->model(array("Solicitudriesgo_model"));
+            
+            $solicitud = $this->input->post('numSolicitud');
+            $empleado = $this->input->post('solicitante');
+            $dim1 = $this->input->post('dimension1');
+            $dim2 = $this->input->post('dimension2');
+            $fInicial = $this->input->post('fInicial');
+            $fFinal = $this->input->post('fFinal');
+            $data['Json'] = $this->Solicitudriesgo_model->filtroempleados($solicitud, $empleado, $dim1, $dim2, $fInicial, $fFinal);
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    
+    function consultaSolicitud(){
+        try {
+            $this->load->model(array("Solicitudriesgo_model"));
+            $solicitud = $this->input->post('solicitud');
+            $data['Json'] = $this->Solicitudriesgo_model->detailxid($solicitud)[0];
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
 
 }
 
