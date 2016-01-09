@@ -6,98 +6,68 @@
     </div>
 </div>
 <div class='cuerpoContenido'>
-    <table class="tablesst">
-        <thead>
-        <th>Plan</th>
-        <th>Actividad Padre</th>
-        <th>Actividad</th>
-        <th>Tarea</th>
-        <th>Riesgo</th>
-        <th>Riesgo Clasificación</th>
-        <th>Tipo</th>
-        </thead>
-        <?php foreach ($matriz as $plan => $actP): ?>
-            <tr>
-                <td rowspan="<?php echo count($actP) ?>"><?php echo $plan ?></td>  
-                <?php
-                $i = 0;
-                foreach ($actP as $actividadPadre => $actH):
-                    if ($i == 0) {
-                        if (!empty($actividadPadre)) {
-                            ?>
-                            <td rowspan="<?php echo count($actH) ?>"><?php echo $actividadPadre; ?></td>
-                            <?php
+    <table border="0">
+        <?php
+        echo "<tr><td><table border='0' >";
+        foreach ($matriz as $key => $value) {
+            echo '<tr>';
+            if (!empty($key))
+                echo "<td class='t1' >" . $key . "</td>";
+            echo '<td><table>';
+            foreach ($value as $key2 => $value2) {
+                echo '<tr>';
+                if (!empty($key2))
+                    echo "<td class='t1' >" . $key2 . "</td>";
+                echo '<td><table>';
+                foreach ($value2 as $key3 => $value3) {
+                    echo '<tr>';
+                    if (!empty($key3))
+                        echo "<td class='t1' >" . $key3 . "</td>";
+                    echo '<td><table>';
+                    foreach ($value3 as $key4 => $value4) {
+                        echo '<tr>';
+                        if (!empty($key4))
+                            echo "<td class='t1' >" . $key4 . "</td>";
+                        echo '<td><table>';
+                        foreach ($value4 as $key5 => $value5) {
+                            if (!empty($key5))
+                                echo "<tr><td class='t5'>" . $key5 . "</td></tr>";
                         }
-                    } else {
-                        ?>
-                        <td><?php echo $actividadPadre; ?></td>
-                        <?php
+                        echo "</table></td>";
                     }
-                    $i++;
-                    $d = 0;
-                    foreach ($actH as $actividadHijo => $tar):
-                        if ($d == 0) {
-                            if (!empty($actividadHijo)) {
-                                ?>
-                                <td rowspan="<?php echo count($tar) ?>"><?php echo $actividadHijo; ?></td>
-                            <?php }
-                        } else { ?>
-                            <td><?php echo $actividadHijo; ?></td>
-                            <?php
-                        }
-                        $d++;
-                        $m = 0;
-                        foreach ($tar as $tarea => $rie):
-                            if ($m == 0) {
-                                if (!empty($tarea)) {
-                                    ?>
-                                    <td rowspan="<?php echo count($rie) ?>"><?php echo $tarea . "oooooo"; ?></td>
-                                    <?php
-                                }
-                            } else {
-                                ?>
-                                <td><?php echo $tarea . "pppppp"; ?></td>
-                                <?php
-                            }
-                            $m++;
-                            $l = 0;
-                            foreach ($rie as $riesgo => $cla):
-                                if ($l == 0) {
-                                    if (!empty($riesgo)) {
-                                        ?>
-                                        <td rowspan="<?php echo count($cla) ?>"><?php echo $riesgo; ?></td>
-                                        <?php
-                                    }
-                                } else {
-                                    ?>
-                                    <td><?php echo $riesgo; ?></td>
-                                    <?php
-                                }
-                                $l++;
-                                $z = 0;
-                                foreach ($cla as $clasificacion => $num):
-                                    if ($z == 0) {
-                                        if (!empty($clasificacion)) {
-                                            ?>
-                                            <td rowspan="<?php echo count($num) ?>"><?php echo $clasificacion; ?></td>
-                                        <?php
-                                        }
-                                    } else {
-                                        ?>
-                                        <td><?php echo $clasificacion; ?></td>
-                                        <?php
-                                    }
-                                    $z++;
-                                    foreach ($num as $tipo):
-                                        
-                                    endforeach;
-                                endforeach;
-                            endforeach;
-                        endforeach;
-                    endforeach;
-                    ?></tr><?php
-                endforeach;
-            endforeach;
-            ?>
-    </table>  
+                    echo "</table></td>";
+                }
+                echo "</table></td>";
+            }
+            echo "</table></td>";
+        }
+        echo "</table></td></tr>";
+        ?>
+    </table>              
+    <?php // print_y($matriz); ?>
 </div>
+<style>
+    /*    tr td{
+            border-bottom:1px solid #FFF;
+        }*/
+    .t1{
+        width: 200px;
+        border:1px solid red;
+    }
+    .t2{
+        width: 200px;
+        border:1px solid red;
+    }
+    .t3{
+        width: 200px;
+        border:1px solid red;
+    }
+    .t4{
+        width: 200px;
+        border:1px solid red;
+    }
+    .t5{
+        width: 200px;
+        border:1px solid red;
+    }
+</style>

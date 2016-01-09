@@ -274,8 +274,7 @@
                 <div class="row">
                     <label for="clasificacionriesgo" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Clasificación de riesgo</label>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <select name='clasificacionriesgo' id='clasificacionriesgo' class="form-control">
-                            <option value=''>::Seleccionar::</option>
+                        <select name='clasificacionriesgo[]' id='clasificacionriesgo' class="form-control" multiple>
                             <?php foreach ($categoria as $ca) { ?>
                                 <option <?php echo (!empty($tarea->rieCla_id) && $ca->rieCla_id == $tarea->rieCla_id ) ? "Selected" : ""; ?> value="<?php echo $ca->rieCla_id ?>"><?php echo $ca->rieCla_categoria ?></option>
                             <?php } ?>
@@ -285,8 +284,7 @@
                 <div class="row">
                     <label for="tiposriesgos" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Tipos de Riesgos</label>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <select name='tiposriesgos' id='tiposriesgos' class="form-control">
-                            <option value=''>::Seleccionar::</option>
+                        <select name='tiposriesgos' id='tiposriesgos' class="form-control" multiple>
                             <?php foreach($tipoClasificacion as $tc): ?>
                             <option <?php echo (!empty($tarea->tipRie_id) && $tc->rieClaTip_id == $tarea->tipRie_id ) ? "Selected" : ""; ?> vale="<?php echo $tc->rieClaTip_id ?>"><?php echo $tc->rieClaTip_tipo ?></option>
                             <?php endforeach; ?>
@@ -746,6 +744,7 @@
 
         });
         function clasificacionRiesgoTipo() {
+            
             $.post(
                     "<?php echo base_url("index.php/riesgo/consultatiporiesgoxclasificacion") ?>",
                     {categoria: $("#clasificacionriesgo").val()}
@@ -755,8 +754,13 @@
                             alerta("amarillo", msg['message'])
                         else {
                             $('#tiposriesgos *').remove();
-                            var option = "<option value=''>::Seleccionar::</option>";
+                            var option = "";
+                            var titulo="";
                             $.each(msg.Json, function (key, val) {
+                                if(titulo!=val.rieCla_id){
+                                    option+='<optgroup label="'+val.rieCla_categoria+'">';
+                                    titulo=val.rieCla_id;
+                                }
                                 option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
                             });
                             $('#tiposriesgos').append(option);

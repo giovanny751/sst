@@ -29,7 +29,9 @@ class Riesgoclasificaciontipo_model extends CI_Model {
 
     function tipoxcategoria($categoria) {
         try {
-            $this->db->where("rieCla_id", $categoria);
+            $this->db->select("riesgo_clasificacion_tipo.*,riesgo_clasificacion.rieCla_categoria");
+            $this->db->where_in("riesgo_clasificacion_tipo.rieCla_id", $categoria);
+            $this->db->join('riesgo_clasificacion','riesgo_clasificacion.rieCla_id=riesgo_clasificacion_tipo.rieCla_id');
             $data = $this->db->get("riesgo_clasificacion_tipo");
             return $data->result();
         } catch (exception $e) {
