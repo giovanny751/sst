@@ -25,8 +25,15 @@ class Riesgo_model extends CI_Model {
 
     function create($data) {
         try {
+            $this->db->trans_begin();
             $this->db->insert("riesgo", $data);
-            return $this->db->insert_id();
+            if($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+            }else{
+                $id = $this->db->insert_id();
+                $this->db->trans_commit();
+                return $id;
+            }
         } catch (exception $e) {
             
         }
@@ -131,7 +138,7 @@ class Riesgo_model extends CI_Model {
             $this->db->select("actividad_hijo.actHij_nombre");
             $this->db->select("tarea.tar_descripcion");
             $this->db->select("riesgo.rie_descripcion");
-            $this->db->select("riesgo.rie_rutinario");
+            $this->db->select("tarea.tar_rutinario");
             $this->db->select("riesgo_clasificacion.rieCla_categoria");
             $this->db->select("riesgo_clasificacion_tipo.rieClaTip_tipo");
             $this->db->join("actividad_padre","actividad_padre.pla_id = planes.pla_id","left");  

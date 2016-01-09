@@ -6,73 +6,98 @@
     </div>
 </div>
 <div class='cuerpoContenido'>
-    <?php var_dump($matriz); ?>
     <table class="tablesst">
-        <?php
-        foreach ($matriz as $plan => $actP):
-            ?><tr><td rowspan="<?php echo count($matriz[$plan])+count($actP) ?>"><?php echo $plan; ?></td><?php
-                $h = 0;
-                echo ($h != 0 ) ? "<tr>" : ""; 
-                if(is_array($actP))
+        <thead>
+        <th>Plan</th>
+        <th>Actividad Padre</th>
+        <th>Actividad</th>
+        <th>Tarea</th>
+        <th>Riesgo</th>
+        <th>Riesgo Clasificación</th>
+        <th>Tipo</th>
+        </thead>
+        <?php foreach ($matriz as $plan => $actP): ?>
+            <tr>
+                <td rowspan="<?php echo count($actP) ?>"><?php echo $plan ?></td>  
+                <?php
+                $i = 0;
                 foreach ($actP as $actividadPadre => $actH):
-                    ?>
-                    <td rowspan="<?php echo count($actP[$actividadPadre])+count($actH) ?>"><?php echo $actividadPadre ?></td>
-                    <?php
-                    $i = 0;
-                    echo ($i != 0 ) ? "<tr>" : ""; 
-                    if(is_array($actH))
-                    foreach ($actH as $actividadHijo => $tar):
-                        ?>
-                        <td rowspan="<?php echo count($actH[$actividadHijo])+count($tar) ?>"><?php echo $actividadHijo ?></td>
-                        <?php
-                        $j = 0;
-                        echo ($j != 0 ) ? "<tr>" : ""; 
-                        if(is_array($tar))
-                        foreach ($tar as $tarea => $rie):
+                    if ($i == 0) {
+                        if (!empty($actividadPadre)) {
                             ?>
-                            <td rowspan="<?php echo count($tar[$tarea])+count($rie); ?>" ><?php echo $tarea ?></td>
+                            <td rowspan="<?php echo count($actH) ?>"><?php echo $actividadPadre; ?></td>
                             <?php
-                            $k = 0;
-                            echo ($k != 0 ) ? "<tr>" : "";
-                            if(is_array($rie))
-                            foreach ($rie as $riesgo => $cla):
-                                ?>
-                                <td rowspan="<?php echo count($rie[$riesgo])+count($cla); ?>"><?php echo $riesgo ?></td>
-                                <?php
-                                $n = 0;
-                                echo ($n != 0 ) ? "<tr>" : ""; 
-                                if(is_array($cla))
-                                foreach ($cla as $clasificacion => $num):
-                                    ?>
-                                    <td rowspan="<?php echo count($cla[$clasificacion])+count($num) ?>"><?php echo $clasificacion ?></td>
-                                    <?php
-                                    $m = 0;
-                                    foreach ($num as $tipo):
-                                        ?>
-                                        <?php echo ($m == 0 ) ? "<tr>" : ""; ?>
-                                            <td><?php echo $tipo ?></td>
-                                        <?php echo ($m != 0 ) ? "</tr>" : ""; 
-                                        $m++;
-                                        ?>
-                                <?php endforeach;
-                                echo ($n > count($cla[$clasificacion]) ) ? "</tr>" : "";
-                                $n++;
-                            endforeach;
-                            echo ($k > count($rie[$riesgo]) ) ? "</tr>" : "";
-                            $k++;
-                        endforeach;
-                        echo ($j > count($tar[$tarea]) ) ? "</tr>" : "";
-                        $j++;
-                    endforeach;
-                    echo ($i > count($actH[$actividadHijo]) ) ? "</tr>" : "";
+                        }
+                    } else {
+                        ?>
+                        <td><?php echo $actividadPadre; ?></td>
+                        <?php
+                    }
                     $i++;
+                    $d = 0;
+                    foreach ($actH as $actividadHijo => $tar):
+                        if ($d == 0) {
+                            if (!empty($actividadHijo)) {
+                                ?>
+                                <td rowspan="<?php echo count($tar) ?>"><?php echo $actividadHijo; ?></td>
+                            <?php }
+                        } else { ?>
+                            <td><?php echo $actividadHijo; ?></td>
+                            <?php
+                        }
+                        $d++;
+                        $m = 0;
+                        foreach ($tar as $tarea => $rie):
+                            if ($m == 0) {
+                                if (!empty($tarea)) {
+                                    ?>
+                                    <td rowspan="<?php echo count($rie) ?>"><?php echo $tarea . "oooooo"; ?></td>
+                                    <?php
+                                }
+                            } else {
+                                ?>
+                                <td><?php echo $tarea . "pppppp"; ?></td>
+                                <?php
+                            }
+                            $m++;
+                            $l = 0;
+                            foreach ($rie as $riesgo => $cla):
+                                if ($l == 0) {
+                                    if (!empty($riesgo)) {
+                                        ?>
+                                        <td rowspan="<?php echo count($cla) ?>"><?php echo $riesgo; ?></td>
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <td><?php echo $riesgo; ?></td>
+                                    <?php
+                                }
+                                $l++;
+                                $z = 0;
+                                foreach ($cla as $clasificacion => $num):
+                                    if ($z == 0) {
+                                        if (!empty($clasificacion)) {
+                                            ?>
+                                            <td rowspan="<?php echo count($num) ?>"><?php echo $clasificacion; ?></td>
+                                        <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <td><?php echo $clasificacion; ?></td>
+                                        <?php
+                                    }
+                                    $z++;
+                                    foreach ($num as $tipo):
+                                        
+                                    endforeach;
+                                endforeach;
+                            endforeach;
+                        endforeach;
+                    endforeach;
+                    ?></tr><?php
                 endforeach;
-                echo ($h > count($actP[$actividadPadre]) ) ? "</tr>" : "";
-                $h++;
             endforeach;
-            ?></tr><?php
-        endforeach;
-        ?>
-    </table>              
-
+            ?>
+    </table>  
 </div>

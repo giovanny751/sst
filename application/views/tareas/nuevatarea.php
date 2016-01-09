@@ -88,6 +88,18 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sx-6 col-sm-6 ">
+                        <label for="rutinario">Rutinario</label>
+                    </div>    
+                    <div class="col-lg-6 col-md-6 col-sx-6 col-sm-6 ">
+                        <select name="rutinario" id="rutinario" class="form-control" >
+                            <option value="">::Seleccionar::</option>
+                            <option value="1" <?php echo ((!empty($tarea->tar_rutinario)) && (1 == $tarea->tar_rutinario) ? "selected" : "") ?> >Si</option>
+                            <option value="0" <?php echo ((!empty($tarea->tar_rutinario)) && (0 == $tarea->tar_rutinario) ? "selected" : "") ?> >No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
                     <label for="dimensionuno" class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><?php echo $empresa[0]->Dim_id ?></label>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <select name="dimensionuno" id="dimensionuno" class="form-control" >

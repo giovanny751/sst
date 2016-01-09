@@ -514,7 +514,8 @@ class Tareas extends My_Controller {
                     "tip_id" => $this->input->post("tipo"),
                     "tar_idpadre" => $this->input->post("tareapadre"),
                     "tipRie_id" => $this->input->post("tiposriesgos"),
-                    "nor_id" => $this->input->post("norma")
+                    "nor_id" => $this->input->post("norma"),
+                    "tar_rutinario" => $this->input->post("rutinario")
                 );
                 $idtarea = $this->input->post('id');
                 $actualizar = $this->Tarea_model->update($data, $idtarea);
@@ -540,7 +541,8 @@ class Tareas extends My_Controller {
                     "tip_id" => $this->input->post("tipo"),
                     "tar_idpadre" => $this->input->post("tareapadre"),
                     "tipRie_id" => $this->input->post("tiposriesgos"),
-                    "nor_id" => $this->input->post("norma")
+                    "nor_id" => $this->input->post("norma"),
+                    "tar_rutinario" => $this->input->post("rutinario"),
                 );
                 $idtarea = $this->Tarea_model->create($data);
                 $consultaxid = $this->Tarea_model->detailxid($idtarea);

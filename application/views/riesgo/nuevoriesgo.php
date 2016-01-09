@@ -107,29 +107,62 @@
                         <input type="text" name="requisito" id="requisito" class="form-control" value="<?php echo ((!empty($riesgo->rie_requisito)) ? $riesgo->rie_requisito : ""); ?>">
                     </div>
                 </div>
+                
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
-                        <label for="rutinario">Rutinario</label>
+                        <label for="nivelDeficiencia">Nivel de deficiencia</label>
                     </div>    
                     <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
-                        <select name="rutinario" id="rutinario" class="form-control" >
+                        <select name="nivelDeficiencia" id="nivelDeficiencia" class="form-control calculoNivelProbabilidad" >
                             <option value="">::Seleccionar::</option>
-                            <option value="1" <?php echo ((!empty($riesgo->rie_rutinario)) && (1 == $riesgo->rie_rutinario) ? "selected" : "") ?> >Si</option>
-                            <option value="0" <?php echo ((!empty($riesgo->rie_rutinario)) && (0 == $riesgo->rie_rutinario) ? "selected" : "") ?> >No</option>
+                            <?php foreach ($deficiencia as $d): ?>
+                                <option value="<?php echo $d->nivDef_valor ?>"><?php echo $d->nivDef_nivel . " (" . $d->nivDef_valor . ")" ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
-                        <label for="rutinario">Nivel de exposicion</label>
+                        <label for="nivelExposicion">Nivel de exposición</label>
                     </div>    
                     <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
-                        <select name="rutinario" id="rutinario" class="form-control" >
+                        <select name="nivelExposicion" id="nivelExposicion" class="form-control calculoNivelProbabilidad" >
                             <option value="">::Seleccionar::</option>
-                            
+                            <?php foreach ($exposicion as $e): ?>
+                                <option value="<?php echo $e->nivExp_valor ?>"><?php echo $e->nivExp_nivel . " (" . $e->nivExp_valor . ")" ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
+                        <label for="nivelProbabilidad">Nivel de Probabilidad</label>
+                    </div>  
+                    <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
+                        <input type="text" id="nivelProbabilidad" class="form-control" />
+                    </div>
+                </div>  
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
+                        <label for="nivelConsecuencia">Nivel de consecuencia</label>
+                    </div>    
+                    <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
+                        <select name="nivelConsecuencia" id="nivelConsecuencia" class="form-control calculoNivelProbabilidad" >
+                            <option value="">::Seleccionar::</option>
+                            <?php foreach ($consecuencia as $c): ?>
+                                <option value="<?php echo $c->nivCon_nc ?>"><?php echo $c->nivCon_nivel . " (" . $c->nivCon_nc . ")" ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
+                        <label for="nivelRiesgo">Nivel de riesgo</label>
+                    </div>  
+                    <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 ">
+                        <input type="text" id="nivelRiesgo" class="form-control" />
+                    </div>
+                </div> 
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sx-4 col-sm-4 ">
                         <label for="observaciones">Observaciones</label>
@@ -560,6 +593,66 @@
     <?php endif; ?>
 </div>
 <script>
+
+    $('body').delegate(".calculoNivelProbabilidad", "change", function () {
+        var deficiencia = $("#nivelDeficiencia").val();
+        var exposicion = $("#nivelExposicion").val();
+        if (deficiencia != "" && exposicion != "") {
+            $.post("<?php echo base_url("index.php/riesgo/nivelProbabilidad") ?>",
+                    {
+                        deficiencia: deficiencia, 
+                        exposicion: exposicion,
+                        consecuencia : $("#nivelConsecuencia").val()
+                    }
+            )
+                    .done(function (msg) {
+                        if (!jQuery.isEmptyObject(msg.message)) {
+                            alerta("rojo", msg['message'])
+                            $('#nivelProbabilidad').val("");
+                            $('#nivelRiesgo').val("");
+                             $('#nivelRiesgo').css({
+                                    border: "1px black",
+                                    background: "whilte",
+                                    color : "black"
+                                });
+                        }
+                        else {
+                            if(msg.Json[0].nivRie_nivel != undefined){ 
+                                $('#nivelRiesgo').val(msg.Json[0].nivRie_nivel+" - "+msg.Json[0].nivRie_tipo);
+                                if(msg.Json[0].nivRie_nivel == 'I')
+                                    $('#nivelRiesgo').css({
+                                    border: "2px solid red",
+                                    background: "red",
+                                    color : "white"
+                                });
+                                else if(msg.Json[0].nivRie_nivel == 'II')
+                                    $('#nivelRiesgo').css({
+                                    border: "2px solid yellow",
+                                    background: "yellow",
+                                    color : "black"
+                                });
+                                else if(msg.Json[0].nivRie_nivel == 'III')
+                                    $('#nivelRiesgo').css({
+                                    border: "2px solid green",
+                                    background: "green",
+                                    color : "black"
+                                });
+                                else if(msg.Json[0].nivRie_nivel == 'IV')
+                                    $('#nivelRiesgo').css({
+                                    border: "2px solid orange",
+                                    background: "orange",
+                                    color : "black"
+                                });
+                            }
+                            $('#nivelProbabilidad').val(msg.Json[0].nivPro_Nivel);
+                        }
+                    })
+                    .fail(function (msg) {
+
+                    });
+        }
+    });
+
     $('body').delegate(".editartarea", "click", function () {
         var form = "<form method='post' id='frmFormAvance' action='<?php echo base_url("index.php/tareas/nuevatarea") ?>'>";
         form += "<input type='hidden' name='tar_id' value='" + $(this).attr("tar_id") + "'>";
@@ -697,7 +790,7 @@
                 var filas = "";
                 $.each(result, function (key, val) {
                     filas += "<tr>";
-                    filas += "<td>"+'<a target="_black" href="<?php echo base_url() ?>'+val.reg_ruta+"/"+val.reg_id+'/'+val.reg_archivo+'">' + val.reg_archivo + "</a></td>";
+                    filas += "<td>" + '<a target="_black" href="<?php echo base_url() ?>' + val.reg_ruta + "/" + val.reg_id + '/' + val.reg_archivo + '">' + val.reg_archivo + "</a></td>";
                     filas += "<td>" + val.reg_descripcion + "</td>";
                     filas += "<td>" + val.reg_version + "</td>";
                     filas += "<td>" + val.usu_nombre + " " + val.usu_apellido + "</td>";
@@ -727,9 +820,9 @@
         $("#archivoadescargar").remove();
         $('#carpeta').val($(this).attr('car_id'));
     });
-    
+
     $('body').delegate('.modificarregistro', 'click', function () {
-        var reg_id=$(this).attr('reg_id');
+        var reg_id = $(this).attr('reg_id');
         $.post(
                 "<?php echo base_url("index.php/planes/modificarregistro") ?>",
                 {registro: $(this).attr('reg_id')}
@@ -931,6 +1024,7 @@
             $.post("<?php echo base_url("index.php/riesgo/guardarriesgo") ?>"
                     , $("#riesgos").serialize()
                     ).done(function (msg) {
+
                 alerta("verde", "Guardado");
                 if (confirm("Desea guardar otro riesgo?")) {
                     $("#riesgos").find("input").val("");

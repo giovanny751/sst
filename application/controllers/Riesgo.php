@@ -31,8 +31,13 @@ class Riesgo extends My_Controller {
                 "Registrocarpeta_model",
                 "Estadoaceptacioncolor_model",
                 "Riesgocargo_model",
-                "Cargo_model"
+                "Cargo_model",
+                "Planes_model",
+                "Niveles_model"
             ));
+            $this->data['deficiencia'] = $this->Niveles_model->nivelDeficiencia();
+            $this->data['exposicion'] = $this->Niveles_model->nivelExposicion();
+            $this->data['consecuencia'] = $this->Niveles_model->nivelConsecuencia();
             $this->data['categoria'] = $this->Riesgoclasificacion_model->detail();
             $this->data['estadoaceptacionxcolor'] = $this->Estadoaceptacion_model->detail();
             $this->data['empresa'] = $this->Empresa_model->detail();
@@ -54,7 +59,6 @@ class Riesgo extends My_Controller {
                         );
                     }
                     $this->data['carpeta'] = $d;
-                    $this->load->model("Planes_model");
                     $this->data['rie_id'] = $this->input->post("rie_id");
                     $this->data['tarea'] = $this->Tarea_model->tareaxRiesgo($this->data['rie_id']);
                     $this->data['riesgo'] = $this->Riesgo_model->detailxid($this->input->post("rie_id"))[0];
@@ -79,9 +83,7 @@ class Riesgo extends My_Controller {
 
     function guardarriesgo() {
         try {
-            $this->load->model('Riesgo_model');
-            $this->load->model('Riesgocargo_model');
-            $this->load->model('Riesgoclasificaciontipo_model');
+            $this->load->model(array('Riesgo_model','Riesgocargo_model','Riesgoclasificaciontipo_model'));
             $data = array(
                 "rie_descripcion" => $this->input->post("descripcion"),
                 "rieCla_id" => $this->input->post("categoria"),
@@ -111,6 +113,19 @@ class Riesgo extends My_Controller {
             
         } finally {
             
+        }
+    }
+    
+    function nivelProbabilidad(){
+        try{
+        $this->load->model("Niveles_model");
+        $data['Json'] = $this->Niveles_model->nivelProbabilidad($this->input->post("deficiencia"),$this->input->post("exposicion"),$this->input->post("consecuencia"));
+        if(count($data['Json']) == 0) throw new Exception("No se encontro nivel de probabilidad");
+        
+        }catch(exception $e){
+            $data['message'] = $e->getMessage();
+        }finally{
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }
 
@@ -162,10 +177,7 @@ class Riesgo extends My_Controller {
 
     function consultaRiesgoFlechas() {
         try {
-            $this->load->model("Riesgo_model");
-            $this->load->model("Riesgocargo_model");
-            $this->load->model("Riesgoclasificaciontipo_model");
-            $this->load->model("Estadoaceptacioncolor_model");
+            $this->load->model(array("Riesgo_model","Riesgocargo_model","Riesgoclasificaciontipo_model","Estadoaceptacioncolor_model"));
             $idRiesgo = $this->input->post("idRiesgo");
             $metodo = $this->input->post("metodo");
             $campos["campos"] = $this->Riesgo_model->consultaRiesgoFlechas($idRiesgo, $metodo)[0];
@@ -305,9 +317,7 @@ class Riesgo extends My_Controller {
 
     function estadosaceptacion() {
         try {
-            $this->load->model("Estadoaceptacion_model");
-            $this->load->model("Estadoaceptacioncolor_model");
-            $this->load->model("Riesgocolor_model");
+            $this->load->model(array("Estadoaceptacion_model","Estadoaceptacioncolor_model","Riesgocolor_model"));
 
             $estadoaceptacion = $this->Estadoaceptacion_model->detailandcolor();
             $i = array();
@@ -510,8 +520,7 @@ class Riesgo extends My_Controller {
     function guardartipocategoria() {
 
         try {
-            $this->load->model("Riesgoclasificacion_model");
-            $this->load->model("Riesgoclasificaciontipo_model");
+            $this->load->model(array("Riesgoclasificacion_model","Riesgoclasificaciontipo_model"));
             if (empty($this->Riesgoclasificaciontipo_model->exist($this->input->post("categoria"), $this->input->post("tipo")))) {
                 if ($this->input->post("accion") == 1) {
                     $this->Riesgoclasificaciontipo_model->create(
