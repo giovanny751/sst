@@ -261,7 +261,9 @@ class Administrativo extends My_Controller {
                 'empInc_observacion' => $this->input->post('observacionInc'),
                 'usu_id' => $this->session->userdata('usu_id'),
                 'emp_id' => $this->input->post('empleadoInc'),
-                'empInc_fechaIngreso' => date("Y-m-d H:i:s")
+                'empInc_fechaIngreso' => date("Y-m-d H:i:s"),
+                'creatorUser' => $this->data["usu_id"],
+                'creationDate' => date("Y-m-d H:i:s")
             );
             $this->Empleadoincapacidad_model->create($data);
         } catch (exception $e) {
@@ -621,9 +623,9 @@ class Administrativo extends My_Controller {
         }
     }
 
-    function guardarusuario() {
+function guardarusuario() {
         try {
-            $this->load->model(array('User_model','Roles_model'));
+            $this->load->model(array('User_model','Roles_model','Empresa_model'));
             $consultaexistencia = $this->User_model->consultausuarioxcedula($this->input->post('cedula'));
             if (empty($consultaexistencia)) {
                 $data = array(
@@ -642,7 +644,17 @@ class Administrativo extends My_Controller {
                     'emp_id' => (!empty($this->input->post('empleado')) ? $this->input->post('empleado') : NULL),
                     'rol_id' => (!empty($this->input->post('rol')) ? $this->input->post('rol') : NULL)
                 );
+                $this->data['empresa'] = $this->Empresa_model->detail();
+                $this->data['nombre'] = $this->input->post('nombres')." ".$this->input->post('apellidos');
+                $this->data['usuario'] = $this->input->post('usuario');
+                $this->data['contrasena'] = $this->input->post('contrasena');
+                        
+                $cartaBienvenida = $this->load->view("cartas/ingresousuario",$this->data,true);
+                $cabeceras  = 'MIME-Version: 1.0' . "\r\n";
+                $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
                 
+                mail($this->input->post('email'), "Bienvenido al sistema SG-SST", $cartaBienvenida, $cabeceras);
+//                echo $data;die;
 //                var_dump($data);die;
                 
                 $id = $this->User_model->create($data);
@@ -1291,15 +1303,20 @@ class Administrativo extends My_Controller {
     }
 
 function accidente() {
+    
+        $idAccidente = $this->input->post("accidente");
+    
         $this->load->model(array('Tipoevento_model'
                                 ,'Claseevento_model'
                                 ,'Partescuerpo_model'
                                 ,'Riesgoclasificacion_model'
-                                , 'Empleado_model'
+                                ,'Empleado_model'
                                 ,'Dimension2_model'
                                 ,'Dimension_model'
-                                , "Empresa_model"
-                                ,"Empleadoresponsable_model"));
+                                ,"Empresa_model"
+                                ,"Empleadoresponsable_model"
+                                ,'Riesgoclasificacion_model' 
+                                , "Accidentes_model" ));
         
         $this->data["tipo_eventos"] = $this->Tipoevento_model->detail();
         $this->data["clases_eventos"] = $this->Claseevento_model->detail();
@@ -1311,6 +1328,39 @@ function accidente() {
         $this->data['empresa'] = $this->Empresa_model->detail()[0];
         $this->data['responsables'] = $this->Empleadoresponsable_model->detail();
         
+        if(!empty($idAccidente)){
+            $rieClaTip = array();
+            $resultadoAccidentes  = $this->Accidentes_model->detailAccidente($idAccidente);
+            foreach($resultadoAccidentes as $resultadoAccidente){
+                $this->data["accidente"]["datos"]["id"] = $resultadoAccidente->id;
+                $this->data["accidente"]["datos"]["empleado"] = $resultadoAccidente->empleado;
+                $this->data["accidente"]["datos"]["lugar"] = $resultadoAccidente->lugar;
+                $this->data["accidente"]["datos"]["dimension1"] = $resultadoAccidente->dimension1;
+                $this->data["accidente"]["datos"]["dimension2"] = $resultadoAccidente->dimension2;
+                $this->data["accidente"]["datos"]["zona"] = $resultadoAccidente->zona;
+                $this->data["accidente"]["datos"]["jefeInmediato"] = $resultadoAccidente->jefeInmediato;
+                $this->data["accidente"]["datos"]["tipoEvento"] = $resultadoAccidente->tipoEvento;
+                $this->data["accidente"]["datos"]["lugarAccidente"] = $resultadoAccidente->lugarAccidente;
+                $this->data["accidente"]["datos"]["fechaAccidente"] = explode(" ", $resultadoAccidente->fechaAccidente);
+                $this->data["accidente"]["datos"]["descripcion"] = $resultadoAccidente->descripcion;
+                $this->data["accidente"]["datos"]["reportado"] = $resultadoAccidente->reportado;
+                $this->data["accidente"]["incapacidad"]["fInicial"] = $resultadoAccidente->fechaInicio;
+                $this->data["accidente"]["incapacidad"]["fFinal"] = $resultadoAccidente->fechaFinal;
+                $this->data["accidente"]["incapacidad"]["responsable"] = $resultadoAccidente->responsable;
+                $this->data["accidente"]["tipEve"][$resultadoAccidente->accidenteEvento] = $resultadoAccidente->claseEvento;
+                $this->data["accidente"]["parCUe"][$resultadoAccidente->accidenteParte] = $resultadoAccidente->parteCuerpo;
+                $this->data["accidente"]["correo"][$resultadoAccidente->accidenteCorreo] = $resultadoAccidente->correo;
+                $this->data["accidente"]["rieClasificacion"][$resultadoAccidente->accidenteRiesgoCla] = $resultadoAccidente->riesgoCla;
+                $this->data["accidente"]["rieClasificacionTipo"][$resultadoAccidente->accidenteRiesgoClaTip] = $resultadoAccidente->RiesgoClaTip;
+                array_push($rieClaTip, $resultadoAccidente->riesgoCla);                
+            }
+            $rieClaTip = array_unique($rieClaTip);
+            $rieClasificaciones =$this->Riesgoclasificacion_model->detailandtipo_categoria_batch($rieClaTip);
+            foreach($rieClasificaciones as $rieClasificacion){
+                $this->data["rieClasificaciones"][$rieClasificacion->clasificacion]["tipo"][$rieClasificacion->clasificacion_id] = $rieClasificacion->tipo;
+                $this->data["rieClasificaciones"][$rieClasificacion->clasificacion]["categoria"] = $rieClasificacion->categoria;
+            }
+        }
         $this->layout->view("administrativo/accidente", $this->data);
     }
     
@@ -1408,7 +1458,133 @@ function accidente() {
                         "empRes_id" => $responsable
                         ,"empInc_fechaInicio" => $fInicio
                         ,"empInc_fechaFinal" => $fFin
-                        ,"empInc_motivo" => "Incapacidad"
+                        ,"empInc_motivo" => "Accidente"
+                        ,"usu_id" => $this->data["usu_id"]
+                        ,"emp_id" => $empleado
+                        ,"empInc_fechaIngreso" => date("Y-m-d H:i:s")
+                    );
+                    $this->Empleadoincapacidad_model->create($incapacidad);
+                }
+                
+                $i=0;
+                $indiceError = ["Eventos","Cuerpo","Riesgo","Correo"];
+                    print_r($verificacion);die;
+                foreach ($verificacion as $veri){
+                    if($veri === false){
+                        array_push($data['message'], "Error en -> ".$indiceError[$i].""); 
+                    }
+                    $i++;
+                }
+                if(count($data['message']) == 0){
+                    array_push($data['message'],"SUCCESS");
+                }
+            }else{
+                throw new Exception("Error por favor comunicarse con el administrador");
+            }
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    function editarAccidente(){
+        try {
+            
+            $this->load->model(array("Accidentes_model"
+                                    ,"Accidentesclaseevento_model"
+                                    ,"Accidentespartescuerpo_model"
+                                    ,"Accidentesriesgoclasificacion_model"
+                                    ,"Accidentesriesgoclasificaciontipo_model"
+                                    ,"Empleadoincapacidad_model"
+                                    ,"Accidentescorreo_model"));
+            
+            $empleado = $this->input->post("empleado");
+            
+            $idAccidente = $this->db->post("registro");
+            
+            $accdente = array(
+                "emp_id" => $empleado
+                ,"acc_lugar" => $this->input->post("lugar")
+                ,"dim1_id" => $this->input->post("dimension1")
+                ,"dim2_id" => $this->input->post("dimension2")
+                ,"acc_zona" => $this->input->post("zona")
+                ,"acc_jefeInmediato" => $this->input->post("jefe")
+                ,"tipEve_id" => $this->input->post("tipo")
+                ,"acc_lugarAccidente" => $this->input->post("sitio")
+                ,"acc_fechaAccidente" => $this->input->post("accidenteFecha")." ".$this->input->post("accidenteHora")
+                ,"acc_descripcion" => $this->input->post("descripcion")
+                ,"acc_reportado" => $this->input->post("accidenteReportado")
+                ,"modificationUser" => $this->data["usu_id"]
+                ,"modificationDate" => date("Y-m-d H:i:s")
+            );
+            $id = $this->Accidentes_model->update($accdente,$idAccidente);
+            
+            if($id != FALSE){
+                $agregarEvento = array();
+                $agregarParte = array();
+                $agregarTipo = array();
+                $agregarCorreo = array();
+                $verificacion = array();
+                $data['message'] = array();
+               
+                $claseEventos = $this->input->post("claseEventos");
+                if(isset($claseEventos)){
+                    foreach($claseEventos as $claseEvento)
+                        array_push($agregarEvento, array("acc_id"=>$id,"claEve_id"=>$claseEvento));
+                    $verificacion[] = $this->Accidentesclaseevento_model->updateAccidente($agregarEvento,$id);
+                }
+                
+                $correo = $this->input->post("correo");   
+                if(isset($correo)){
+                    foreach($correo as $c)
+                        array_push($agregarCorreo, array("acc_id"=>$id,"accCor_correo"=>$c));
+                    $verificacion[] = $this->Accidentescorreo_model->insert($agregarCorreo);
+                }
+                
+                $parteCuerpo = $this->input->post("parteCuerpo");
+                if(isset($parteCuerpo)){
+                    foreach($parteCuerpo as $pc)
+                        array_push($agregarParte, array("acc_id"=>$id,"parCue_id"=>$pc));
+                    $verificacion[] = $this->Accidentespartescuerpo_model->insert($agregarParte);
+                }
+                
+                $tipoRiesgo = $this->input->post("tipoRiesgo");   
+                if(isset($tipoRiesgo)){
+                    foreach($tipoRiesgo as $tr){
+                        $idriesgo = $this->Accidentesriesgoclasificacion_model->insert(array("acc_id"=>$id,"rieCla_id"=>$tr));
+
+                        if($idriesgo != FALSE){
+                            $dato = $this->input->post();
+                            foreach($dato as $name => $val){
+                                $valores = array();
+                                $variable = explode("/",$name);
+                                if($variable[0] == "dato"){
+                                    if($variable[1] == $tr){
+                                        foreach($val as $index => $tipo_id )
+                                            $valores[]= array("accRieCla_id" => $idriesgo, "rieClaTip_id" => $tipo_id);
+                                        $resultadoTipo = $this->Accidentesriesgoclasificaciontipo_model->insert($valores);
+                                        if($resultadoTipo == False){
+                                            $data["Error"] = "Error Insertando tipo Riesgo";
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            $verificacion[] = FALSE;
+                        }
+                    }
+                }
+                
+                $responsable = $this->input->post("responsable");
+                $fInicio = $this->input->post("fechaInicioIncapacidad");
+                $fFin = $this->input->post("fechaFinIncapacidad");
+               
+                if(isset($responsable) && isset($fInicio) && isset($fFin)){
+                    $incapacidad = array(
+                        "empRes_id" => $responsable
+                        ,"empInc_fechaInicio" => $fInicio
+                        ,"empInc_fechaFinal" => $fFin
+                        ,"empInc_motivo" => "Accidente"
                         ,"usu_id" => $this->data["usu_id"]
                         ,"emp_id" => $empleado
                         ,"empInc_fechaIngreso" => date("Y-m-d H:i:s")
@@ -1438,6 +1614,7 @@ function accidente() {
         }
     }
     
+    
     function horasextras(){
         $this->load->model(array('Empleado_model','Horaextratipo_model'));
         $this->data['empleados'] = $this->Empleado_model->detail();
@@ -1452,6 +1629,47 @@ function accidente() {
         }catch(Exception $e){
             $data['message'] = $e->getMessage();
         }  finally {
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
+    }
+    
+    function listadoaccidente(){
+        try{
+            $this->load->model(array('Empleado_model'
+                                ,'Dimension2_model'
+                                ,'Dimension_model'
+                                , "Empresa_model"));
+        
+        $this->data["empleados"] = $this->Empleado_model->detail_order();
+        $this->data['dimension1'] = $this->Dimension_model->detail();
+        $this->data['dimension2'] = $this->Dimension2_model->detail();
+        $this->data['empresa'] = $this->Empresa_model->detail()[0];
+            
+            $this->layout->view("administrativo/listadoaccidente", $this->data);
+        }catch(Exeption $e){
+            
+        }finally{}
+    }
+    
+    function filtroaccidente(){
+        try {
+            $this->load->model(array("Accidentes_model"));
+            
+            $reporte = $this->input->post('reporte');
+            $empleado = $this->input->post('empleado');
+            $dim1 = $this->input->post('dimension1');
+            $dim2 = $this->input->post('dimension2');
+            $zona = $this->input->post('zona');
+            $lugar = $this->input->post('lugar');
+            $fInicial = $this->input->post('fInicial');
+            $fFinal = $this->input->post('fFinal');
+            $Creacion = $this->input->post('fCreacion');
+            $incapacidad = $this->input->post('incapacidad');
+                   
+            $data['Json'] = $this->Accidentes_model->filtroaccidente($reporte, $empleado, $dim1, $dim2, $zona, $lugar, $fInicial, $fFinal, $Creacion, $incapacidad);
+        } catch (exception $e) {
+            $data['message'] = $e->getMessage();
+        } finally {
             $this->output->set_content_type('application/json')->set_output(json_encode($data));
         }
     }

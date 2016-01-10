@@ -46,6 +46,23 @@ class Riesgoclasificacion_model extends CI_Model {
             
         }
     }
+    function detailandtipo_categoria_batch($categoria_id) {
+        try {
+            $this->db->select("riesgo_clasificacion_tipo.rieClaTip_id as clasificacion_id");
+            $this->db->select("riesgo_clasificacion_tipo.rieClaTip_tipo as tipo");
+            $this->db->select("riesgo_clasificacion.rieCla_categoria as categoria");
+            $this->db->select("riesgo_clasificacion.rieCla_id as clasificacion");
+            $this->db->join("riesgo_clasificacion_tipo", "riesgo_clasificacion_tipo.rieCla_id = riesgo_clasificacion.rieCla_id", "LEFT");
+            $this->db->where_in("riesgo_clasificacion.rieCla_id",$categoria_id);
+            $this->db->order_by("riesgo_clasificacion.rieCla_categoria","asc");
+            $this->db->order_by("riesgo_clasificacion_tipo.rieClaTip_tipo","asc");
+            $datos = $this->db->get("riesgo_clasificacion");
+//            echo $this->db->last_query();
+            return $datos->result();
+        } catch (exception $e) {
+            
+        }
+    }
 
     function detailxcategoria($categoria) {
         try {
