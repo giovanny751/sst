@@ -52,7 +52,6 @@
             foreach ($menu as $modulo)
                 $i[$modulo['menu_nombrepadre']][$modulo['menu_idpadre']] [] = array($modulo['menu_idhijo'], $modulo['menu_controlador'], $modulo['menu_accion'], $modulo['mod_icons']);
             echo"<ul class=''>";
-//            foreach ( as $padre => $nombrepapa)
                 foreach ($i as $nombrepapa => $menuidpadre)
                     foreach ($menuidpadre as $modulos => $menu)
                         foreach ($menu as $submenus):

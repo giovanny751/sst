@@ -481,8 +481,7 @@ class Presentacion extends My_Controller {
         try {
             $this->load->model("User_model");
             $rol = $this->input->post("rol");
-            $usu_id = $this->session->userdata('usu_id');
-            $this->User_model->rolxdefecto($rol, $usu_id);
+            $this->User_model->rolxdefecto($rol, $this->data['usu_id']);
         } catch (exception $e) {
             
         } finally {

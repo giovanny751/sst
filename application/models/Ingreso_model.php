@@ -378,17 +378,19 @@ class Ingreso_model extends CI_Model {
         }
     }
 
-    function consultapermisosmenu($usu_id, $controller, $method) {
+    function consultapermisosmenu($usu_id, $controller, $method, $rol_id) {
         try {
             $this->db->select("modulo.menu_controlador clase");
             $this->db->select("modulo.menu_accion metodo");
             $this->db->select("permisos.usu_id");
             $this->db->where("modulo.menu_controlador", $controller);
             $this->db->where("modulo.menu_accion", $method);
+            $this->db->where("roles.rol_id", $rol_id);
             $this->db->join("permisos_rol", "permisos_rol.menu_id = modulo.menu_id ", "left");
             $this->db->join("roles", "roles.rol_id = permisos_rol.rol_id", "left");
             $this->db->join("permisos", "permisos.rol_id = roles.rol_id and usu_id = $usu_id");
             $query = $this->db->get("modulo");
+//            echo $this->db->last_query();die;
             return $query->result_array();
         } catch (exception $e) {
             

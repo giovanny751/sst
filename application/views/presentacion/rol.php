@@ -20,24 +20,16 @@
             <?php } ?>
         </tbody>
     </table>
+    </form>   
     <div class="row" style="text-align:center">
         <!--<button type="button" class="btn btn-success ingresar">Ingresar</button>-->
-        <button type="button" class="btn-sst ingresar">Rol por defecto</button>
+        <button type="button" class="btn-sst defecto">Rol por defecto</button>
     </div>
-    </form>   
 </div>
 <script>
     
-    $('.ingresar').click(function(){
-        
-        
-        $('#f20').attr("action","<?php echo base_url("index.php") ?>");
-        $('#f20').submit();
-        
-    });
     
     $('.defecto').click(function(){
-        
         $.post("<?php echo base_url("index.php/presentacion/guardarroldefecto") ?>"
         ,$('#f20').serialize()
                 ).done(function(msg){

@@ -26,7 +26,7 @@ class MY_Controller extends CI_Controller {
         $this->data['user'] = $this->session->userdata();
         $this->data["usu_id"] = $this->session->userdata('usu_id');
         validate_login($this->data['user']['usu_id']);
-//        $this->verificacion();
+        $this->verificacion();
     }
 
     function verificacion() {
@@ -40,12 +40,11 @@ class MY_Controller extends CI_Controller {
                     (strtoupper($method) != strtoupper('index') || strtoupper($method) != strtoupper('verify'))
                     )
             ) {
-                $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method);
+                $view = $this->Ingreso_model->consultapermisosmenu($this->data['user']['usu_id'], $controller, $method,$this->data['user']['rol_id']);
                 $permisosPeticion = $this->Ingreso_model->consultaPermisosAccion($this->data['user']['usu_id'], $controller, $method);
                 if (!empty($view)) {
-                    if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id'])) {
+                    if (!empty($view[0]['clase']) && !empty($view[0]['metodo']) && empty($view[0]['usu_id']))
                         echo "No tiene permisos por favor comunicarse con el administrador";
-                    }
                 } else if (!empty($permisosPeticion)) {
                     if (!empty($permisosPeticion[0]['clase']) && !empty($permisosPeticion[0]['metodo']) && empty($permisosPeticion[0]['usu_id'])) {
                         throw new Exception("No tiene permisos de ejecutar la acción");

@@ -207,6 +207,7 @@ class User_model extends CI_Model {
             $this->db->where("usu_id", $usu_id);
             $this->db->set("rol_id", $rol);
             $this->db->update("user");
+            echo $this->db->last_query();die;
         } catch (exception $e) {
             
         }
