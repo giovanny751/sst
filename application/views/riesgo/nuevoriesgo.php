@@ -219,13 +219,12 @@
                     </div>    
                     <div class="col-lg-8 col-md-8 col-sx-8 col-sm-8 "> 
                         <?php
+                        $select=array();
                         if (!empty($rie_id)) {
                             foreach ($cargoId as $value) {
                                 $select[] = $value->car_id;
                             }
-                        } else {
-                            $select[] = 0;
-                        }
+                        } 
                         ?>
                         <?php echo listaMultiple2("cargo[]", "cargo", "form-control", "cargo", "car_id", "car_nombre", $select, array("cargo.est_id" => 1), null) ?> 
                     </div>

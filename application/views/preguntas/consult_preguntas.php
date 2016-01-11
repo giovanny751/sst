@@ -24,13 +24,13 @@
                 <br>
             </div>
 
-            <div class="col-md-3">
+            <!--<div class="col-md-3">
                 <label for="tem_id">
                     Tema                        </label>
             </div>
             <div class="col-md-3">
 
-                <?php echo lista("tem_id", "tem_id", "form-control obligatorio", "tema", "tem_id", "tem_nombre", (isset($post['tem_id']) ? $post['tem_id'] : ''), array("ACTIVO" => "S"), /* readOnly? */ false); ?>
+                <?php // echo lista("tem_id", "tem_id", "form-control obligatorio", "tema", "tem_id", "tem_nombre", (isset($post['tem_id']) ? $post['tem_id'] : ''), array("ACTIVO" => "S"), /* readOnly? */ false); ?>
                 <br>
             </div>
 
@@ -39,10 +39,10 @@
                     Area                        </label>
             </div>
             <div class="col-md-3">
-                <?php echo lista("are_id", "are_id", "form-control obligatorio", "area", "are_id", "are_nombre", (isset($post['are_id']) ? $post['are_id'] : ''), array("ACTIVO" => "S"), /* readOnly? */ false); ?>
+                <?php //echo lista("are_id", "are_id", "form-control obligatorio", "area", "are_id", "are_nombre", (isset($post['are_id']) ? $post['are_id'] : ''), array("ACTIVO" => "S"), /* readOnly? */ false); ?>
                 <br>
             </div>
-
+-->
             <div class="col-md-3">
                 <label for="tipPre_id">
                     Tipo pregunta                        </label>
@@ -72,8 +72,8 @@
                 <thead>
                 <th style='display:none'></th>
                 <th>Evaluación</th>
-                <th>Tema</th>
-                <th>Area</th>
+<!--                <th>Tema</th>
+                <th>Area</th>-->
                 <th>Tipo pregunta</th>
                 <th>pregunta</th>
                 <th>Numero de respuestas</th>
@@ -103,7 +103,7 @@
                                 echo '<a href="javascript:" class="btn btn-dcs" ><i class="fa fa-check fa-2x modificar" modificar=' . $valor . ' estado=' . "'" . $value->$key2 . "'" . ' style="color:' . $d . '"></i></a>';
                                 echo "</td>";
                             } else {
-                                echo "<td>" . $value->$key2 . "</td>";
+                                echo "<td>" . utf8_encode($value->$key2) . "</td>";
                             }
                             $i++;
                         }

@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>SG-SST</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <!--<meta http-equiv="Content-type" content="text/html; charset=utf-8">-->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta content="" name="description"/>
         <meta content="" name="author"/>
         <link href="<?= base_url('assets/global/plugins/font-awesome/css/font-awesome.min.css') ?>" rel="stylesheet" type="text/css"/> 
@@ -74,19 +76,19 @@
                 }
 
                 foreach ($preguntas_evaluacion as $key => $value) {
-                    echo '<tr><td><span><b>Pregunta # ' . $i . '</b></span><span style="float:right">Tipo pregunta: ' . $value->tipPre_nombre . '</span></td></tr><tr><td>';
+                    echo '<tr><td><span><b>Pregunta # ' . $i . '</b></span><span style="float:right">Tipo pregunta: ' .utf8_encode($value->tipPre_nombre) . '</span></td></tr><tr><td>';
                     $i++;
-                    if ($value->are_nombre != $area) {
-                        echo '<b>Area: ' . $value->are_nombre . '</b><p>';
-                        $area = $value->are_nombre;
-                    }
-                    if ($value->tem_nombre != $tema) {
-                        echo '<b>Tema: ' . $value->tem_nombre . '</b><p>';
-                        $tema = $value->tem_nombre;
-                    }
+//                    if ($value->are_nombre != $area) {
+//                        echo '<b>Area: ' . $value->are_nombre . '</b><p>';
+//                        $area = $value->are_nombre;
+//                    }
+//                    if ($value->tem_nombre != $tema) {
+//                        echo '<b>Tema: ' . $value->tem_nombre . '</b><p>';
+//                        $tema = $value->tem_nombre;
+//                    }
                     if (!empty($value->pre_contexto))
-                        echo '<b>Contexto:</b> <br>' . $value->pre_contexto . '<p>';
-                    echo '<b>Pregunta:</b> <br>' . $value->pre_nombre . '<p>';
+                        echo '<b>Contexto:</b> <br>' . utf8_encode($value->pre_contexto) . '<p>';
+                    echo '<b>Pregunta:</b> <br>' . utf8_encode($value->pre_nombre) . '<p>';
                     $pregu[] = $value->pre_id;
                     @$datos = Evaluacion::obtener_respuestas($value->pre_id);
                     
