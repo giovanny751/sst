@@ -494,15 +494,18 @@ class Tareas extends My_Controller {
         try {
             $this->load->model('Tarea_model');
             if (!empty($this->input->post('id'))):
+                if (!empty($this->input->post("registro"))) {
+                    $this->db->set('actHij_id', $this->input->post("registro"));
+                }
                 $data = array(
                     "actPad_id" => $this->input->post("actividad"),
-                    "actHij_id" => $this->input->post("registro"),
                     "car_id" => $this->input->post("cargo"),
-                    "rieCla_id" => $this->input->post("clasificacionriesgo"),
+//                    "rieCla_id" => $this->input->post("clasificacionriesgo"),
+//                    "tipRie_id" => $this->input->post("tiposriesgos"),
                     "tar_costopresupuestado" => $this->input->post("costrospresupuestados"),
                     "tar_descripcion" => $this->input->post("descripcion"),
-                    "dim_id" => $this->input->post("dimensionuno"),
-                    "dim2_id" => $this->input->post("dimensiondos"),
+                    "dim_id" => (!empty($this->input->post("dimensionuno")) ? $this->input->post("dimensionuno") : null),
+                    "dim2_id" => (!empty($this->input->post("dimensiondos")) ? $this->input->post("dimensiondos") : null),
                     "est_id" => $this->input->post("estado"),
                     "tar_fechaInicio" => $this->input->post("fechaIncio"),
                     "tar_fechaUltimaMod" => date("Y-m-d H:i:s"),
@@ -513,7 +516,6 @@ class Tareas extends My_Controller {
                     "pla_id" => $this->input->post("plan"),
                     "tip_id" => $this->input->post("tipo"),
                     "tar_idpadre" => $this->input->post("tareapadre"),
-                    "tipRie_id" => $this->input->post("tiposriesgos"),
                     "nor_id" => $this->input->post("norma"),
                     "tar_rutinario" => $this->input->post("rutinario")
                 );
@@ -521,11 +523,14 @@ class Tareas extends My_Controller {
                 $actualizar = $this->Tarea_model->update($data, $idtarea);
                 $consultaxid = $this->Tarea_model->detailxid($this->input->post('id'));
             else:
+                if (!empty($this->input->post("registro"))) {
+                    $this->db->set('actHij_id', $this->input->post("registro"));
+                }
                 $data = array(
                     "actPad_id" => $this->input->post("actividad"),
-                    "actHij_id" => $this->input->post("registro"),
                     "car_id" => $this->input->post("cargo"),
-                    "rieCla_id" => $this->input->post("clasificacionriesgo"),
+//                    "rieCla_id" => $this->input->post("clasificacionriesgo"),
+//                    "tipRie_id" => $this->input->post("tiposriesgos"),
                     "tar_costopresupuestado" => $this->input->post("costrospresupuestados"),
                     "tar_descripcion" => $this->input->post("descripcion"),
                     "dim_id" => $this->input->post("dimensionuno"),
@@ -540,13 +545,13 @@ class Tareas extends My_Controller {
                     "pla_id" => $this->input->post("plan"),
                     "tip_id" => $this->input->post("tipo"),
                     "tar_idpadre" => $this->input->post("tareapadre"),
-                    "tipRie_id" => $this->input->post("tiposriesgos"),
                     "nor_id" => $this->input->post("norma"),
                     "tar_rutinario" => $this->input->post("rutinario"),
                 );
                 $idtarea = $this->Tarea_model->create($data);
                 $consultaxid = $this->Tarea_model->detailxid($idtarea);
             endif;
+            $this->Tarea_model->tarea_riegos_clasificacion($idtarea, $this->input->post("clasificacionriesgo"), $this->input->post("tiposriesgos"));
             $this->Tarea_model->guardar_lista_riesgos($idtarea, $this->input->post("lista_riesgos"));
             $articulosnorma = $this->input->post("articulosnorma");
             $data = array();
@@ -673,7 +678,7 @@ class Tareas extends My_Controller {
             $this->output->set_content_type('application/json')->set_output(json_encode($this->data['tarea']));
         } catch (exception $e) {
             
-        }finally{
+        } finally {
             
         }
     }

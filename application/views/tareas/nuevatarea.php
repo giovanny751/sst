@@ -284,9 +284,9 @@
                 <div class="row">
                     <label for="tiposriesgos" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">Tipos de Riesgos</label>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <select name='tiposriesgos' id='tiposriesgos' class="form-control" multiple>
-                            <?php foreach($tipoClasificacion as $tc): ?>
-                            <option <?php echo (!empty($tarea->tipRie_id) && $tc->rieClaTip_id == $tarea->tipRie_id ) ? "Selected" : ""; ?> vale="<?php echo $tc->rieClaTip_id ?>"><?php echo $tc->rieClaTip_tipo ?></option>
+                        <select name='tiposriesgos[]' id='tiposriesgos' class="form-control" multiple>
+                            <?php foreach ($tipoClasificacion as $tc): ?>
+                                <option <?php echo (!empty($tarea->tipRie_id) && $tc->rieClaTip_id == $tarea->tipRie_id ) ? "Selected" : ""; ?> vale="<?php echo $tc->rieClaTip_id ?>"><?php echo $tc->rieClaTip_tipo ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -744,7 +744,7 @@
 
         });
         function clasificacionRiesgoTipo() {
-            
+
             $.post(
                     "<?php echo base_url("index.php/riesgo/consultatiporiesgoxclasificacion") ?>",
                     {categoria: $("#clasificacionriesgo").val()}
@@ -755,11 +755,11 @@
                         else {
                             $('#tiposriesgos *').remove();
                             var option = "";
-                            var titulo="";
+                            var titulo = "";
                             $.each(msg.Json, function (key, val) {
-                                if(titulo!=val.rieCla_id){
-                                    option+='<optgroup label="'+val.rieCla_categoria+'">';
-                                    titulo=val.rieCla_id;
+                                if (titulo != val.rieCla_id) {
+                                    option += '<optgroup label="' + val.rieCla_categoria + '">';
+                                    titulo = val.rieCla_id;
                                 }
                                 option += "<option value='" + val.rieClaTip_id + "'>" + val.rieClaTip_tipo + "</option>";
                             });
@@ -770,7 +770,7 @@
             });
         }
         $('#clasificacionriesgo').change(function () {
-               clasificacionRiesgoTipo(); 
+            clasificacionRiesgoTipo();
         });
     });
 
@@ -790,7 +790,7 @@
                             totalhoras += Number(val.avaTar_horasTrabajadas);
                             console.log(val.avaTar_costo);
 //                        console.log(val.avaTar_costo.replace(',','').replace(',','').replace(',','').replace('.',''));
-                            costo += Number(val.avaTar_costo.replace(',', '').replace(',', '').replace('.', '')) ;
+                            costo += Number(val.avaTar_costo.replace(',', '').replace(',', '').replace('.', ''));
 //                        console.log(costo);
                             html += "<tr>"
                                     + "<td>"
@@ -1152,10 +1152,16 @@
 
     $('#tiposriesgos').change(function () {
         var url = '<?php echo base_url("index.php/tareas/traer_riesgos") ?>';
-        $.post(url, {tiposriesgos: $(this).val(), clasificacionriesgo: $('#clasificacionriesgo').val()})
+        $.post(url, {tiposriesgos: $('#tiposriesgos').val(), clasificacionriesgo: $('#clasificacionriesgo').val()})
                 .done(function (msg) {
                     $('#lista_riesgos').html('');
+                    var titulo = '';
                     $.each(msg, function (key, val) {
+                        if (titulo != val.rieClaTip_tipo) {
+                            var option = '<optgroup label="' + val.rieClaTip_tipo + '">';
+                            titulo = val.rieClaTip_tipo;
+                            $('#lista_riesgos').append(option);
+                        }
                         $('#lista_riesgos').append('<option value="' + val.rie_id + '">' + val.rie_descripcion + '</option>');
                     })
                 })
