@@ -387,8 +387,8 @@ function lista($name, $id, $class, $tabla, $option_value, $option_name, $value, 
             return false;
         }
     }
-    function auto($tabla,$idcampo,$nombrecampo,$letra) {
-            $search = buscador($tabla,$nombrecampo,$letra);
+    function auto($tabla,$idcampo,$nombrecampo,$letra,$limit = null) {
+            $search = buscador($limit,$tabla,$nombrecampo,$letra);
             $h = 0;
             foreach($search as $result){
                 $data[$h] = array(
@@ -400,7 +400,7 @@ function lista($name, $id, $class, $tabla, $option_value, $option_name, $value, 
             }
             return $data;
     }
-    function buscador($tabla,$nombrecampo,$palabra,$campo1=null,$campo2=null,$campo3=null){
+    function buscador($limit = null,$tabla,$nombrecampo,$palabra,$campo1=null,$campo2=null,$campo3=null){
         $CI = & get_instance();
         $CI->db->like($nombrecampo,$palabra);
         if($campo1!=null)
@@ -409,7 +409,7 @@ function lista($name, $id, $class, $tabla, $option_value, $option_name, $value, 
         $CI->db->or_like($campo2,$palabra);
         if($campo3!=null)
         $CI->db->or_like($campo3,$palabra);
-        $user = $CI->db->get($tabla);
+        $user = $CI->db->get($tabla,$limit);
         return $user->result();
     }
     function listaMultiple2($name, $id, $class, $tabla, $option_value, $option_name, $value, $where, $bloqued) {
