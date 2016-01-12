@@ -40,6 +40,7 @@
                     <li class='active'>
                         <a data-toggle="tab" href="#tab1">Informacion General</a>
                     </li>
+                    <?php if (!empty($empleado[0]->Emp_Id)) { ?>
                     <li>
                         <a data-toggle="tab" href="#tab2">Contratos</a>
                     </li>
@@ -58,6 +59,7 @@
                     <li>
                         <a data-toggle="tab" href="#tab6">Registro</a>
                     </li>
+                    <?php } ?>
                 </ul>
                 <div class="tab-content">
                     <div id="tab1" class="tab-pane active">
@@ -429,27 +431,26 @@
                         <div class="row">
                             <div class="circuloIcon guardarHorasExtra"><i class="fa fa-floppy-o fa-3x"></i></div>
                         </div>
-                        <div class='cuerpoContenido'>
                             <form method="post" id="FrmHorasExtras">
                                 <input type="hidden" id="emp_id" name="emp_id"  value="<?php echo (!empty($empleado[0]->Emp_Id)) ? $empleado[0]->Emp_Id : ""; ?>" />
                                 <div class="row">
-                                    <label for="horas">
+                                    <label for="horas" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                         Fecha
                                     </label>
-                                    <div class="">
-                                        <input type="text" name="fecha" id="fecha" class="form-control fecha"/>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <input type="text" name="fecha" id="fecha" class="form-control fecha obligatorioHoraExtra"/>
                                     </div>
-                                    <label for="horas">
+                                    <label for="horas" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                         Cantidad Horas
                                     </label>
-                                    <div class="">
-                                        <input type="number" name="horas" id="horas" class="form-control"/>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <input type="number" name="horas" id="horas" class="form-control obligatorioHoraExtra"/>
                                     </div>
-                                    <label for="horas">
+                                    <label for="horas" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                         Tipo
                                     </label>
-                                    <div class="">
-                                        <select name="tipo" class="form-control">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <select name="tipo" class="form-control obligatorioHoraExtra" id="tipoHoraExtra">
                                             <option value="">::Seleccionar::</option>
                                             <?php foreach ($tipoHora as $t): ?>
                                                 <option value="<?php echo $t->horExtTip_id ?>"><?php echo $t->horExtTip_tipo ?></option>
@@ -458,6 +459,23 @@
                                     </div>
                                 </div>
                             </form>
+                        <div class="row">
+                            <table class="tablesst">
+                                <thead>
+                                    <th>Fecha</th>
+                                    <th>Cantidad de horas</th>
+                                    <th>Tipo</th>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($horasExtras as $he): ?>
+                                    <tr>
+                                        <td><?php echo $he->empHorExt_fecha ?></td>
+                                        <td><?php echo $he->empHorExt_horas ?></td>
+                                        <td><?php echo $he->horExtTip_tipo ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -754,6 +772,7 @@ endforeach;
 <script>
 
     $('.guardarHorasExtra').click(function () {
+        if(obligatorio('obligatorioHoraExtra') == true){
         $.post("<?php echo base_url("index.php/administrativo/guardarHorasExtras") ?>",
                 $('#FrmHorasExtras').serialize()
                 )
@@ -761,12 +780,13 @@ endforeach;
                     if (!jQuery.isEmptyObject(msg.message))
                         alerta("amarillo", msg['message'])
                     else {
-
+                        $("#fecha,#horas,#tipoHoraExtra").val();
                     }
                 })
                 .fail(function (msg) {
                     alerta("rojo","Error en el sistema favor comunicarse con el administrador")
                 });
+            }
     });
 
     $('#motivoIncapacidad').autocomplete({
@@ -1373,10 +1393,6 @@ endforeach;
     });
     function tabla(msg) {
         var tbody = "";
-//        var url = "<?php echo base_url("index.php/administrativo/cargartablaincapacidad"); ?>";
-//        var datos = {empleado: $("#emp_id").val()}
-//        $.post(url, datos)
-//                .done(function (msg) {
         $.each(msg, function (indice, valor) {
             tbody += "<tr>";
             tbody += "<td>" + valor.responsable + "</td>";
@@ -1390,9 +1406,5 @@ endforeach;
         });
         $("#tablaIncapacidad *").remove();
         $("#tablaIncapacidad").html(tbody);
-//                })
-//                .fail(function () {
-//                    alerta("rojo", "Error al cargar tabla")
-//                })
     }
 </script>    
