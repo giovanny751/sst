@@ -1,3 +1,4 @@
+<script src="<?php echo base_url("js/tinymce/js/tinymce/tinymce.min.js") ?>"></script>
 <div class="row">
     <div class="col-md-6">
         <div class="circuloIcon" id="guardar" title="Guardar"><i class="fa fa-floppy-o fa-3x"></i></div>
@@ -158,6 +159,9 @@
     </form>
 </div>
 <script>
+    
+    tinymce.init({ selector:'textarea' });
+    
     cantidad = <?php echo $ij ?>;
     $('#guardar').click(function () {
         var r = campos();
